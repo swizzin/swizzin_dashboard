@@ -35,7 +35,7 @@ class delugeweb_meta:
     pretty_name = "Deluge Web"
     systemd = "deluge-web@"
     multiuser = True
-
+    process = "deluge-web"
 
 class emby_meta:
     name = "emby"
