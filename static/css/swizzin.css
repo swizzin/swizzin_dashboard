@@ -1,3 +1,7 @@
+.card-columns .card {
+  margin-bottom: 0;
+}
+
 a[post=true] {
   cursor: pointer;
 }
