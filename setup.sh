@@ -55,6 +55,17 @@ TimeoutStopSec=300
 WantedBy=multi-user.target
 EOS
 
+cat > /etc/sudoers.d/panel <<EOSUD
+#Defaults  env_keep -="HOME"
+Defaults:swizzin !logfile
+Defaults:swizzin !syslog
+Defaults:swizzin !pam_session
+
+Cmnd_Alias   CMNDS = /usr/bin/quota, /bin/systemctl
+
+swizzin     ALL = (ALL) NOPASSWD: CMNDS
+EOSUD
+
 systemctl reload nginx
 systemctl enable --now panel
 
