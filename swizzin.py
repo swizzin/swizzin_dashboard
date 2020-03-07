@@ -1,4 +1,4 @@
-#!/root/flask/bin/python
+#!/usr/bin/env python
 import flask
 from flask_htpasswd import HtPasswdAuth
 from flask_socketio import SocketIO, emit
@@ -12,27 +12,30 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 import calendar
 import psutil
 import eventlet
-eventlet.monkey_patch()
 
+#Prep the websockets with eventlet workers
+eventlet.monkey_patch()
 async_mode = None
 
+#Prep flask
 app = flask.Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app)
 socketio = SocketIO(app, async_mode=async_mode)
 
+#Config the app
 app.config.from_object('core.config.Config')
 app.config.from_pyfile('swizzin.cfg', silent=True)
-
-#app.config['FLASK_HTPASSWD_PATH'] = '/etc/htpasswd'
-#app.config['FLASK_SECRET'] = "What's the password?"
 admin_user = app.config['ADMIN_USER']
-
 htpasswd = HtPasswdAuth(app)
+
+#Prepare the background threads
 thread = None
 thread_lock = Lock()
 thread2 = None
 thread2_lock = Lock()
 
+
+#Background thread functions
 def current_speed(app):
     """ Thread for interface speed """
     with app.app_context():
@@ -63,6 +66,7 @@ def io_wait(app):
             #print(times.iowait)
             emit('iowait', {'iowait': times.iowait}, namespace='/websocket', broadcast=True)
 
+#Begin routes
 @app.route('/')
 @htpasswd.required
 def index(user):
