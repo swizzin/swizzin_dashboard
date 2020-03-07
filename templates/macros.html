@@ -1,0 +1,48 @@
+{% macro build_site_navigation(pages, selected) %}
+<div class="bg-dark" id="sidebar-wrapper">
+    <div class="sidebar-heading"><img class="logo" src="{{ url_for('static', filename='img/logo-dark.png') }}" /></div>
+    <div class="list-group list-group-flush">
+    {% for page in pages|sort(attribute="pretty_name") if page.url %}
+        <a href="{{page.url}}" target="_blank" class="list-group-item list-group-item-action bg-dark"><img src="{{ url_for('static', filename='img/apps/'+page.name+'.png') }}" class="app-icon rounded-circle">{{page.pretty_name}}</a>
+    {% endfor %}
+    </div>
+</div>
+{% endmacro %}
+
+{% macro build_app_table(apps) %}
+<div class="card border-dark mt-3">
+  <div class="card-header">Service Info</div>
+  <div class="card-body">
+    <table class="table table-borderless table-hover table-sm table-dark">
+        <tbody>
+            <colgroup>
+              <col style="width: 32%;">
+              <col style="width: 30%;">
+              <col style="width: 8%;">
+              <col style="width: 30%;">
+            </colgroup>
+            {% for app in apps|sort(attribute="pretty_name") if app.systemd %}
+            <tr>
+                <td class="align-middle"><span class="align-middle">{{ app.pretty_name }}</span></td>
+                <td class="align-middle text-center"><a post="true" phref="{{ url_for('service') }}" pdata='{"user": "{{ user }}", "function": "restart", "application": "{{ app.name }}"}' class="btn btn-xs btn-secondary"><i class="fa fa-refresh"></i>Restart</a></td>
+                <td class="align-middle text-center"><span id="status_{{ app.name }}" class="indicator"></span></td>
+                <td class="align-middle text-center"><input data-toggle="toggle" post="true" phref="{{ url_for('service') }}" pdata='{"application": "{{ app.name }}"}' type="checkbox" data-size="xs" data-on="Enabled" data-off="Disabled" data-onstyle="outline-success" data-offstyle="outline-danger" id="enabled_{{ app.name }}"></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+  </div>
+</div>
+{% endmacro %}
+
+{% macro build_app_table_js(apps) %}
+    {% for app in apps %}
+        (function {{ app.name }}_status() {
+            $.get('{{ url_for('status', p=app.name) }}', function(data) {
+                    $("#status_{{ app.name }}").html(data);
+                    setTimeout(function(){{ '{' }}{{ app.name }}_status()}, 15000);
+                }
+                );
+            })();
+    {% endfor %}
+{% endmacro %}

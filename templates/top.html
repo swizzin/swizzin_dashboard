@@ -1,0 +1,79 @@
+<div class="card border-dark mt-3">
+    <div class="card-header">Network Info</div>
+    <div class="card-body">
+
+
+<table class="table table-hover table-condensed table-dark table-borderless">
+    <thead class="table-active">
+        <tr>
+            <th scope="col">Interface</th>
+            <th scope="col" class="text-info text-right">RX</th>
+            <th scope="col" class="text-success">TX</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><div id="current_interface">--</div></td>
+            <td class="text-info"><div id="current_rx" class="text-right">--</div></td>
+            <td class="text-success"><div id="current_tx">--</div></td>
+        </tr>
+    </tbody>
+</table>
+
+<table class="table table-condensed table-hover table-dark table-borderless">
+    <thead class="table-active">
+        <tr>
+            <th scope="col">Span</th>
+            <th scope="col" class="text-info text-right">RX</th>
+            <th scope="col" class="text-success">TX</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>This Hour</td>
+            <td class="text-info text-right">{{ hour['rx'] }}</td>
+            <td class="text-success">{{ hour['tx'] }}</td>
+        </tr>
+        <tr>
+            <td>Last Hour</td>
+            <td class="text-info text-right">{{ lasthour['rx'] }}</td>
+            <td class="text-success">{{ lasthour['tx'] }}</td>
+        </tr>
+        <tr>
+            <td>This Day</td>
+            <td class="text-info text-right">{{ day['rx'] }}</td>
+            <td class="text-success">{{ day['tx'] }}</td>
+        </tr>
+        <tr>
+            <td>This Month</td>
+            <td class="text-info text-right">{{ month['rx'] }}</td>
+            <td class="text-success">{{ month['tx'] }}</td>
+        </tr>
+        <tr>
+            <td>All Time</td>
+            <td class="text-info text-right">{{ alltime['rx'] }}</td>
+            <td class="text-success">{{ alltime['tx'] }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<table class="table table-condensed table-hover table-dark table-borderless">
+    <thead class="table-active">
+        <tr>
+            <th scope="col">Date</th>
+            <th scope="col" class="text-info text-right">RX</th>
+            <th scope="col" class="text-success">TX</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for t in top %}
+        <tr>
+            <td>{{ t['date'] }}</td>
+            <td class="text-info text-right">{{ t['rx'] }}</td>
+            <td class="text-success">{{ t['tx'] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+</div>
