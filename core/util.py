@@ -35,7 +35,7 @@ def generate_page_list(user):
     pages = []
     is_shared = current_app.config['SHAREDSERVER']
     if is_shared is True:
-        locks = os.listdir('/home/'+username+'/.install')
+        locks = os.listdir('/home/'+user+'/.install')
     else:
         locks = os.listdir('/install')
     try:
