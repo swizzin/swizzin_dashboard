@@ -34,7 +34,11 @@ def get_default_interface():
 def generate_page_list(user):
     admin_user = current_app.config['ADMIN_USER']
     pages = []
-    locks = os.listdir('/install')
+    is_shared = current_app.config['SHAREDSERVER']
+    if is_shared is True:
+        locks = os.listdir('/home/'+username+'/.install')
+    else:
+        locks = os.listdir('/install')
     try:
         host = request.host.split(":")[0]
     except:
@@ -71,7 +75,11 @@ def generate_page_list(user):
 def apps_status(username):
     apps = []
     admin_user = current_app.config['ADMIN_USER']
-    locks = os.listdir('/install')
+    is_shared = current_app.config['SHAREDSERVER']
+    if is_shared is True:
+        locks = os.listdir('/home/'+username+'/.install')
+    else:
+        locks = os.listdir('/install')
     ps = sp.Popen(('ps', 'axo', 'user:20,comm,cmd'), stdout=sp.PIPE).communicate()[0]
     procs = ps.splitlines()
     for lock in locks:

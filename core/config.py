@@ -8,3 +8,4 @@ class Config:
     HOST = "0.0.0.0"
     PORT = "8333"
     URL_BASE = "/"
+    SHAREDSERVER = False
