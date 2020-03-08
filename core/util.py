@@ -8,7 +8,6 @@ import json
 import shutil
 import datetime
 from pwd import getpwnam
-import psutil
 
 try:
     from core.custom.profiles import *
