@@ -10,7 +10,6 @@ import requests
 import time
 from werkzeug.middleware.proxy_fix import ProxyFix
 import calendar
-import psutil
 import eventlet
 
 #Prep the websockets with eventlet workers
@@ -61,11 +60,30 @@ def current_speed(app):
 
 def io_wait(app):
     """ Thread for iowait emission """
+    #https://stackoverflow.com/a/7299268
+    tick = os.sysconf(os.sysconf_names['SC_CLK_TCK'])
+    numcpu = os.cpu_count()
+    interval = 10
     with app.app_context():
         while(True):
-            times = psutil.cpu_times_percent(interval=10)
-            #print(times.iowait)
-            emit('iowait', {'iowait': times.iowait}, namespace='/websocket', broadcast=True)
+            readstats = open('/proc/stat')
+            procstats = readstats.readlines()[0].split()
+            user, nice, sys, idle, iowait, irq, sirq = ( float(procstats[1]), float(procstats[2]),
+                                            float(procstats[3]), float(procstats[4]),
+                                            float(procstats[5]), float(procstats[6]),
+                                            float(procstats[7]) )
+            readstats.close()
+            time.sleep(interval)
+            readstats = open('/proc/stat')
+            procstats = readstats.readlines()[0].split()
+            userd, niced, sysd, idled, iowaitd, irqd, sirqd = ( float(procstats[1]), float(procstats[2]),
+                                            float(procstats[3]), float(procstats[4]),
+                                            float(procstats[5]), float(procstats[6]),
+                                            float(procstats[7]) )
+            readstats.close()
+            iowait = '{0:.1f}'.format(((iowaitd - iowait)* 100 / tick ) / numcpu / interval)
+            #times = psutil.cpu_times_percent(interval=10)
+            emit('iowait', {'iowait': iowait}, namespace='/websocket', broadcast=True)
 
 #Begin routes
 @app.route('/')

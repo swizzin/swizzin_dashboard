@@ -1,6 +1,5 @@
 flask
 flask-htpasswd
 flask-socketio
-psutil
 eventlet
 requests
