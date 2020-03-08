@@ -187,7 +187,7 @@ def loadavg(user):
 @htpasswd.required
 def vnstat(user):
     stats = []
-    interface = "eno1"
+    interface = get_default_interface()
     statsh = vnstat_parse(interface, "h", "hours", 0)
     statslh = vnstat_parse(interface, "h", "hours", 1)
     statsd = vnstat_parse(interface, "d", "days", 0)
