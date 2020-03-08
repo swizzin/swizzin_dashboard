@@ -22,6 +22,7 @@ def str_to_class(str):
     return getattr(sys.modules[__name__], str)
 
 def get_default_interface():
+    #Based on: https://stackoverflow.com/a/6556951
     """Get the default interface directly from /proc."""
     with open("/proc/net/route") as route:
         for line in route:
@@ -179,6 +180,7 @@ def quota_usage(username):
     return totalh, usedh, freeh, usage
 
 def GetHumanReadableKB(size,precision=2):
+    #https://stackoverflow.com/a/32009595
     suffixes=['KB','MB','GB','TB','PB']
     suffixIndex = 0
     while size > 1024 and suffixIndex < 4:
@@ -187,6 +189,7 @@ def GetHumanReadableKB(size,precision=2):
     return "%.*f %s"%(precision,size,suffixes[suffixIndex])
 
 def GetHumanReadableB(size,precision=2):
+    #https://stackoverflow.com/a/32009595
     suffixes=['B','KB','MB','GB','TB','PB']
     suffixIndex = 0
     while size > 1024 and suffixIndex < 4:
