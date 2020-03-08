@@ -38,6 +38,7 @@ thread2_lock = Lock()
 #Background thread functions
 def current_speed(app):
     """ Thread for interface speed """
+    #Modified for our uses from https://stackoverflow.com/a/26853086
     with app.app_context():
         #print("Starting current speed for", interface)
         interface = get_default_interface()
@@ -173,7 +174,7 @@ def vnstat(user):
     statslh = vnstat_parse(interface, "h", "hours", 1)
     statsd = vnstat_parse(interface, "d", "days", 0)
     statsm = vnstat_parse(interface, "m", "months", 0)
-    statsa = ''
+    statsa = vnstat_parse(interface, "h", "total")
     #statsa = vnstat_parse(interface, "m", "total", 0)
     tops = vnstat_data(interface, "t")['interfaces'][0]['traffic']['tops']
     top = []

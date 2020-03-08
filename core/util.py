@@ -146,10 +146,15 @@ def vnstat_data(interface, mode):
     #data = vnstat.stdout.decode('utf-8')
     return data
 
-def vnstat_parse(interface, mode, query, position):
-    result = vnstat_data(interface, mode)['interfaces'][0]['traffic'][query][position]
-    result['rx'] = GetHumanReadableKB(result['rx'])
-    result['tx'] = GetHumanReadableKB(result['tx'])
+def vnstat_parse(interface, mode, query, position=False):
+    if position is not False:
+        result = vnstat_data(interface, mode)['interfaces'][0]['traffic'][query][position]
+        result['rx'] = GetHumanReadableKB(result['rx'])
+        result['tx'] = GetHumanReadableKB(result['tx'])
+    else:
+        result = vnstat_data(interface, mode)['interfaces'][0]['traffic'][query]
+        result['rx'] = GetHumanReadableKB(result['rx'])
+        result['tx'] = GetHumanReadableKB(result['tx'])
     return result
 
 def disk_usage(location):
