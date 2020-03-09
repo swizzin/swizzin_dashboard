@@ -195,12 +195,12 @@ def network_quota_usage(username):
     except:
         totalh = quota['total']
     try:
-        used = int(quota['used'])
-        usedh = GetHumanReadableB(used)
+        free = int(quota['remaining'])
+        freeh = GetHumanReadableB(free)
     except:
-        usedh = quota['used']
-    free = int(quota['remaining'])
-    freeh = GetHumanReadableB(free)
+        freeh = quota['remaining']
+    used = int(quota['used'])
+    usedh = GetHumanReadableB(used)
     try:
         usage = '{0:.2f}'.format((used / total * 100))
     except:
