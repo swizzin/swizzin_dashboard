@@ -186,6 +186,27 @@ def quota_usage(username):
     usage = '{0:.2f}'.format((used / total * 100))
     return totalh, usedh, freeh, usage
 
+def network_quota_usage(username):
+    quota = sp.Popen(('sudo', '/etc/swizzin.xl/add-on/panelquotas.sh', 'json', username), stdout=sp.PIPE).communicate()[0].decode("utf-8")
+    quota = json.loads(quota)
+    try:
+        total = int(quota['total'])
+        totalh = GetHumanReadableB(total)
+    except:
+        totalh = quota['total']
+    try:
+        used = int(quota['used'])
+        usedh = GetHumanReadableB(used)
+    except:
+        usedh = quota['used']
+    free = int(quota['remaining'])
+    freeh = GetHumanReadableB(free)
+    try:
+        usage = '{0:.2f}'.format((used / total * 100))
+    except:
+        usage = "N/A"
+    return totalh, usedh, freeh, usage
+
 def GetHumanReadableKB(size,precision=2):
     #https://stackoverflow.com/a/32009595
     suffixes=['KB','MB','GB','TB','PB']

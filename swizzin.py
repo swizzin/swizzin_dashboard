@@ -236,6 +236,12 @@ def ram_stats(user):
     perutil = '{0:.2f}'.format((ramstats['MemTotal'] - ramstats['MemAvailable']) / ramstats['MemTotal'] * 100)
     return flask.jsonify({"ramtotal": ramtotal, "ramfree": ramfree, "ramused": ramused, "perutil": perutil})
 
+@app.route('/stats/network')
+@htpasswd.required
+def network_quota(user):
+    if app.config['SHAREDSERVER'] is True:
+        total, used, free, usage = network_quota_usage(user)
+    return flask.jsonify({"nettotal": total, "netused": used, "netfree": free, "perutil": usage})
 
 if __name__ == '__main__':
     socketio.run(app, host=app.config['HOST'], port=app.config['PORT'])

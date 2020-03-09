@@ -1,4 +1,4 @@
-{% macro build_site_navigation(pages, selected) %}
+{% macro build_sidebar(pages) %}
 <div class="bg-dark" id="sidebar-wrapper">
     <div class="sidebar-heading"><img class="logo" src="{{ url_for('static', filename='img/logo-dark.png') }}" /></div>
     <div class="list-group list-group-flush">
@@ -7,6 +7,70 @@
     {% endfor %}
     </div>
 </div>
+{% endmacro %}
+
+{% macro build_nav(user, selected) %}
+<div id="page-content-wrapper">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <button class="btn btn-primary" id="menu-toggle">«</button>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+          <li class="nav-item active">
+              <a class="nav-link" href="{{ url_for('index') }}">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('stats') }}">Stats</a>
+          </li>
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ user }}
+              </a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Something else here</a>
+              </div>
+          </li>
+        </ul>
+      </div>
+  </nav>
+{% endmacro %}
+
+{% macro build_nav_shared(user, selected) %}
+<div id="page-content-wrapper">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <button class="btn btn-primary" id="menu-toggle">«</button>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+          <li class="nav-item active">
+              <a class="nav-link" href="{{ url_for('index') }}">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('stats') }}">Stats</a>
+          </li>
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ user }}
+              </a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Something else here</a>
+              </div>
+          </li>
+        </ul>
+      </div>
+  </nav>
 {% endmacro %}
 
 {% macro build_app_table(apps) %}
@@ -35,14 +99,121 @@
 </div>
 {% endmacro %}
 
-{% macro build_app_table_js(apps) %}
-    {% for app in apps %}
-        (function {{ app.name }}_status() {
-            $.get('{{ url_for('status', p=app.name) }}', function(data) {
-                    $("#status_{{ app.name }}").html(data);
-                    setTimeout(function(){{ '{' }}{{ app.name }}_status()}, 15000);
-                }
-                );
-            })();
-    {% endfor %}
+{% macro build_widget_js(apps) %}
+function appstatus(){
+  $.get("{{ url_for('app_status') }}", function(data){
+  for (var apps in data) {
+    var name = data[apps]["name"];
+    var enabled = data[apps]["enabled"];
+    var active = data[apps]["active"];
+    if (active == true) {
+      $("#status_"+name+".indicator").addClass("bg-success").removeClass("bg-danger");
+    } else {
+      $("#status_"+name+".indicator").addClass("bg-danger").removeClass("bg-success");
+    }
+    if (enabled == true) {
+      $('#enabled_'+name).data('bs.toggle').on(true);
+    } else {
+      $('#enabled_'+name).data('bs.toggle').off(true);  
+    }
+  }
+  timer = setTimeout(function(){appstatus()}, 60000);
+  }
+)
+};
+appstatus();
+
+(function loadavg() {
+    $.get('{{ url_for('loadavg') }}', function(data) {
+      $("#load1m").html(data['1m']);
+      $("#load5m").html(data['5m']);
+      $("#load15m").html(data['15m']);
+      $("#loadpercent").html(data['perutil']);
+      if (Number(data['perutil']) > 90) {
+        $("#loadindicator.systemindicator").addClass("bg-danger").removeClass("bg-success bg-warning");
+      } else if (Number(data['perutil']) > 75) {
+        $("#loadindicator.systemindicator").addClass("bg-warning").removeClass("bg-success bg-danger");
+      } else {
+        $("#loadindicator.systemindicator").addClass("bg-success").removeClass("bg-warning bg-danger");
+      }
+      setTimeout(function(){loadavg()}, 60000);
+      }
+    );
+})();
+
+(function diskusage() {
+    $.get('{{ url_for('disk_free') }}', function(data) {
+      var percent = Math.trunc(data['perutil']);
+      $("#diskfree").html(data['diskfree']);
+      $("#diskused").html(data['diskused']);
+      $("#disktotal").html(data['disktotal']);
+      $("#diskpercent").html(data['perutil']);
+      if (Number(data['perutil']) > 90) {
+        $("#diskindicator.systemindicator").addClass("bg-danger").removeClass("bg-success bg-warning");
+        $("#diskprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-danger").removeClass("bg-success bg-warning");
+      } else if (Number(data['perutil']) > 75) {
+        $("#diskindicator.systemindicator").addClass("bg-warning").removeClass("bg-success bg-danger");
+        $("#diskprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-warning").removeClass("bg-success bg-danger");
+      } else {
+        $("#diskindicator.systemindicator").addClass("bg-success").removeClass("bg-warning bg-danger");
+        $("#diskprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-success").removeClass("bg-danger bg-warning");
+      }
+      setTimeout(function(){diskusage()}, 60000);
+      }
+    );
+})();
+
+(function ramusage() {
+    $.get('{{ url_for('ram_stats') }}', function(data) {
+      var percent = Math.trunc(data['perutil']);
+      $("#ramfree").html(data['ramfree']);
+      $("#ramused").html(data['ramused']);
+      $("#ramtotal").html(data['ramtotal']);
+      $("#rampercent").html(data['perutil']);
+      if (Number(data['perutil']) > 90) {
+        $("#ramindicator.systemindicator").addClass("bg-danger").removeClass("bg-success bg-warning");
+        $("#ramprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-danger").removeClass("bg-success bg-warning");
+      } else if (Number(data['perutil']) > 75) {
+        $("#ramindicator.systemindicator").addClass("bg-warning").removeClass("bg-success bg-danger");
+        $("#ramprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-warning").removeClass("bg-success bg-danger");
+      } else {
+        $("#ramindicator.systemindicator").addClass("bg-success").removeClass("bg-warning bg-danger");
+        $("#ramprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-success").removeClass("bg-danger bg-warning");
+      }
+      setTimeout(function(){ramusage()}, 60000);
+      }
+    );
+})();
+
+{% if config.SHAREDSERVER == True %}
+(function netusage() {
+  $.get('{{ url_for('network_quota') }}', function(data) {
+    var percent = Math.trunc(data['perutil']);
+    $("#netfree").html(data['netfree']);
+    $("#netused").html(data['netused']);
+    $("#nettotal").html(data['nettotal']);
+    $("#netpercent").html(data['perutil']);
+    if (Number(data['perutil']) > 90) {
+      $("#ramindicator.systemindicator").addClass("bg-danger").removeClass("bg-success bg-warning");
+      $("#ramprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-danger").removeClass("bg-success bg-warning");
+    } else if (Number(data['perutil']) > 75) {
+      $("#ramindicator.systemindicator").addClass("bg-warning").removeClass("bg-success bg-danger");
+      $("#ramprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-warning").removeClass("bg-success bg-danger");
+    } else {
+      $("#ramindicator.systemindicator").addClass("bg-success").removeClass("bg-warning bg-danger");
+      $("#ramprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-success").removeClass("bg-danger bg-warning");
+    }
+    setTimeout(function(){netusage()}, 60000);
+    }
+  );
+})();
+{% endif %}
+
+(function vnstat_top10() {
+    $.get('{{ url_for('vnstat') }}', function(data) {
+      $("#top10").html(data);
+      setTimeout(function(){vnstat_top10()}, 600000);
+      }
+    );
+  })();
 {% endmacro %}
