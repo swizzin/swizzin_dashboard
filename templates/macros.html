@@ -207,14 +207,14 @@ appstatus();
     $("#nettotal").html(data['nettotal']);
     $("#netpercent").html(data['perutil']);
     if (Number(data['perutil']) > 90) {
-      $("#ramindicator.systemindicator").addClass("bg-danger").removeClass("bg-success bg-warning");
-      $("#ramprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-danger").removeClass("bg-success bg-warning");
+      $("#netindicator.systemindicator").addClass("bg-danger").removeClass("bg-success bg-warning");
+      $("#netprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-danger").removeClass("bg-success bg-warning");
     } else if (Number(data['perutil']) > 75) {
-      $("#ramindicator.systemindicator").addClass("bg-warning").removeClass("bg-success bg-danger");
-      $("#ramprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-warning").removeClass("bg-success bg-danger");
+      $("#netindicator.systemindicator").addClass("bg-warning").removeClass("bg-success bg-danger");
+      $("#netprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-warning").removeClass("bg-success bg-danger");
     } else {
-      $("#ramindicator.systemindicator").addClass("bg-success").removeClass("bg-warning bg-danger");
-      $("#ramprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-success").removeClass("bg-danger bg-warning");
+      $("#netindicator.systemindicator").addClass("bg-success").removeClass("bg-warning bg-danger");
+      $("#netprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-success").removeClass("bg-danger bg-warning");
     }
     setTimeout(function(){netusage()}, 60000);
     }
