@@ -207,10 +207,11 @@ def vnstat(user):
         top.append({"date": date, "rx": rx, "tx": tx})
     columns = {"date", "rx", "tx"}
     #stats = []
-    #stats.extend([statsh, statslh, statsd, statsm, top])
+    #stats.extend({"statsh": statsh, "statslh": statslh, "statsd": statsd, "statsm": statsm, "statsa": statsa, "top": top})
     #print(stats)
-    return flask.render_template('top.html', top=top, day=statsd, month=statsm, hour=statsh, lasthour=statslh, alltime=statsa, colnames=columns)
-    
+    #return flask.jsonify({"statsh": statsh, "statslh": statslh, "statsd": statsd, "statsm": statsm, "statsa": statsa, "top": top})
+    return flask.render_template('top.html', user=user, top=top, day=statsd, month=statsm, hour=statsh, lasthour=statslh, alltime=statsa, colnames=columns)
+
 @app.route('/stats/disk')
 @htpasswd.required
 def disk_free(user):
