@@ -103,7 +103,7 @@
 </div>
 {% endmacro %}
 
-{% macro build_widget_js(apps) %}
+{% macro build_widget_js() %}
 function appstatus(){
   $.get("{{ url_for('app_status') }}", function(data){
   for (var apps in data) {
@@ -189,7 +189,16 @@ appstatus();
     );
 })();
 
-{% if config.SHAREDSERVER == True %}
+(function vnstat_top10() {
+    $.get('{{ url_for('vnstat') }}', function(data) {
+      $("#top10").html(data);
+      setTimeout(function(){vnstat_top10()}, 600000);
+      }
+    );
+  })();
+{% endmacro %}
+
+{% macro build_widget_js_shared() %}
 (function netusage() {
   $.get('{{ url_for('network_quota') }}', function(data) {
     var percent = Math.trunc(data['perutil']);
@@ -211,13 +220,4 @@ appstatus();
     }
   );
 })();
-{% endif %}
-
-(function vnstat_top10() {
-    $.get('{{ url_for('vnstat') }}', function(data) {
-      $("#top10").html(data);
-      setTimeout(function(){vnstat_top10()}, 600000);
-      }
-    );
-  })();
 {% endmacro %}

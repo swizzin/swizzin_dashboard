@@ -24,9 +24,6 @@
           {% include 'systeminfo.html' %}
           {% include 'diskinfo.html' %}
           {% include 'raminfo.html' %}
-          {% if config.SHAREDSERVER == True %}
-            {% include 'netinfo.html' %}
-          {% endif %}
           <div id="top10"></div>
       </div>
     </div>
@@ -43,6 +40,9 @@
 
 <script>
 {{ macros.build_widget_js() }}
+{% if config.SHAREDSERVER == True %}
+{{ macros.build_widget_js_shared() }}
+{% endif %}
 
 </script>
 
