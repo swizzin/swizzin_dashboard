@@ -203,6 +203,15 @@ class tautulli_meta:
     baseurl = "/tautulli"
     runas = "tautulli"
 
+class wireguard_meta:
+    name = "wireguard"
+    pretty_name = "Wireguard"
+    #systemd = "wg-quick@"
+    multiuser = True
+    def __init__(self, user):
+        uid = str(get_uid(user))
+        self.systemd = "wg-quick@wg"+uid
+
 class xmrig_meta:
     name = "xmrig"
     pretty_name = "XMRig"

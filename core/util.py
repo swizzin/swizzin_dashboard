@@ -1,6 +1,5 @@
 import sys
 import os
-from core.profiles import *
 from flask import request, current_app
 from flask_socketio import SocketIO, emit
 import subprocess as sp
@@ -8,6 +7,14 @@ import json
 import shutil
 import datetime
 from pwd import getpwnam
+
+is_shared = current_app.config['SHAREDSERVER']
+
+if is_shared is True:
+    from core.profiles_shared import *
+else:
+    from core.profiles import *
+
 
 try:
     from core.custom.profiles import *
@@ -33,7 +40,6 @@ def get_default_interface():
 def generate_page_list(user):
     admin_user = current_app.config['ADMIN_USER']
     pages = []
-    is_shared = current_app.config['SHAREDSERVER']
     if is_shared is True:
         locks = os.listdir('/home/'+user+'/.install')
     else:
@@ -47,9 +53,12 @@ def generate_page_list(user):
     for lock in locks:
         app = lock.split(".")[1]
         try:
-            profile = str_to_class(app+"_meta")
+            profile = str_to_class(app+"_meta")(user)
         except:
-            continue
+            try:
+                profile = str_to_class(app+"_meta")
+            except:
+                continue
         try:
             multiuser = profile.multiuser
         except:
@@ -123,22 +132,14 @@ def is_process_running(procs, username, application):
     for p in procs:
         if username.lower() in str(p).lower():
             if application.lower() in str(p).lower():
-                #print("True")
                 result = True
-                #print(result)
     return result
 
 def is_application_enabled(application, user):
-    if "@" in application:
+    if application.endswith("@"):
         result = os.path.exists('/etc/systemd/system/multi-user.target.wants/{application}{user}.service'.format(application=application, user=user))
-        #result = sp.run(('systemctl', 'is-enabled', application+user), stdout=sp.DEVNULL).returncode
     else:
         result = os.path.exists('/etc/systemd/system/multi-user.target.wants/{application}.service'.format(application=application))
-        #result = sp.run(('systemctl', 'is-enabled', application), stdout=sp.DEVNULL).returncode
-    #if result == 0:
-    #    result = True
-    #else:
-    #    result = False
     return result
 
 def systemctl(function, application):
