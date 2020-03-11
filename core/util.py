@@ -1,5 +1,6 @@
 import sys
 import os
+from swizzin import app
 from flask import request, current_app
 from flask_socketio import SocketIO, emit
 import subprocess as sp
@@ -8,7 +9,8 @@ import shutil
 import datetime
 from pwd import getpwnam
 
-is_shared = current_app.config['SHAREDSERVER']
+
+is_shared = app.config['SHAREDSERVER']
 
 if is_shared is True:
     from core.profiles_shared import *
