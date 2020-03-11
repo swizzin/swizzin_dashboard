@@ -75,16 +75,18 @@ $("input[post=true]").each(function () {
 });
 
 $(document).ready(function(){
-var protocol = window.location.protocol;
-var socket = io.connect(protocol + '//' + document.domain + ':' + location.port + '/websocket');
-socket.on('speed', function(result) {
-  $('#current_rx').html(result.rx);
-  $('#current_tx').html(result.tx)
-  $('#current_interface').html(result.interface)
-  return false;
-});
-socket.on('iowait', function(result) {
-  $('#iowait-glance').html(result.iowait);
-  return false;
-});
+  var protocol = window.location.protocol;
+  var socket = io.connect(protocol + '//' + document.domain + ':' + location.port + '/websocket');
+  if (document.getElementById(current_rx)) {
+    socket.on('speed', function(result) {
+      $('#current_rx').html(result.rx);
+      $('#current_tx').html(result.tx)
+      $('#current_interface').html(result.interface)
+      return false;
+    });
+  }
+  socket.on('iowait', function(result) {
+    $('#iowait-glance').html(result.iowait);
+    return false;
+  });
 });

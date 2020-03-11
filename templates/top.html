@@ -1,43 +1,3 @@
-<div class="card border-dark mt-3">
-    <div class="card-header">Network Info</div>
-    <div class="card-body">
-      {% if config.SHAREDSERVER == True %}
-        <div class="row">
-            <div class="col">
-              <h5 class="text-center">Used</h5>
-              <p class="text-center"><span id="netused"></span></p>
-            </div>
-            <div class="col">
-              <h5 class="text-center">Free</h5>
-              <p class="text-center"><span id="netfree"></span></p>
-            </div>
-            <div class="col">
-              <h5 class="text-center">Total</h5>
-              <p class="text-center"><span id="nettotal"></span></p>
-            </div>
-          </div>
-        <div class="progress">
-          <div id="ramprogress" class="progress-bar bg-warning" role="progressbar" style="" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
-        </div>
-        <p class="text-center">Net utilization is at <span id="netpercent"></span>%</p>
-      {% endif %}
-
-<table class="table table-hover table-condensed table-dark table-borderless">
-    <thead class="table-active">
-        <tr>
-            <th scope="col">Interface</th>
-            <th scope="col" class="text-info text-right">RX</th>
-            <th scope="col" class="text-success">TX</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><div id="current_interface">--</div></td>
-            <td class="text-info"><div id="current_rx" class="text-right">--</div></td>
-            <td class="text-success"><div id="current_tx">--</div></td>
-        </tr>
-    </tbody>
-</table>
 {% if config.ADMIN_USER == user %}
 <table class="table table-condensed table-hover table-dark table-borderless">
     <thead class="table-active">
@@ -95,6 +55,3 @@
     </tbody>
 </table>
 {% endif %}
-
-</div>
-</div>
