@@ -210,7 +210,7 @@ class wireguard_meta:
     multiuser = True
     def __init__(self, user):
         uid = str(get_uid(user))
-        self.systemd = "wg-quick@wg"+uid
+        self.systemd = "wg-quick@wg"+str(uid)
 
 class xmrig_meta:
     name = "xmrig"

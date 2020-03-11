@@ -1,4 +1,4 @@
-from core.util import get_uid
+from pwd import getpwnam
 
 class autodl_meta:
     name = "irssi"
@@ -147,5 +147,5 @@ class wireguard_meta:
     #systemd = "wg-quick@"
     multiuser = True
     def __init__(self, user):
-        uid = str(get_uid(user))
-        self.systemd = "wg-quick@wg"+uid
+        uid = getpwnam(user).pw_uid
+        self.systemd = "wg-quick@wg"+str(uid)
