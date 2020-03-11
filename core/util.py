@@ -16,12 +16,12 @@ if is_shared is True:
     from core.profiles_shared import *
 else:
     from core.profiles import *
+    try:
+        from core.custom.profiles import *
+    except:
+        pass
 
 
-try:
-    from core.custom.profiles import *
-except:
-    pass
 
 boottimestamp = os.stat("/proc").st_ctime
 boottimeutc = datetime.datetime.fromtimestamp(boottimestamp).strftime('%b %d, %Y %H:%M:%S')
@@ -95,9 +95,12 @@ def apps_status(username):
     for lock in locks:
         application = lock.split(".")[1]
         try:
-            profile = str_to_class(application+"_meta")
+            profile = str_to_class(application+"_meta")(username)
         except:
-            continue
+            try:
+                profile = str_to_class(application+"_meta")
+            except:
+                continue
         try:
             multiuser = profile.multiuser
         except:

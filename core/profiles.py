@@ -1,3 +1,5 @@
+from pwd import getpwnam
+
 class autodl_meta:
     name = "irssi"
     pretty_name = "AutoDL irssi"
@@ -209,7 +211,7 @@ class wireguard_meta:
     #systemd = "wg-quick@"
     multiuser = True
     def __init__(self, user):
-        uid = str(get_uid(user))
+        uid = getpwnam(user).pw_uid
         self.systemd = "wg-quick@wg"+str(uid)
 
 class xmrig_meta:

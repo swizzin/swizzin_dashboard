@@ -155,9 +155,12 @@ def service(user):
         data = flask.request.get_json()
         application = data['application']
         try:
-            profile = str_to_class(application+"_meta")
+            profile = str_to_class(application+"_meta")(user)
         except:
-            return """Application profile not found."""
+            try:
+                profile = str_to_class(application+"_meta")
+            except:
+                return """Application profile not found."""
         try:
             multiuser = profile.multiuser
         except:
@@ -169,7 +172,7 @@ def service(user):
         except:
             pass
 
-        if "@" in application:
+        if application.endswith("@"):
             application = application+user
         result = systemctl(data['function'], application)
         return str(result)

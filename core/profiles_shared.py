@@ -96,7 +96,7 @@ class plex_meta:
         for line in num:
             self.port = [int(x) for x in line.split()]
             self.port = int(self.port[0])
-        self.baseurl = ':'+self.port+'/web'
+        self.baseurl = ':'+str(self.port)+'/web'
 
 class radarr_meta:
     name = "radarr"
@@ -146,6 +146,8 @@ class wireguard_meta:
     pretty_name = "Wireguard"
     #systemd = "wg-quick@"
     multiuser = True
+    runas = "root"
     def __init__(self, user):
         uid = getpwnam(user).pw_uid
         self.systemd = "wg-quick@wg"+str(uid)
+        self.process = "wg"+str(uid)
