@@ -24,7 +24,7 @@
           {% include 'systeminfo.html' %}
           {% include 'diskinfo.html' %}
           {% include 'raminfo.html' %}
-          {% if (config.SHAREDSERVER == True or config.ADMIN_USER == user %}
+          {% if (config.SHAREDSERVER == True or config.ADMIN_USER == user) %}
             {% include 'netinfo.html' %}
           {% endif %}
       </div>
