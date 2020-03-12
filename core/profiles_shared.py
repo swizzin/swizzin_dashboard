@@ -98,6 +98,13 @@ class plex_meta:
             self.port = int(self.port[0])
         self.baseurl = ':'+str(self.port)+'/web'
 
+class plexpy_meta:
+    name = "tautulli"
+    pretty_name = "Tautulli"
+    baseurl = "/plexpy"
+    systemd = "plexpy@"
+    multiuser = True
+
 class radarr_meta:
     name = "radarr"
     pretty_name = "Radarr"
@@ -131,14 +138,6 @@ class sonarr_meta:
     pretty_name = "Sonarr"
     baseurl = "/sonarr"
     systemd = "sonarr@"
-    multiuser = True
-
-
-class tautulli_meta:
-    name = "tautulli"
-    pretty_name = "Tautulli"
-    baseurl = "/tautulli"
-    systemd = "tautulli@"
     multiuser = True
 
 class wireguard_meta:
