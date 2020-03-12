@@ -86,6 +86,15 @@ def io_wait(app):
             #times = psutil.cpu_times_percent(interval=10)
             emit('iowait', {'iowait': iowait}, namespace='/websocket', broadcast=True)
 
+
+@app.before_request
+def reload_htpasswd():
+    """ 
+    This function will run before every load of the index. It will ensure the htpasswd file is current.
+    """
+    if flask.request.endpoint == 'index':
+        htpasswd.load_users(app)
+
 #Begin routes
 @app.route('/')
 @htpasswd.required
