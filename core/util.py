@@ -135,7 +135,8 @@ def apps_status(username):
 def is_process_running(procs, username, application):
     result = False
     for p in procs:
-        if username.lower() in str(p).lower():
+        p = p.decode('utf-8').split()
+        if username.lower() == str(p[0]).lower():
             if application.lower() in str(p).lower():
                 result = True
     return result
