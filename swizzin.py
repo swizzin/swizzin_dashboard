@@ -4,7 +4,6 @@ from flask_htpasswd import HtPasswdAuth
 from flask_socketio import SocketIO, emit
 from threading import Thread, Lock
 import os
-from core.util import *
 import core.config
 import requests
 import time
@@ -26,6 +25,8 @@ app.config.from_object('core.config.Config')
 app.config.from_pyfile('swizzin.cfg', silent=True)
 admin_user = app.config['ADMIN_USER']
 htpasswd = HtPasswdAuth(app)
+
+from core.util import *
 
 #Prepare the background threads
 thread = None
