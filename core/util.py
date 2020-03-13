@@ -24,7 +24,7 @@ else:
 
 
 boottimestamp = os.stat("/proc").st_ctime
-boottimeutc = datetime.datetime.fromtimestamp(boottimestamp).strftime('%b %d, %Y %H:%M:%S')
+boottimeutc = datetime.datetime.utcfromtimestamp(boottimestamp).strftime('%b %d, %Y %H:%M:%S')
 
 def str_to_class(str):
     return getattr(sys.modules[__name__], str)

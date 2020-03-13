@@ -5,7 +5,7 @@ window.onload = function() {
 };
 function countUpFromTime(countFrom, id) {
 countFrom = new Date(countFrom).getTime();
-var now = new Date(),
+var now = new Date(new Date().toUTCString().substr(0, 25)),
 countFrom = new Date(countFrom),
 timeDifference = (now - countFrom);
 
