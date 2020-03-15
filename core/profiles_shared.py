@@ -87,7 +87,7 @@ class ombi_meta:
 class plex_meta:
     name = "plex"
     pretty_name = "Plex"
-    process = "Plex"
+    process = "plexmediaserver"
     systemd = "plex@"
     multiuser = True
     def __init__(self, user):
@@ -99,10 +99,11 @@ class plex_meta:
         self.baseurl = ':'+str(self.port)+'/web'
 
 class plexpy_meta:
-    name = "tautulli"
+    name = "plexpy"
     pretty_name = "Tautulli"
     baseurl = "/plexpy"
     systemd = "plexpy@"
+    process = "plexpy"
     multiuser = True
 
 class radarr_meta:
