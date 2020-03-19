@@ -7,6 +7,7 @@ import subprocess as sp
 import json
 import shutil
 import datetime
+import re
 from pwd import getpwnam
 
 
@@ -184,7 +185,7 @@ def quota_usage(username):
     quota = sp.Popen(('sudo', 'quota', '-wpu', username), stdout=sp.PIPE)
     quota = quota.communicate()[0].decode("utf-8").split('\n')[2].split()
     fs = quota[0]
-    used = int(quota[1])
+    used = int(re.sub("[^0-9]", "", quota[1]))
     total = int(quota[2])
     free = total - used
     totalh = GetHumanReadableKB(total)
