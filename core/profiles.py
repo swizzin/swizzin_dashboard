@@ -1,7 +1,8 @@
 from pwd import getpwnam
 
 class autodl_meta:
-    name = "irssi"
+    name = "autodl"
+    process = "irssi"
     pretty_name = "AutoDL irssi"
     systemd = "irssi@"
     multiuser = True
