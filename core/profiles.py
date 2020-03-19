@@ -29,6 +29,7 @@ class deluge_meta:
     name = "deluge"
     pretty_name = "Deluge"
     baseurl = "/deluge"
+    process = "deluged"
     systemd = "deluged@"
     multiuser = True
 
