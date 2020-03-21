@@ -175,9 +175,9 @@ def vnstat_parse(interface, mode, query, position=False):
 
 def disk_usage(location):
     total, used, free = shutil.disk_usage(location)
-    totalh = GetHumanReadableB(total)
-    usedh = GetHumanReadableB(used)
-    freeh = GetHumanReadableB(free)
+    totalh = GetHumanReadableBi(total)
+    usedh = GetHumanReadableBi(used)
+    freeh = GetHumanReadableBi(free)
     usage = '{0:.2f}'.format((used / total * 100))
     return totalh, usedh, freeh, usage
 
@@ -188,9 +188,9 @@ def quota_usage(username):
     used = int(re.sub("[^0-9]", "", quota[1]))
     total = int(quota[2])
     free = total - used
-    totalh = GetHumanReadableKB(total)
-    usedh = GetHumanReadableKB(used)
-    freeh = GetHumanReadableKB(free)
+    totalh = GetHumanReadableKiB(total)
+    usedh = GetHumanReadableKiB(used)
+    freeh = GetHumanReadableKiB(free)
     usage = '{0:.2f}'.format((used / total * 100))
     return totalh, usedh, freeh, usage
 
@@ -215,9 +215,27 @@ def network_quota_usage(username):
         usage = "N/A"
     return totalh, usedh, freeh, usage
 
+def GetHumanReadableKiB(size,precision=2):
+    #https://stackoverflow.com/a/32009595
+    suffixes=['KiB','MiB','GiB','TiB','PiB']
+    suffixIndex = 0
+    while size > 1024 and suffixIndex < 4:
+        suffixIndex += 1 #increment the index of the suffix
+        size = size/1024.0 #apply the division
+    return "%.*f %s"%(precision,size,suffixes[suffixIndex])
+
 def GetHumanReadableKB(size,precision=2):
     #https://stackoverflow.com/a/32009595
     suffixes=['KB','MB','GB','TB','PB']
+    suffixIndex = 0
+    while size > 1024 and suffixIndex < 4:
+        suffixIndex += 1 #increment the index of the suffix
+        size = size/1024.0 #apply the division
+    return "%.*f %s"%(precision,size,suffixes[suffixIndex])
+
+def GetHumanReadableBi(size,precision=2):
+    #https://stackoverflow.com/a/32009595
+    suffixes=['B','KiB','MiB','GiB','TiB','PiB']
     suffixIndex = 0
     while size > 1024 and suffixIndex < 4:
         suffixIndex += 1 #increment the index of the suffix
