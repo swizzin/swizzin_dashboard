@@ -19,7 +19,7 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
-          <li class="nav-item">
+          <li class="nav-item {{ 'active' if request.endpoint == 'index' else '' }}">
               <a class="nav-link" href="{{ url_for('index') }}">Home <span class="sr-only">(current)</span></a>
           </li>
           {% if ('deluge' in apps|map(attribute="name") or 'rtorrent' in apps|map(attribute="name")) %}
@@ -38,7 +38,7 @@
           </li>
           {% endif %}
           {% if config.ADMIN_USER == user %}
-          <li class="nav-item">
+          <li class="nav-item {{ 'active' if request.endpoint == 'stats' else '' }}">
               <a class="nav-link" href="{{ url_for('stats') }}">Stats</a>
           </li>
           {% endif %}
@@ -68,7 +68,7 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
-          <li class="nav-item">
+          <li class="nav-item {{ 'active' if request.endpoint == 'index' else '' }}">
               <a class="nav-link" href="{{ url_for('index') }}">Home <span class="sr-only">(current)</span></a>
           </li>
           {% if ('deluge' in apps|map(attribute="name") or 'rtorrent' in apps|map(attribute="name")) %}
@@ -86,8 +86,8 @@
             </div>
           </li>
           {% endif %}
-          {% if ( config.ADMIN_USER == user and 'netdata' in apps|map(attribute="name") ) %}
-          <li class="nav-item">
+          {% if config.ADMIN_USER == user %}
+          <li class="nav-item {{ 'active' if request.endpoint == 'stats' else '' }}">
               <a class="nav-link" href="{{ url_for('stats') }}">Stats</a>
           </li>
           {% endif %}
