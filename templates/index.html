@@ -12,9 +12,9 @@
 <div class="d-flex" id="wrapper">
   {{macros.build_sidebar(pages=pages)}}
   {% if config.SHAREDSERVER == True %}
-    {{macros.build_nav_shared(user=user, selected="Home")}}
+    {{macros.build_nav_shared(user=user, apps=pages)}}
   {% else %}
-    {{macros.build_nav(user=user, selected="Home")}}
+    {{macros.build_nav(user=user, apps=pages)}}
   {% endif %}
   <!-- #page-content-wrapper -->
   <div class="container-fluid">
