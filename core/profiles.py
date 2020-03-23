@@ -215,6 +215,7 @@ class wireguard_meta:
     def __init__(self, user):
         uid = getpwnam(user).pw_uid
         self.systemd = "wg-quick@wg"+str(uid)
+        self.process = "wg"+str(uid)
 
 class xmrig_meta:
     name = "xmrig"
