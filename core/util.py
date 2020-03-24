@@ -40,6 +40,18 @@ def get_default_interface():
                 continue
             return fields[0]
 
+def get_mounts():
+    mounts = []
+    with open("/proc/mounts") as mount:
+        for line in mount:
+            fields = line.strip().split()
+            if fields[0].startswith("/dev"):
+                if "boot" in fields[1]:
+                    continue
+                else:
+                    mounts.append(fields[1])
+    return mounts
+
 def generate_page_list(user):
     admin_user = current_app.config['ADMIN_USER']
     pages = []

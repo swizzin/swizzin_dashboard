@@ -134,6 +134,57 @@
 {% endmacro %}
 
 {% macro build_widget_js() %}
+function getdisks() {
+  $('#diskinfo').html('')
+  var html =`
+  <table class="table table-sm table-hover table-dark table-borderless">
+      <thead class="table-active">
+          <tr>
+              <th scope="col" class="text-center">Mount</th>
+              <th scope="col" class="text-center">Used</th>
+              <th scope="col" class="text-center">Free</th>
+              <th scope="col" class="text-center">Total</th>
+          </tr>
+      </thead>
+  `
+  $.get('{{ url_for('disk_free') }}', function(data) {
+    var datalength = $(data).length
+    var i = 0
+    for (var mount in data) {
+      html += `
+      <tbody class="diskwidget">
+      <tr style="height: 15px;"></tr>
+      <tr>
+          <td>`+mount+`</td>
+          <td id='`+mount+`diskused' class="text-center"></td>
+          <td id='`+mount+`diskfree'class="text-center"></td>
+          <td id='`+mount+`disktotal' class="text-center"></td>
+      </tr>
+      <tr>
+          <td colspan="4" class="align-middle"><span class="progress"><div id='`+mount+`diskprogress' class='progress-bar bg-warning' role='progressbar' style='' aria-valuenow='' aria-valuemin='0' aria-valuemax='100'></div></span></td>
+        </tr>
+      <tr>
+          <td colspan="4" class="text-center"><span id='`+mount+`diskpercent'></span>%</td>
+      </tr>
+      </tbody>
+      
+      `
+      if (i < $(data).length) {
+        html += ``
+      }
+      i++
+    }
+      html += `
+    </table>
+    `
+    $('#diskinfo').append(html)
+    }
+  );
+
+
+}
+getdisks()
+
 function appstatus(){
   $.get("{{ url_for('app_status') }}", function(data){
   for (var apps in data) {
@@ -177,24 +228,25 @@ appstatus();
 
 (function diskusage() {
     $.get('{{ url_for('disk_free') }}', function(data) {
-      var percent = Math.trunc(data['perutil']);
-      $("#diskfree").html(data['diskfree']);
-      $("#diskused").html(data['diskused']);
-      $("#disktotal").html(data['disktotal']);
-      $("#diskpercent").html(data['perutil']);
-      if (Number(data['perutil']) > 90) {
-        $("#diskindicator.systemindicator").addClass("bg-danger").removeClass("bg-success bg-warning");
-        $("#diskprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-danger").removeClass("bg-success bg-warning");
-      } else if (Number(data['perutil']) > 75) {
-        $("#diskindicator.systemindicator").addClass("bg-warning").removeClass("bg-success bg-danger");
-        $("#diskprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-warning").removeClass("bg-success bg-danger");
-      } else {
-        $("#diskindicator.systemindicator").addClass("bg-success").removeClass("bg-warning bg-danger");
-        $("#diskprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-success").removeClass("bg-danger bg-warning");
-      }
-      setTimeout(function(){diskusage()}, 60000);
-      }
-    );
+      for (var mount in data) {
+        var percent = Math.trunc(data[mount]['perutil']);
+        $("#"+$.escapeSelector(mount)+"diskfree").html(data[mount]['diskfree']);
+        $("#"+$.escapeSelector(mount)+"diskused").html(data[mount]['diskused']);
+        $("#"+$.escapeSelector(mount)+"disktotal").html(data[mount]['disktotal']);
+        $("#"+$.escapeSelector(mount)+"diskpercent").html(data[mount]['perutil']);
+        if (Number(data[mount]['perutil']) > 90) {
+          $("#"+$.escapeSelector(mount)+"diskindicator.systemindicator").addClass("bg-danger").removeClass("bg-success bg-warning");
+          $("#"+$.escapeSelector(mount)+"diskprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-danger").removeClass("bg-success bg-warning");
+        } else if (Number(data[mount]['perutil']) > 75) {
+          $("#"+$.escapeSelector(mount)+"diskindicator.systemindicator").addClass("bg-warning").removeClass("bg-success bg-danger");
+          $("#"+$.escapeSelector(mount)+"diskprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-warning").removeClass("bg-success bg-danger");
+        } else {
+          $("#"+$.escapeSelector(mount)+"diskindicator.systemindicator").addClass("bg-success").removeClass("bg-warning bg-danger");
+          $("#"+$.escapeSelector(mount)+"diskprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-success").removeClass("bg-danger bg-warning");
+        }
+        }
+        setTimeout(function(){diskusage()}, 60000);
+    });
 })();
 
 (function ramusage() {
