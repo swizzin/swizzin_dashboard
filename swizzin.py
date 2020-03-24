@@ -239,7 +239,6 @@ def disk_free(user):
     for mount in mounts:
         total, used, free, usage = disk_usage(mount)
         data[mount] = {"disktotal": total, "diskused": used, "diskfree": free, "perutil": usage}
-    for 
     return flask.jsonify(data)
 
 @app.route('/stats/quota')
