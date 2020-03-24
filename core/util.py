@@ -50,6 +50,11 @@ def get_mounts():
                     continue
                 else:
                     mounts.append(fields[1])
+    with open("/etc/fstab") as fstab:
+        for line in fstab:
+            fields = line.strip().split()
+            if "bind" in str(fields):
+                mounts.remove(fields[1])
     return mounts
 
 def generate_page_list(user):
