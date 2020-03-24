@@ -159,6 +159,8 @@
             <td colspan="4" class="text-center"><span id='{{ mount }}diskpercent'></span>%</td>
         </tr>
     </tbody>
+    {% endfor %}
+  </table>
 {% endmacro %}
 
 {% macro build_disk_glances(mounts) %}
