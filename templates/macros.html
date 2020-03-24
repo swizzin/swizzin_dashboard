@@ -133,6 +133,38 @@
 </div>
 {% endmacro %}
 
+{% macro build_disk_info(mounts) %}
+<table class="table table-sm table-hover table-dark table-borderless">
+    <thead class="table-active">
+        <tr>
+            <th scope="col" class="text-center">Mount</th>
+            <th scope="col" class="text-center">Used</th>
+            <th scope="col" class="text-center">Free</th>
+            <th scope="col" class="text-center">Total</th>
+        </tr>
+    </thead>
+    {% for mount in mounts %}
+    <tbody class="diskwidget">
+        <tr style="height: 15px;"></tr>
+        <tr>
+            <td>{{ mount }}</td>
+            <td id='{{ mount }}diskused' class="text-center"></td>
+            <td id='{{ mount }}diskfree'class="text-center"></td>
+            <td id='{{ mount }}disktotal' class="text-center"></td>
+        </tr>
+        <tr>
+            <td colspan="4" class="align-middle"><span class="progress"><div id='{{ mount }}diskprogress' class='progress-bar' role='progressbar' style='' aria-valuenow='' aria-valuemin='0' aria-valuemax='100'></div></span></td>
+          </tr>
+        <tr>
+            <td colspan="4" class="text-center"><span id='{{ mount }}diskpercent'></span>%</td>
+        </tr>
+    </tbody>
+{% endmacro %}
+
+{% macro build_disk_glances(mounts) %}
+
+{% endmacro %}
+
 {% macro build_widget_js() %}
 function getdisks() {
   $('#diskinfo').html('')
@@ -183,7 +215,7 @@ function getdisks() {
 
 
 }
-getdisks()
+//getdisks()
 
 function appstatus(){
   $.get("{{ url_for('app_status') }}", function(data){
