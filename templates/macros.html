@@ -164,7 +164,7 @@
 {% endmacro %}
 
 {% macro build_disk_glances(mounts) %}
-  {% for mounts_row in mounts | batch(4, '&nbsp;') %}
+  {% for mounts_row in mounts | batch(4) %}
   <div class="row">
       {% for mount in mounts_row %}
       <div class="col">
