@@ -164,7 +164,16 @@
 {% endmacro %}
 
 {% macro build_disk_glances(mounts) %}
-
+  {% for mounts_row in mounts | batch(4, '&nbsp;') %}
+  <div class="row">
+      {% for mount in mounts_row %}
+      <div class="col">
+          <h5 class="text-center">{{ mount }}</h5>
+          <p class="text-center"><span id="{{ mount }}indicator" class="systemindicator"></span></p>
+      </div>
+      {% endfor %}
+  </div>
+  {% endfor %}
 {% endmacro %}
 
 {% macro build_widget_js() %}
@@ -269,13 +278,13 @@ appstatus();
         $("#"+$.escapeSelector(mount)+"disktotal").html(data[mount]['disktotal']);
         $("#"+$.escapeSelector(mount)+"diskpercent").html(data[mount]['perutil']);
         if (Number(data[mount]['perutil']) > 90) {
-          $("#"+$.escapeSelector(mount)+"diskindicator.systemindicator").addClass("bg-danger").removeClass("bg-success bg-warning");
+          $("#"+$.escapeSelector(mount)+"indicator.systemindicator").addClass("bg-danger").removeClass("bg-success bg-warning");
           $("#"+$.escapeSelector(mount)+"diskprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-danger").removeClass("bg-success bg-warning");
         } else if (Number(data[mount]['perutil']) > 75) {
-          $("#"+$.escapeSelector(mount)+"diskindicator.systemindicator").addClass("bg-warning").removeClass("bg-success bg-danger");
+          $("#"+$.escapeSelector(mount)+"indicator.systemindicator").addClass("bg-warning").removeClass("bg-success bg-danger");
           $("#"+$.escapeSelector(mount)+"diskprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-warning").removeClass("bg-success bg-danger");
         } else {
-          $("#"+$.escapeSelector(mount)+"diskindicator.systemindicator").addClass("bg-success").removeClass("bg-warning bg-danger");
+          $("#"+$.escapeSelector(mount)+"indicator.systemindicator").addClass("bg-success").removeClass("bg-warning bg-danger");
           $("#"+$.escapeSelector(mount)+"diskprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-success").removeClass("bg-danger bg-warning");
         }
         }
