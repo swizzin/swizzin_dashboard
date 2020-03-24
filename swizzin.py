@@ -235,7 +235,6 @@ def vnstat(user):
 def disk_free(user):
     mounts = get_mounts()
     data = {}
-    percent
     for mount in mounts:
         total, used, free, usage = disk_usage(mount)
         data[mount] = {"disktotal": total, "diskused": used, "diskfree": free, "perutil": usage}
