@@ -159,15 +159,17 @@
             <td colspan="4" class="text-center"><span id='{{ mount }}diskpercent'></span>%</td>
         </tr>
     </tbody>
-    {% if loop.index == 5 %}
-    <div class="collapse" id="collapsediskinfo" aria-expanded="false">
+    {% if loop.index == 3 %}
+      </table>
+      <table class="collapse" id="collapsediskinfo" aria-expanded="false">
     {% endif %}
-    {% if (loop.index > 5 and loop.last) %}
-    </div>
-    <a role="button" class="collapsed" data-toggle="collapse" href="#collapsediskinfo" aria-expanded="false" aria-controls="collapsediskinfo"></a>
+    {% if loop.last %}
+      </table>
+      {% if loop.index > 3 %}
+      <a role="button" class="collapsed" data-toggle="collapse" href="#collapsediskinfo" aria-expanded="false" aria-controls="collapsediskinfo"></a>
+      {% endif %}
     {% endif %}
     {% endfor %}
-  </table>
 {% endmacro %}
 
 {% macro build_disk_glances(mounts) %}
