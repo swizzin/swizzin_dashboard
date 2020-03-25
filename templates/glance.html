@@ -6,7 +6,7 @@
           <h5 class="text-center">Load</h5>
           <p class="text-center"><span id="loadindicator" class="systemindicator"></span></p>
         </div>
-        {% if quota == True and config.ADMIN_USER == user %}
+        {% if quota == True %}
         <div class="col">
           <h5 class="text-center">Disk</h5>
           <p class="text-center"><span id="quotaindicator" class="systemindicator"></span></p>
@@ -21,7 +21,9 @@
             <p class="text-center"><span id="iowait-glance">--</span></p>
           </div>
       </div>
-      {{macros.build_disk_glances(mounts=mounts)}}
+      {% if (quota == False or config.ADMIN_USER == user) %} 
+         {{macros.build_disk_glances(mounts=mounts)}}
+      {% endif %}
       <h5 class="text-center">Uptime</h5>
       <div class="countup text-center" id="uptime">
         <p>
