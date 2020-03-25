@@ -6,7 +6,7 @@
           <h5 class="text-center">Load</h5>
           <p class="text-center"><span id="loadindicator" class="systemindicator"></span></p>
         </div>
-        {% if quota == True %}
+        {% if quota == True and config.ADMIN_USER == user %}
         <div class="col">
           <h5 class="text-center">Disk</h5>
           <p class="text-center"><span id="quotaindicator" class="systemindicator"></span></p>
