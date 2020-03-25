@@ -62,7 +62,7 @@
         if (Number(data["quota"]['perutil']) > 90) {
           $("#quotaindicator.systemindicator").addClass("bg-danger").removeClass("bg-success bg-warning");
           $("#quotaprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-danger").removeClass("bg-success bg-warning");
-        } else if (Number(data[mount]['perutil']) > 75) {
+        } else if (Number(data["quota"]['perutil']) > 75) {
           $("#quotaindicator.systemindicator").addClass("bg-warning").removeClass("bg-success bg-danger");
           $("#quotaprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-warning").removeClass("bg-success bg-danger");
         } else {
