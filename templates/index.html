@@ -69,7 +69,7 @@
           $("#quotaindicator.systemindicator").addClass("bg-success").removeClass("bg-warning bg-danger");
           $("#quotaprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-success").removeClass("bg-danger bg-warning");
         }
-        setTimeout(function(){diskusage()}, 60000);
+        setTimeout(function(){quotausage()}, 60000);
     });
 })();
 {% endif %}
