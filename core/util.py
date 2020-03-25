@@ -46,7 +46,7 @@ def get_mounts():
         for line in mount:
             fields = line.strip().split()
             if fields[0].startswith("/dev"):
-                if "boot" in fields[1]:
+                if ("boot" in fields[1]) or ("fuse" in fields):
                     continue
                 else:
                     mounts.append(fields[1])
