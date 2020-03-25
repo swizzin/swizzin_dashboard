@@ -173,9 +173,8 @@
 {% endmacro %}
 
 {% macro build_disk_glances(mounts) %}
-  {% for mounts_row in mounts | batch(4) %}
   <div class="row">
-      {% for mount in mounts_row %}
+      {% for mount in mounts %}
       <div class="col">
           <h5 class="text-center">{{ mount }}</h5>
           <p class="text-center"><span id="{{ mount }}indicator" class="systemindicator"></span></p>
