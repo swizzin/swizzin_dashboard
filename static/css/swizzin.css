@@ -2,6 +2,14 @@
   margin-bottom: 0;
 }
 
+#diskinfo a.collapsed:after {
+  content: '+ Show More';
+}
+
+#diskinfo a:not(.collapsed):after {
+  content: '- Show Less';
+}
+
 a[post=true] {
   cursor: pointer;
 }
