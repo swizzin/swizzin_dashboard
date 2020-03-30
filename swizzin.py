@@ -104,7 +104,12 @@ def index(user):
     #    thread = Thread(target=current_speed)
     #    thread.start()
     pages = generate_page_list(user)
-    return flask.render_template('index.html', title='{user} - swizzin dashboard'.format(user=user), user=user, pages=pages, async_mode=socketio.async_mode)
+    mounts = get_mounts()
+    if os.path.isfile("/install/.quota.lock"):
+        quota = True
+    else:
+        quota = False
+    return flask.render_template('index.html', title='{user} - swizzin dashboard'.format(user=user), user=user, pages=pages, quota=quota, mounts=mounts, async_mode=socketio.async_mode)
 
 @socketio.on('connect', namespace='/websocket')
 def socket_connect():
@@ -228,12 +233,21 @@ def vnstat(user):
 @app.route('/stats/disk')
 @htpasswd.required
 def disk_free(user):
-    location = "/"
+    mounts = get_mounts()
+    data = {}
+    for mount in mounts:
+        total, used, free, usage = disk_usage(mount)
+        data[mount] = {"disktotal": total, "diskused": used, "diskfree": free, "perutil": usage}
+    return flask.jsonify(data)
+
+@app.route('/stats/quota')
+@htpasswd.required
+def quota_free(user):
     if os.path.isfile("/install/.quota.lock"):
         total, used, free, usage = quota_usage(user)
+        return flask.jsonify({"quota": {"disktotal": total, "diskused": used, "diskfree": free, "perutil": usage}})
     else:
-        total, used, free, usage = disk_usage(location)
-    return flask.jsonify({"disktotal": total, "diskused": used, "diskfree": free, "perutil": usage})
+        return """Quota not installed"""
 
 @app.route('/stats/boot')
 @htpasswd.required

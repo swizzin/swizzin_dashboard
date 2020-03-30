@@ -1,0 +1,23 @@
+<div class="card border-dark mt-3">
+    <div class="card-header">Disk Quota Info</div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+              <h5 class="text-center">Used</h5>
+              <p class="text-center"><span id="quotaused"></span></p>
+            </div>
+            <div class="col">
+              <h5 class="text-center">Free</h5>
+              <p class="text-center"><span id="quotafree"></span></p>
+            </div>
+            <div class="col">
+              <h5 class="text-center">Total</h5>
+              <p class="text-center"><span id="quotatotal"></span></p>
+            </div>
+          </div>
+      <div class="progress">
+        <div id="quotaprogress" class="progress-bar bg-warning" role="progressbar" style="" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+      <p class="text-center">You have used <span id="quotapercent"></span>% of your disk quota</p>
+    </div>
+</div>
