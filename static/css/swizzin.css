@@ -2,11 +2,26 @@
   margin-bottom: 0;
 }
 
+.progress {
+  margin-bottom: 5px;
+}
+
 #diskinfo a.collapsed:after {
   content: '+ Show More';
 }
 
 #diskinfo a:not(.collapsed):after {
+  content: '- Show Less';
+}
+
+#diskglances a.collapsed:after {
+  content: '+ Show More';
+  display: inline-block;
+  width: 100%;
+  text-align: right;
+}
+
+#diskglances a:not(.collapsed):after {
   content: '- Show Less';
 }
 
