@@ -94,6 +94,10 @@ def generate_page_list(user):
         except:
             url = False
         try:
+            url = profile.urloverride
+        except
+            continue
+        try:
             systemd = profile.systemd
         except:
             systemd = profile.name
