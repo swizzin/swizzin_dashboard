@@ -210,6 +210,7 @@ class tautulli_meta:
 class wireguard_meta:
     name = "wireguard"
     pretty_name = "Wireguard"
+    runas = "root"
     #systemd = "wg-quick@"
     multiuser = True
     def __init__(self, user):
