@@ -146,6 +146,7 @@ class rapidleech_meta:
     name = "rapidleech"
     pretty_name = "RapidLeech"
     baseurl = "/rapidleech"
+    systemd = False
 
 class rtorrent_meta:
     name = "rtorrent"
