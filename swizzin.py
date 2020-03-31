@@ -131,30 +131,30 @@ def stats(user):
     return flask.render_template('stats.html', title='Stats', user=user, pages=pages)
 
 @app.route('/stats/netdata/')
-@app.route('/stats/netdata/<path:p>',methods=['GET','POST',"DELETE"])
+@app.route('/stats/netdata/<path:p>',methods=['GET'])
 @htpasswd.required
 def netdataproxy(user, p = ''):
     SITE = 'http://127.0.0.1:19999/{}'.format(p)
     if flask.request.method=='GET':
         if flask.request.args:
             querystring = flask.request.query_string.decode('utf-8')
-            resp = requests.get(f'{SITE}?{querystring}')
+            resp = requests.get("{SITE}?{querystring}".format(SITE=SITE,querystring=querystring))
         else:
-            resp = requests.get(f'{SITE}')
+            resp = requests.get("{SITE}".format(SITE=SITE))
         excluded_headers = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
         headers = [(name, value) for (name, value) in  resp.raw.headers.items() if name.lower() not in excluded_headers]
         response = flask.Response(resp.content, resp.status_code, headers)
         return response
-    elif flask.request.method=='POST':
-        resp = requests.post(f'{SITE}',json=request.get_json())
-        excluded_headers = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
-        headers = [(name, value) for (name, value) in resp.raw.headers.items() if name.lower() not in excluded_headers]
-        response = flask.Response(resp.content, resp.status_code, headers)
-        return response
-    elif flask.request.method=='DELETE':
-        resp = requests.delete(f'{SITE}').content
-        response = flask.Response(resp.content, resp.status_code, headers)
-        return response
+    #elif flask.request.method=='POST':
+    #    resp = requests.post(f'{SITE}',json=request.get_json())
+    #    excluded_headers = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
+    #    headers = [(name, value) for (name, value) in resp.raw.headers.items() if name.lower() not in excluded_headers]
+    #    response = flask.Response(resp.content, resp.status_code, headers)
+    #    return response
+    #elif flask.request.method=='DELETE':
+    #    resp = requests.delete(f'{SITE}').content
+    #    response = flask.Response(resp.content, resp.status_code, headers)
+    #    return response
 
 
 @app.route('/apps/status')
