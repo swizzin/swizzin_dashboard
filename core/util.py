@@ -90,13 +90,12 @@ def generate_page_list(user):
         except:
             scheme = request.scheme
         try:
-            url = scheme+"://"+host+profile.baseurl
-        except:
-            url = False
-        try:
             url = profile.urloverride
         except:
-            continue
+            try:
+                url = scheme+"://"+host+profile.baseurl
+            except:
+                url = False
         try:
             systemd = profile.systemd
         except:
