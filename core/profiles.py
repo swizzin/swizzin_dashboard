@@ -187,6 +187,7 @@ class sickgear_meta:
 class sonarr_meta:
     name = "sonarr"
     pretty_name = "Sonarr"
+    process = "nzbdrone"
     baseurl = "/sonarr"
     systemd = "sonarr@"
 
