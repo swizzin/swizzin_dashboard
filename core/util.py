@@ -10,7 +10,6 @@ import datetime
 import re
 from pwd import getpwnam
 
-
 is_shared = swizzin.app.config['SHAREDSERVER']
 
 if is_shared is True:
@@ -148,18 +147,33 @@ def apps_status(username):
             enabled = is_application_enabled(systemd, user)
         except:
             enabled = False
-        
-        status = is_process_running(procs, user, application)
+        try:
+            check_theD = profile.check_theD
+        except:
+            check_theD = False 
+        if check_theD is True:
+            status = is_process_running(systemd, user, systemd=True)
+        else:
+            status = is_process_running(application, user, procs=procs)
         apps.append({"name": profile.name, "active": status, "enabled": enabled})
     return apps
 
-def is_process_running(procs, username, application):
+def is_process_running(application, username, systemd=False, procs=False):
     result = False
-    for p in procs:
-        p = p.decode('utf-8').split()
-        if username.lower() == str(p[0]).lower():
-            if application.lower() in str(p).lower():
-                result = True
+    if systemd is True:
+        if application.endswith("@"):
+            service = application+username
+        else:
+            service = application
+        returncode = sp.run(('systemctl', 'is-active', service), stdout=sp.DEVNULL).returncode
+        if returncode == 0:
+            result = True
+    else:
+        for p in procs:
+            p = p.decode('utf-8').split()
+            if username.lower() == str(p[0]).lower():
+                if application.lower() in str(p).lower():
+                    result = True
     return result
 
 def is_application_enabled(application, user):
