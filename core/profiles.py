@@ -79,7 +79,7 @@ class lidarr_meta:
 class lounge_meta:
     name = "lounge"
     pretty_name = "The Lounge"
-    baseurl = "/lounge"
+    baseurl = "/irc"
     runas = "lounge"
 
 class medusa_meta:
