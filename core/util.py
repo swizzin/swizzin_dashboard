@@ -75,7 +75,7 @@ def generate_page_list(user):
             profile = str_to_class(app+"_meta")(user)
         except:
             try:
-                profile = str_to_class(app+"_meta")
+                profile = str_to_class(app+"_meta")()
             except:
                 continue
         try:

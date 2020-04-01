@@ -1,4 +1,5 @@
 from pwd import getpwnam
+from configparser import ConfigParser
 
 class autodl_meta:
     name = "autodl"
@@ -228,3 +229,14 @@ class znc_meta:
     name = "znc"
     pretty_name = "ZNC"
     runas = "znc"
+    def __init__(self):
+        parser = ConfigParser()
+        with open("/install/.znc.lock") as stream:
+            parser.read_string("[general]\n" + stream.read())
+        port = parser['general']['Port']
+        ssl = parser['general']['SSL']
+        self.baseurl = ":"+port
+        if ssl == "true":
+            self.scheme = "https"
+        else:
+            self.scheme = "http"
