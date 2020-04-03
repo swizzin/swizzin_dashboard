@@ -3,7 +3,7 @@
     <div class="sidebar-heading"><img class="logo" src="{{ url_for('static', filename='img/logo-dark.png') }}" /></div>
     <div class="list-group list-group-flush">
     {% for page in pages|sort(attribute="pretty_name") if page.url %}
-        <a href="{{page.url}}" target="_blank" class="list-group-item list-group-item-action bg-dark"><img src="{{ url_for('static', filename='img/apps/'+page.name+'.png') }}" class="app-icon rounded-circle">{{page.pretty_name}}</a>
+        <a href="{{page.url}}" target="_blank" class="list-group-item list-group-item-action bg-dark"><img src="{{ url_for('static', filename='img/apps/'+page.name+'.png') }}" class="app-icon">{{page.pretty_name}}</a>
     {% endfor %}
     </div>
 </div>
