@@ -71,6 +71,12 @@ class jackett_meta:
     pretty_name = "Jackett"
     baseurl = "/jackett"
     systemd = "jackett@"
+    
+class jellyfin_meta:
+    name = "jellyfin"
+    pretty_name = "Jellyfin"
+    baseurl = "/jellyfin"
+    systemd = "jellyfin"
 
 class lidarr_meta:
     name = "lidarr"
