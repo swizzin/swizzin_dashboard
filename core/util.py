@@ -53,7 +53,10 @@ def get_mounts():
         for line in fstab:
             fields = line.strip().split()
             if "bind" in str(fields):
-                mounts.remove(fields[1])
+                try:
+                    mounts.remove(fields[1])
+                except:
+                    pass
     return mounts
 
 def generate_page_list(user):
