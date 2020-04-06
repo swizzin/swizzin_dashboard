@@ -55,6 +55,14 @@ class jackett_meta:
     systemd = "jackett@"
     multiuser = True
 
+class jellyfin_meta:
+    name = "jellyfin"
+    pretty_name = "Jellyfin"
+    systemd = "jellyfin@"
+    multiuser = True
+    def __init__(self, user):
+        self.baseurl = "/"+user+"/jellyfin/"
+
 class lidarr_meta:
     name = "lidarr"
     pretty_name = "Lidarr"
