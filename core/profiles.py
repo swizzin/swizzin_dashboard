@@ -78,6 +78,12 @@ class jellyfin_meta:
     baseurl = "/jellyfin"
     systemd = "jellyfin"
 
+class librespeed_meta:
+    name = "librespeed"
+    pretty_name = "LibreSpeed"
+    systemd = False
+    baseurl = "/librespeed"
+
 class lidarr_meta:
     name = "lidarr"
     pretty_name = "Lidarr"
