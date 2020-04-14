@@ -16,7 +16,7 @@ class bazarr_meta:
 class btsync_meta:
     name = "btsync"
     pretty_name = "Resilio Sync"    
-    baseurl = ":8888/web"
+    baseurl = ":8888/gui"
     scheme = "http"
     systemd = "resilio-sync"
     process = "rslsync"
