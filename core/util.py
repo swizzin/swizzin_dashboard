@@ -297,8 +297,16 @@ def get_uid(user):
     result = getpwnam(user).pw_uid
     return result
 
+def swizzin_task(function, application)
+    with sp.Popen(['bash', '/usr/local/bin/swizzin/'+function+'/'+application'.sh'], stdout=sp.PIPE, bufsize=1, universal_newlines=True) as process:
+        for line in process.stdout:
+            line = line.rstrip()
+            print("{line}".format(line=line))
+            emit('stdout', line, namespace='/websocket', broadcast=True)
 
+#https://stackoverflow.com/questions/57541356/how-to-send-the-output-of-a-long-running-python-script-over-a-websocket
 #https://stackoverflow.com/questions/41431882/live-stream-stdout-and-stdin-with-websocket
+#https://gitlab.com/pgjones/quart
 ## panel threading install idea
 #async def time(websocket, path):
 #    script_name = 'script.py'

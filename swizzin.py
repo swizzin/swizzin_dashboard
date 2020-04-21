@@ -3,6 +3,7 @@ import flask
 from flask_htpasswd import HtPasswdAuth
 from flask_socketio import SocketIO, emit
 from threading import Thread, Lock
+from multiprocessing import Pool
 import os
 import core.config
 import requests
@@ -33,6 +34,7 @@ thread = None
 thread_lock = Lock()
 thread2 = None
 thread2_lock = Lock()
+_pool = None
 
 
 #Background thread functions
@@ -192,6 +194,14 @@ def service(user):
         result = systemctl(data['function'], application)
         return str(result)
 
+@app.route('/apps/installer', methods=['POST'])
+@htpasswd.required
+def installer(user):
+    if flask.request.method == 'POST':
+        data = flask.request.get_json()
+        application = data['application']
+        function = data['function']
+        swizzin_task
 
 @app.route('/stats/loadavg')
 @htpasswd.required
@@ -272,6 +282,7 @@ def network_quota(user):
     return flask.jsonify({"nettotal": total, "netused": used, "netfree": free, "perutil": usage})
 
 if __name__ == '__main__':
+    _pool = Pool(processes=4)
     socketio.run(app, host=app.config['HOST'], port=app.config['PORT'])
 
     #app.run(debug=True,host='0.0.0.0', port=8333)
