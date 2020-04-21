@@ -201,7 +201,8 @@ def installer(user):
         data = flask.request.get_json()
         application = data['application']
         function = data['function']
-        swizzin_task
+        s = _pool.apply_async(swizzin_task, [function, application])
+        r = f.get(timeout=2)
 
 @app.route('/stats/loadavg')
 @htpasswd.required

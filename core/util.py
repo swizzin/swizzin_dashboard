@@ -298,7 +298,7 @@ def get_uid(user):
     return result
 
 def swizzin_task(function, application):
-    with sp.Popen(['bash', '/usr/local/bin/swizzin/'+function+'/'+application'.sh'], stdout=sp.PIPE, bufsize=1, universal_newlines=True) as process:
+    with sp.Popen(['bash', '/usr/local/bin/swizzin/'+function+'/'+application+'.sh'], stdout=sp.PIPE, bufsize=1, universal_newlines=True) as process:
         for line in process.stdout:
             line = line.rstrip()
             print("{line}".format(line=line))
