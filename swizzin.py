@@ -131,13 +131,13 @@ def socket_connect():
 @htpasswd.required
 def test(user):
     ident = str(uuid4())
-    jobs[ident] = tasks.pool.apply_async(tasks.some_job, ())
-    return '<a href="/result?ident=' + ident + '">' + ident + '</a>'
+    tasks.jobs[ident] = tasks.pool.apply_async(tasks.some_job, ())
+    return '<a href="/test/result?ident=' + ident + '">' + ident + '</a>'
 
 @app.route('/test/result')
 @htpasswd.required
-def get_result():
-    return jobs[request.args.get('ident')].get(timeout=1)
+def get_result(user):
+    return tasks.jobs[request.args.get('ident')].get(timeout=1)
 
 @app.route('/stats')
 @app.route('/stats/')
