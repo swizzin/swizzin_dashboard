@@ -2,8 +2,8 @@
 import flask
 from flask_htpasswd import HtPasswdAuth
 from flask_socketio import SocketIO, emit
+import core.tasks as tasks
 from threading import Thread, Lock
-from multiprocessing import Pool
 import os
 import core.config
 import requests
@@ -11,6 +11,8 @@ import time
 from werkzeug.middleware.proxy_fix import ProxyFix
 import calendar
 import eventlet
+from uuid import uuid4
+
 
 #Prep the websockets with eventlet workers
 eventlet.monkey_patch()
@@ -124,6 +126,18 @@ def socket_connect():
         if thread2 is None:
             thread2 = socketio.start_background_task(io_wait, (flask.current_app._get_current_object()))
     emit('my_response', {'data': 'Connected', 'count': 0})
+
+@app.route('/test')
+@htpasswd.required
+def test(user):
+    ident = str(uuid4())
+    jobs[ident] = tasks.pool.apply_async(tasks.some_job, ())
+    return '<a href="/result?ident=' + ident + '">' + ident + '</a>'
+
+@app.route('/test/result')
+@htpasswd.required
+def get_result():
+    return jobs[request.args.get('ident')].get(timeout=1)
 
 @app.route('/stats')
 @app.route('/stats/')
@@ -283,7 +297,6 @@ def network_quota(user):
     return flask.jsonify({"nettotal": total, "netused": used, "netfree": free, "perutil": usage})
 
 if __name__ == '__main__':
-    _pool = Pool(processes=4)
     socketio.run(app, host=app.config['HOST'], port=app.config['PORT'])
 
     #app.run(debug=True,host='0.0.0.0', port=8333)
