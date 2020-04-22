@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 import flask
 from flask_htpasswd import HtPasswdAuth
-from flask_socketio import SocketIO, emit
-import core.tasks as tasks
+from flask_socketio import SocketIO, emit, join_room, leave_room
+from core.tasks import Tasks
 from threading import Thread, Lock
 import os
 import core.config
@@ -116,7 +116,8 @@ def index(user):
     return flask.render_template('index.html', title='{user} - swizzin dashboard'.format(user=user), user=user, pages=pages, quota=quota, mounts=mounts, async_mode=socketio.async_mode)
 
 @socketio.on('connect', namespace='/websocket')
-def socket_connect():
+@htpasswd.required
+def socket_connect(user):
     global thread
     global thread2
     with thread_lock:
@@ -125,19 +126,35 @@ def socket_connect():
     with thread2_lock:
         if thread2 is None:
             thread2 = socketio.start_background_task(io_wait, (flask.current_app._get_current_object()))
-    emit('my_response', {'data': 'Connected', 'count': 0})
+    room = user
+    join_room(room)
+
+
+@socketio.on('disconnect', namespace='/websocket')
+@htpasswd.required
+def on_leave(data):
+    room = user
+    leave_room(room)
 
 @app.route('/test')
 @htpasswd.required
 def test(user):
     ident = str(uuid4())
-    tasks.jobs[ident] = tasks.pool.apply_async(tasks.some_job, ())
+    tasks.jobs[ident] = Tasks.pool.apply_async(Tasks.some_job, ())
     return '<a href="/test/result?ident=' + ident + '">' + ident + '</a>'
 
 @app.route('/test/result')
 @htpasswd.required
 def get_result(user):
-    return tasks.jobs[request.args.get('ident')].get(timeout=1)
+    job_id = request.args.get('job_id')
+    if job_id not in Tasks.jobs:
+        return 'Job does not exist.'
+    elif Tasks.jobs[job_id].ready():
+        result = jobs[job_id].get(timeout=1)
+        del jobs[job_id]
+        return result
+    else:
+        return "not ready"
 
 @app.route('/stats')
 @app.route('/stats/')
