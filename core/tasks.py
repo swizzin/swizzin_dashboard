@@ -1,5 +1,6 @@
 import multiprocessing as mp
 from multiprocessing import Pool
+from time import sleep
 import subprocess as sp
 
 #http://gouthamanbalaraman.com/blog/python-multiprocessing-as-a-task-queue.html
@@ -7,23 +8,16 @@ import subprocess as sp
 class Tasks(object):
     _pool = None
     jobs = {}
-    running = {}
-    executed = {}
-    errors = {}
-
     @staticmethod
     def pool():
         # Singleton pattern
         if Tasks._pool is None:
             Tasks._pool = Pool(processes=4)
-
         return Tasks._pool
-
     @staticmethod
     def some_job():
         sleep(5)
         return "Job done!"
-
     @staticmethod
     def swizzin_task(user, function, application):
         with sp.Popen(['bash', '/usr/local/bin/swizzin/'+function+'/'+application+'.sh'], stdout=sp.PIPE, bufsize=1, universal_newlines=True) as process:

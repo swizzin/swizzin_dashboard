@@ -3,6 +3,7 @@ import flask
 from flask_htpasswd import HtPasswdAuth
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from core.tasks import Tasks
+Tasks.pool()
 from threading import Thread, Lock
 import os
 import core.config
@@ -36,7 +37,6 @@ thread = None
 thread_lock = Lock()
 thread2 = None
 thread2_lock = Lock()
-_pool = None
 
 
 #Background thread functions
@@ -140,18 +140,18 @@ def on_leave(data):
 @htpasswd.required
 def test(user):
     ident = str(uuid4())
-    tasks.jobs[ident] = Tasks.pool.apply_async(Tasks.some_job, ())
+    Tasks.jobs[ident] = Tasks.pool().apply_async(Tasks.some_job, ())
     return '<a href="/test/result?ident=' + ident + '">' + ident + '</a>'
 
 @app.route('/test/result')
 @htpasswd.required
 def get_result(user):
-    job_id = request.args.get('job_id')
+    job_id = request.args.get('ident')
     if job_id not in Tasks.jobs:
         return 'Job does not exist.'
     elif Tasks.jobs[job_id].ready():
-        result = jobs[job_id].get(timeout=1)
-        del jobs[job_id]
+        result = Tasks.jobs[job_id].get(timeout=1)
+        del Tasks.jobs[job_id]
         return result
     else:
         return "not ready"
@@ -188,6 +188,14 @@ def netdataproxy(user, p = ''):
     #    resp = requests.delete(f'{SITE}').content
     #    response = flask.Response(resp.content, resp.status_code, headers)
     #    return response
+
+@app.route('/apps')
+@app.route('/apps/')
+@htpasswd.required
+def apps(user):
+    #apps = generate_page_list(user)
+    return flask.render_template('apps.html', title='{user} - apps - swizzin dashboard'.format(user=user), user=user, async_mode=socketio.async_mode)
+    #return flask.render_template('apps.html', title='{user} - apps - swizzin dashboard'.format(user=user), user=user, pages=pages, quota=quota, mounts=mounts, async_mode=socketio.async_mode)
 
 
 @app.route('/apps/status')
