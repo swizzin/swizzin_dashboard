@@ -46,7 +46,7 @@ class emby_meta:
     process = "EmbyServer"
     multiuser = True
     def __init__(self, user):
-        self.baseurl = "/"+user+"/emby"
+        self.baseurl = "/"+user+"/emby/"
 
 class jackett_meta:
     name = "jackett"
