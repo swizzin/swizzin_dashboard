@@ -25,7 +25,7 @@ class couchpotato_meta:
     name= "couchpotato"
     pretty_name = "CouchPotato"
     baseurl = "/couchpotato"
-    systemd = "couchpotato@"
+    systemd = "couchpotato"
 
 class deluge_meta:
     name = "deluge"
@@ -99,7 +99,7 @@ class medusa_meta:
     name = "medusa"
     pretty_name = "Medusa"
     baseurl = "/medusa"
-    systemd = "medusa@"
+    systemd = "medusa"
 
 class netdata_meta:
     name = "netdata"
@@ -123,7 +123,7 @@ class nzbhydra_meta:
     name = "nzbhydra"
     pretty_name = "nzbhydra"
     baseurl = "/nzbhydra"
-    systemd = "nzbhydra@"
+    systemd = "nzbhydra"
 
 class ombi_meta:
     name = "ombi"
@@ -143,7 +143,7 @@ class pyload_meta:
     name = "pyload"
     pretty_name = "pyLoad"
     baseurl = "/pyload"
-    systemd = "pyload@"
+    systemd = "pyload"
 
 class quassel_meta:
     name = "quassel"
@@ -178,7 +178,7 @@ class sabnzbd_meta:
     name = "sabnzbd"
     pretty_name = "SABnzbd"
     baseurl = "/sabnzbd"
-    systemd = "sabnzbd@"
+    systemd = "sabnzbd"
 
 class shellinabox_meta:
     name = "shellinabox"
@@ -190,13 +190,13 @@ class sickchill_meta:
     name = "sickchill"
     pretty_name = "SickChill"
     baseurl = "/sickchill"
-    systemd = "sickchill@"
+    systemd = "sickchill"
 
 class sickgear_meta:
     name = "sickgear"
     pretty_name = "SickGear"
     baseurl = "/sickgear"
-    systemd = "sickgear@"
+    systemd = "sickgear"
 
 class sonarr_meta:
     name = "sonarr"
