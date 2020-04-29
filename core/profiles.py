@@ -226,6 +226,7 @@ class transmission_meta:
     name = "transmission"
     pretty_name = "Transmission"
     systemd = "transmission@"
+    baseurl = "/transmission/web/"
     multiuser = True
 
 class wireguard_meta:
