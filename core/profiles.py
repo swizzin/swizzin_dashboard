@@ -222,6 +222,12 @@ class tautulli_meta:
     baseurl = "/tautulli"
     runas = "tautulli"
 
+class transmission_meta:
+    name = "transmission"
+    pretty_name = "Transmission"
+    systemd = "transmission@"
+    multiuser = True
+
 class wireguard_meta:
     name = "wireguard"
     pretty_name = "Wireguard"
