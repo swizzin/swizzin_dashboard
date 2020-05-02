@@ -35,7 +35,8 @@ def get_default_interface():
     with open("/proc/net/route") as route:
         for line in route:
             fields = line.strip().split()
-            if fields[1] != '00000000' or not int(fields[3], 16) & 2:
+            #if fields[1] != '00000000' or not int(fields[3], 16) & 2:
+            if fields[1] != '00000000':
                 continue
             return fields[0]
 
