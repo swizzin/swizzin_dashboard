@@ -229,6 +229,12 @@ class transmission_meta:
     baseurl = "/transmission/web/"
     multiuser = True
 
+class webmin_meta:
+    name = "webmin"
+    pretty_name = "Webmin"
+    runas = "root"
+    baseurl = "/webmin/"
+
 class wireguard_meta:
     name = "wireguard"
     pretty_name = "Wireguard"
