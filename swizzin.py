@@ -91,7 +91,7 @@ def io_wait(app):
 def reload_htpasswd():
     """ 
     This function will run before every load of the index. It will ensure the htpasswd file is current.
-    """
+    """ 
     if flask.request.endpoint == 'index':
         htpasswd.load_users(app)
 
@@ -270,6 +270,24 @@ def network_quota(user):
     if app.config['SHAREDSERVER'] is True:
         total, used, free, usage = network_quota_usage(user)
     return flask.jsonify({"nettotal": total, "netused": used, "netfree": free, "perutil": usage})
+
+
+
+@app.route('/logout')
+def logout():
+    return """
+        <div>You have been logged out. Redirecting to home...</div>    
+
+<script>
+    var XHR = new XMLHttpRequest();
+    XHR.open("GET", "/", true, "no user", "no password");
+    XHR.send();
+
+    setTimeout(function () {
+        window.location.href = "/";
+    }, 500);
+</script>
+    """
 
 if __name__ == '__main__':
     socketio.run(app, host=app.config['HOST'], port=app.config['PORT'])
