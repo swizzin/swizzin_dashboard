@@ -97,7 +97,6 @@ def reload_htpasswd():
 
 @app.after_request
 def apply_headers(response):
-    print(flask.request.host_url)
     if flask.request.referrer == "{}login".format(flask.request.host_url):
         response.headers["WWW-Authenticate"] = 'basic realm="{0}"'.format(current_app.config['FLASK_AUTH_REALM'])
     if flask.request.referrer == "{}login/auth".format(flask.request.host_url):
@@ -108,7 +107,6 @@ def apply_headers(response):
 
 @app.errorhandler(401)
 def unauthorized(e):
-    basic_auth = flask.request.authorization
     if flask.request.referrer == "{}login".format(flask.request.host_url):
         return authenticate()
     elif flask.request.referrer == "{}login/auth".format(flask.request.host_url):
