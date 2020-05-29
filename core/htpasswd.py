@@ -153,7 +153,13 @@ class HtPasswdAuth:
         """
         Sends a 401 response that enables basic auth
         """
-        return abort(401)
+        if request.endpoint == "auth":
+            r = make_response()
+            r.status_code = 401
+            r.headers.set('WWW-Authenticate', 'basic realm="{0}"'.format(current_app.config['FLASK_AUTH_REALM']))
+            return r
+        else:
+            return abort(401)
 
     def authenticate(self):
         """Authenticate user by any means and return either true or false.
