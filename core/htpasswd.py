@@ -8,7 +8,7 @@ from functools import wraps
 import hashlib
 import logging
 
-from flask import request, Response, current_app, g, abort
+from flask import request, Response, current_app, g, abort, make_response
 from itsdangerous import JSONWebSignatureSerializer as Serializer
 from itsdangerous import BadSignature
 from passlib.apache import HtpasswdFile
