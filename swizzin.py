@@ -323,24 +323,9 @@ def auth(user):
 
 
 @app.route('/logout')
-def logout():
-    return """
-        <div>You have been logged out.</div>    
-
-<script>
-    var XHR = new XMLHttpRequest();
-    XHR.open("GET", "/", false, "no user", "no password");
-    XHR.send();
-
-    var XMHR = new XMLHttpRequest();
-    XMHR.open("GET", "/login/auth", false, "no user", "no password");
-    XMHR.send();
-
-    setTimeout(function () {
-        window.location.href = "/";
-    }, 500);
-</script>
-    """
+@htpasswd.required
+def logout(user):
+    return flask.render_template('logout')
 
 if __name__ == '__main__':
     socketio.run(app, host=app.config['HOST'], port=app.config['PORT'])
