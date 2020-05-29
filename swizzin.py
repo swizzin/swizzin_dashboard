@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import flask
-from flask_htpasswd import HtPasswdAuth
+from core.htpasswd import HtPasswdAuth
 from flask_socketio import SocketIO, emit
 from threading import Thread, Lock
 import os
@@ -94,6 +94,38 @@ def reload_htpasswd():
     """ 
     if flask.request.endpoint == 'index':
         htpasswd.load_users(app)
+
+@app.after_request
+def apply_headers(response):
+    if flask.request.referrer == "{}login".format(flask.request.host_url):
+        response.headers["WWW-Authenticate"] = 'basic realm="{0}"'.format(current_app.config['FLASK_AUTH_REALM'])
+    if flask.request.referrer == "{}login/auth".format(flask.request.host_url):
+        response.headers["WWW-Authenticate"] = 'basic realm="{0}"'.format(current_app.config['FLASK_AUTH_REALM'])
+    if flask.request.referrer == "{}logout".format(flask.request.host_url):
+        response.headers["WWW-Authenticate"] = 'basic realm="{0}"'.format(current_app.config['FLASK_AUTH_REALM'])
+    return response
+
+@app.errorhandler(401)
+def unauthorized(e):
+    if flask.request.referrer == "{}login".format(flask.request.host_url):
+        return authenticate()
+    elif flask.request.referrer == "{}login/auth".format(flask.request.host_url):
+        return authenticate()
+    else:
+        return flask.redirect(flask.url_for('login'))
+
+def authenticate():
+    """
+    Sends a 401 response that enables basic auth
+    """
+    return flask.Response(
+        'Could not verify your access level for that URL.\n'
+        'You have to login with proper credentials',
+        401,
+        {'WWW-Authenticate': 'basic realm="{0}"'.format(
+            current_app.config['FLASK_AUTH_REALM']
+        )}
+    )
 
 #Begin routes
 @app.route('/')
@@ -272,22 +304,28 @@ def network_quota(user):
     return flask.jsonify({"nettotal": total, "netused": used, "netfree": free, "perutil": usage})
 
 
+@app.route('/login')
+def login():
+    return flask.render_template('login.html', title='swizzin login')
 
-@app.route('/logout')
-def logout():
+@app.route('/login/auth')
+@htpasswd.required
+def auth(user):
     return """
-        <div>You have been logged out. Redirecting to home...</div>    
+        <div>You have been logged in. Redirecting to home...</div>    
 
 <script>
-    var XHR = new XMLHttpRequest();
-    XHR.open("GET", "/", true, "no user", "no password");
-    XHR.send();
-
     setTimeout(function () {
         window.location.href = "/";
     }, 500);
 </script>
     """
+
+
+@app.route('/logout')
+@htpasswd.required
+def logout(user):
+    return flask.render_template('logout.html')
 
 if __name__ == '__main__':
     socketio.run(app, host=app.config['HOST'], port=app.config['PORT'])
