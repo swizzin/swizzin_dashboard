@@ -325,7 +325,7 @@ def auth(user):
 @app.route('/logout')
 @htpasswd.required
 def logout(user):
-    return flask.render_template('logout')
+    return flask.render_template('logout.html')
 
 if __name__ == '__main__':
     socketio.run(app, host=app.config['HOST'], port=app.config['PORT'])
