@@ -238,10 +238,10 @@ def loadavg(user):
 def vnstat(user):
     stats = []
     interface = get_default_interface()
-    hour = "{:02d}".format(int(time.strftime("%H")))
-    lasthour = "{:02d}".format(int(hour) - 1)
+    hour = int(time.strftime("%H"))
+    lasthour = hour - 1
     if lasthour == -1:
-        lasthour = "23"
+        lasthour = 23
     statsh = vnstat_parse(interface, "h", "hours", hour)
     statslh = vnstat_parse(interface, "h", "hours", lasthour)
     statsd = vnstat_parse(interface, "d", "days", 0)
