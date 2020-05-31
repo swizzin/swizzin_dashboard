@@ -202,9 +202,12 @@ def vnstat_data(interface, mode):
 
 def vnstat_parse(interface, mode, query, position=False):
     if position is not False:
-        result = vnstat_data(interface, mode)['interfaces'][0]['traffic'][query][position]
-        result['rx'] = GetHumanReadableKB(result['rx'])
-        result['tx'] = GetHumanReadableKB(result['tx'])
+        #result = vnstat_data(interface, mode)['interfaces'][0]['traffic'][query][position]
+        result = vnstat_data(interface, mode)['interfaces'][0]['traffic'][query]
+        for p in result:
+            if p["id"] == position:
+                result['rx'] = GetHumanReadableKB(p['rx'])
+                result['tx'] = GetHumanReadableKB(p['tx'])
     else:
         result = vnstat_data(interface, mode)['interfaces'][0]['traffic'][query]
         result['rx'] = GetHumanReadableKB(result['rx'])
