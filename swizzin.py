@@ -95,15 +95,15 @@ def reload_htpasswd():
     if flask.request.endpoint == 'index':
         htpasswd.load_users(app)
 
-@app.after_request
-def apply_headers(response):
-    if flask.request.referrer == "{}login".format(flask.request.host_url):
-        response.headers["WWW-Authenticate"] = 'basic realm="{0}"'.format(current_app.config['FLASK_AUTH_REALM'])
-    if flask.request.referrer == "{}login/auth".format(flask.request.host_url):
-        response.headers["WWW-Authenticate"] = 'basic realm="{0}"'.format(current_app.config['FLASK_AUTH_REALM'])
-    if flask.request.referrer == "{}logout".format(flask.request.host_url):
-        response.headers["WWW-Authenticate"] = 'basic realm="{0}"'.format(current_app.config['FLASK_AUTH_REALM'])
-    return response
+#@app.after_request
+#def apply_headers(response):
+#    if flask.request.referrer == "{}login".format(flask.request.host_url):
+#        response.headers["WWW-Authenticate"] = 'basic realm="{0}"'.format(current_app.config['FLASK_AUTH_REALM'])
+#    if flask.request.referrer == "{}login/auth".format(flask.request.host_url):
+#        response.headers["WWW-Authenticate"] = 'basic realm="{0}"'.format(current_app.config['FLASK_AUTH_REALM'])
+#    if flask.request.referrer == "{}logout".format(flask.request.host_url):
+#        response.headers["WWW-Authenticate"] = 'basic realm="{0}"'.format(current_app.config['FLASK_AUTH_REALM'])
+#    return response
 
 @app.errorhandler(401)
 def unauthorized(e):
