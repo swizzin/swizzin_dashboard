@@ -1,7 +1,10 @@
 import pwd
 
 class Config:
-    ADMIN_USER = pwd.getpwuid(1000).pw_name
+    try:
+        ADMIN_USER = pwd.getpwuid(1000).pw_name
+    except:
+        ADMIN_USER = None
     APPLICATION_ROOT = '/'
     FLASK_HTPASSWD_PATH = '/etc/htpasswd'
     FLASK_SECRET = "What's the password?"
