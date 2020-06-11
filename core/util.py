@@ -203,12 +203,7 @@ def vnstat_data(interface, mode):
 def vnstat_parse(interface, mode, query, position=False):
     if position is not False:
         #result = vnstat_data(interface, mode)['interfaces'][0]['traffic'][query][position]
-        if query == "hours"
-            try:
-                result = vnstat_data(interface, mode)['interfaces'][0]['traffic'][query]
-            except:
-                query = "hour"
-                result = vnstat_data(interface, mode)['interfaces'][0]['traffic'][query]
+        result = vnstat_data(interface, mode)['interfaces'][0]['traffic'][query]
         for p in result:
             if p["id"] == int(position):
                 data = {}
