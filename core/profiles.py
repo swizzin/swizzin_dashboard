@@ -130,6 +130,13 @@ class ombi_meta:
     pretty_name = "Ombi"
     baseurl = "/ombi"
     runas = "ombi"
+    
+class organizr_meta:
+    name = "organizr"
+    pretty_name = "Organizr"
+    baseurl = "/organizr"
+    systemd = False
+    multiuser = True
 
 class plex_meta:
     name = "plex"
