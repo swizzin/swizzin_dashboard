@@ -269,14 +269,14 @@ def vnstat(user):
     #statsa = vnstat_parse(interface, "m", "total", 0)
     tops = vnstat_data(interface, "t")['interfaces'][0]['traffic'][qt]
     top = []
-    for t in tops:
+    for t in tops[:10]:
         date = t['date']
         year = date['year']
         month = calendar.month_abbr[date['month']]
         day = date['day']
         date = "{month} {day}, {year}".format(year=year, month=month, day=day)
-        rx = GetHumanReadableKB(t['rx'])
-        tx = GetHumanReadableKB(t['tx'])
+        rx = read_unit(t['rx'])
+        tx =read_unit(t['tx'])
         top.append({"date": date, "rx": rx, "tx": tx})
     columns = {"date", "rx", "tx"}
     #stats = []
