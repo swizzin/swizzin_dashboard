@@ -246,7 +246,8 @@ def vnstat(user):
         qd = "days"
         qm = "months"
         qt = "tops"
-        position = 0
+        thisday = 0
+        thismonth = 0
         hour = int(time.strftime("%H"))
         lasthour = hour - 1
         if lasthour == -1:
@@ -257,14 +258,15 @@ def vnstat(user):
         qd = "day"
         qm = "month"
         qt = "top"
-        position = 1
+        thisday = vnstat_data(interface, "d")['interfaces'][0]['traffic']['day'][-1]["id"]
+        thismonth = vnstat_data(interface, "m")['interfaces'][0]['traffic']['month'][-1]["id"]
         hour = vnstat_info['interfaces'][0]['traffic']['hour'][-1]["id"]
         lasthour = vnstat_info['interfaces'][0]['traffic']['hour'][-2]["id"]
         read_unit = GetHumanReadableB
     statsh = vnstat_parse(interface, "h", qh, read_unit, hour)
     statslh = vnstat_parse(interface, "h", qh, read_unit, lasthour)
-    statsd = vnstat_parse(interface, "d", qd, read_unit, position)
-    statsm = vnstat_parse(interface, "m", qm, read_unit, position)
+    statsd = vnstat_parse(interface, "d", qd, read_unit, thisday)
+    statsm = vnstat_parse(interface, "m", qm, read_unit, thismonth)
     statsa = vnstat_parse(interface, "h", "total", read_unit)
     #statsa = vnstat_parse(interface, "m", "total", 0)
     tops = vnstat_data(interface, "t")['interfaces'][0]['traffic'][qt]
