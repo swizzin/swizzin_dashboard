@@ -1,0 +1,11 @@
+<div>You have been logged out.</div>    
+
+<script>
+    var XMHR = new XMLHttpRequest();
+    XMHR.open("GET", "{{ url_for('auth') }}", false, "no user", "no password");
+    XMHR.send();
+
+    setTimeout(function () {
+        window.location.href = "{{ url_for('index') }}";
+    }, 500);
+</script>

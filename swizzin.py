@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import flask
-from flask_htpasswd import HtPasswdAuth
+from core.htpasswd import HtPasswdAuth
 from flask_socketio import SocketIO, emit
 from threading import Thread, Lock
 import os
@@ -91,9 +91,41 @@ def io_wait(app):
 def reload_htpasswd():
     """ 
     This function will run before every load of the index. It will ensure the htpasswd file is current.
-    """
+    """ 
     if flask.request.endpoint == 'index':
         htpasswd.load_users(app)
+
+#@app.after_request
+#def apply_headers(response):
+#    if flask.request.referrer == "{}login".format(flask.request.host_url):
+#        response.headers["WWW-Authenticate"] = 'basic realm="{0}"'.format(current_app.config['FLASK_AUTH_REALM'])
+#    if flask.request.referrer == "{}login/auth".format(flask.request.host_url):
+#        response.headers["WWW-Authenticate"] = 'basic realm="{0}"'.format(current_app.config['FLASK_AUTH_REALM'])
+#    if flask.request.referrer == "{}logout".format(flask.request.host_url):
+#        response.headers["WWW-Authenticate"] = 'basic realm="{0}"'.format(current_app.config['FLASK_AUTH_REALM'])
+#    return response
+
+@app.errorhandler(401)
+def unauthorized(e):
+    if flask.request.referrer == "{}login".format(flask.request.host_url):
+        return authenticate()
+    elif flask.request.referrer == "{}login/auth".format(flask.request.host_url):
+        return authenticate()
+    else:
+        return flask.redirect(flask.url_for('login'))
+
+def authenticate():
+    """
+    Sends a 401 response that enables basic auth
+    """
+    return flask.Response(
+        'Could not verify your access level for that URL.\n'
+        'You have to login with proper credentials',
+        401,
+        {'WWW-Authenticate': 'basic realm="{0}"'.format(
+            current_app.config['FLASK_AUTH_REALM']
+        )}
+    )
 
 #Begin routes
 @app.route('/')
@@ -206,8 +238,12 @@ def loadavg(user):
 def vnstat(user):
     stats = []
     interface = get_default_interface()
-    statsh = vnstat_parse(interface, "h", "hours", 0)
-    statslh = vnstat_parse(interface, "h", "hours", 1)
+    hour = int(time.strftime("%H"))
+    lasthour = hour - 1
+    if lasthour == -1:
+        lasthour = 23
+    statsh = vnstat_parse(interface, "h", "hours", hour)
+    statslh = vnstat_parse(interface, "h", "hours", lasthour)
     statsd = vnstat_parse(interface, "d", "days", 0)
     statsm = vnstat_parse(interface, "m", "months", 0)
     statsa = vnstat_parse(interface, "h", "total")
@@ -270,6 +306,30 @@ def network_quota(user):
     if app.config['SHAREDSERVER'] is True:
         total, used, free, usage = network_quota_usage(user)
     return flask.jsonify({"nettotal": total, "netused": used, "netfree": free, "perutil": usage})
+
+
+@app.route('/login')
+def login():
+    return flask.render_template('login.html', title='swizzin login')
+
+@app.route('/login/auth')
+@htpasswd.required
+def auth(user):
+    return """
+        <div>You have been logged in. Redirecting to home...</div>    
+
+<script>
+    setTimeout(function () {
+        window.location.href = "/";
+    }, 500);
+</script>
+    """
+
+
+@app.route('/logout')
+@htpasswd.required
+def logout(user):
+    return flask.render_template('logout.html')
 
 if __name__ == '__main__':
     socketio.run(app, host=app.config['HOST'], port=app.config['PORT'])

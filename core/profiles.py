@@ -130,6 +130,13 @@ class ombi_meta:
     pretty_name = "Ombi"
     baseurl = "/ombi"
     runas = "ombi"
+    
+class organizr_meta:
+    name = "organizr"
+    pretty_name = "Organizr"
+    baseurl = "/organizr"
+    systemd = False
+    multiuser = True
 
 class plex_meta:
     name = "plex"
@@ -221,6 +228,19 @@ class tautulli_meta:
     pretty_name = "Tautulli"
     baseurl = "/tautulli"
     runas = "tautulli"
+
+class transmission_meta:
+    name = "transmission"
+    pretty_name = "Transmission"
+    systemd = "transmission@"
+    baseurl = "/transmission/web/"
+    multiuser = True
+
+class webmin_meta:
+    name = "webmin"
+    pretty_name = "Webmin"
+    runas = "root"
+    baseurl = "/webmin/"
 
 class wireguard_meta:
     name = "wireguard"

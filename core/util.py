@@ -35,7 +35,8 @@ def get_default_interface():
     with open("/proc/net/route") as route:
         for line in route:
             fields = line.strip().split()
-            if fields[1] != '00000000' or not int(fields[3], 16) & 2:
+            #if fields[1] != '00000000' or not int(fields[3], 16) & 2:
+            if fields[1] != '00000000':
                 continue
             return fields[0]
 
@@ -201,9 +202,15 @@ def vnstat_data(interface, mode):
 
 def vnstat_parse(interface, mode, query, position=False):
     if position is not False:
-        result = vnstat_data(interface, mode)['interfaces'][0]['traffic'][query][position]
-        result['rx'] = GetHumanReadableKB(result['rx'])
-        result['tx'] = GetHumanReadableKB(result['tx'])
+        #result = vnstat_data(interface, mode)['interfaces'][0]['traffic'][query][position]
+        result = vnstat_data(interface, mode)['interfaces'][0]['traffic'][query]
+        for p in result:
+            if p["id"] == int(position):
+                data = {}
+                data['rx'] = GetHumanReadableKB(p['rx'])
+                data['tx'] = GetHumanReadableKB(p['tx'])
+                result = data
+                break
     else:
         result = vnstat_data(interface, mode)['interfaces'][0]['traffic'][query]
         result['rx'] = GetHumanReadableKB(result['rx'])
