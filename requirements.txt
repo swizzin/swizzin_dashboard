@@ -3,3 +3,4 @@ flask-htpasswd
 flask-socketio
 eventlet
 requests
+dnspython==1.16.0; python_version == "3.5"
