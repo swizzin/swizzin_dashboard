@@ -13,3 +13,4 @@ class Config:
     PORT = "8333"
     URL_BASE = "/"
     SHAREDSERVER = False
+    FORMS_LOGIN = True

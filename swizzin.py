@@ -108,12 +108,15 @@ def reload_htpasswd():
 
 @app.errorhandler(401)
 def unauthorized(e):
-    if flask.request.referrer == "{}login".format(flask.request.host_url):
-        return authenticate()
-    elif flask.request.referrer == "{}login/auth".format(flask.request.host_url):
-        return authenticate()
+    if app.config['FORMS_LOGIN']:
+        if flask.request.referrer == "{}login".format(flask.request.host_url):
+            return authenticate()
+        elif flask.request.referrer == "{}login/auth".format(flask.request.host_url):
+            return authenticate()
+        else:
+            return flask.redirect(flask.url_for('login'))
     else:
-        return flask.redirect(flask.url_for('login'))
+        return authenticate()
 
 def authenticate():
     """
