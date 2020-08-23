@@ -94,6 +94,14 @@ class lounge_meta:
     pretty_name = "The Lounge"
     baseurl = "/irc"
     runas = "lounge"
+    
+class mango_meta:
+    name = "mango"
+    pretty_name = "Mango"
+    baseurl = "/mango"
+    systemd = "mango"
+    runas = "mango"
+    multiuser = True
 
 class medusa_meta:
     name = "medusa"
