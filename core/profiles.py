@@ -152,6 +152,13 @@ class pyload_meta:
     baseurl = "/pyload"
     systemd = "pyload"
 
+class qbittorrent_meta:
+    name = "qbittorrent"
+    pretty_name = "qBittorrent"
+    baseurl = "/qbittorrent"
+    systemd = "qbittorrent@"
+    multiuser = True
+
 class quassel_meta:
     name = "quassel"
     pretty_name = "Quassel-Core"

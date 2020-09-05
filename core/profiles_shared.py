@@ -116,6 +116,13 @@ class plexpy_meta:
     process = "plexpy"
     multiuser = True
 
+class qbittorrent_meta:
+    name = "qbittorrent"
+    pretty_name = "qBittorrent"
+    baseurl = "/qbittorrent"
+    systemd = "qbittorrent@"
+    multiuser = True
+
 class radarr_meta:
     name = "radarr"
     pretty_name = "Radarr"
