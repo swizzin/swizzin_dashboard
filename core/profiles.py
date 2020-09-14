@@ -20,6 +20,12 @@ class btsync_meta:
     scheme = "http"
     systemd = "resilio-sync"
     process = "rslsync"
+    
+class calibreweb_meta:
+    name= "calibre-web"
+    pretty_name = "Calibre Web"
+    baseurl = "/calibre"
+    systemd = "calibre-web"
 
 class couchpotato_meta:
     name= "couchpotato"
