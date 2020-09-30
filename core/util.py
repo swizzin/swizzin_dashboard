@@ -103,7 +103,11 @@ def generate_page_list(user):
             systemd = profile.systemd
         except:
             systemd = profile.name
-        pages.append({"name": profile.name, "pretty_name": profile.pretty_name, "url": url, "systemd": systemd})
+        try:
+            brand = profile.img
+        except:
+            brand = profile.name
+        pages.append({"name": profile.name, "pretty_name": profile.pretty_name, "url": url, "systemd": systemd, "img": brand})
     return pages
 
 def apps_status(username):
