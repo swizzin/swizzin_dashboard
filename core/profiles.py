@@ -227,6 +227,12 @@ class sonarr_meta:
     baseurl = "/sonarr"
     systemd = "sonarr@"
 
+class sonarrv3_meta:
+    name = "sonarr"
+    pretty_name = "Sonarr"
+    baseurl = "/sonarr"
+    systemd = "sonarr"
+
 class subsonic_meta:
     name = "subsonic"
     pretty_name = "Subsonic"
