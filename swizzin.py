@@ -140,7 +140,7 @@ def index(user):
     #    thread = Thread(target=current_speed)
     #    thread.start()
     pages = generate_page_list(user)
-    mounts = get_mounts()
+    mounts = get_mounts(user)
     if os.path.isfile("/install/.quota.lock"):
         quota = True
     else:
@@ -293,7 +293,7 @@ def vnstat(user):
 @app.route('/stats/disk')
 @htpasswd.required
 def disk_free(user):
-    mounts = get_mounts()
+    mounts = get_mounts(user)
     data = {}
     for mount in mounts:
         total, used, free, usage = disk_usage(mount)

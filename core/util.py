@@ -40,8 +40,9 @@ def get_default_interface():
                 continue
             return fields[0]
 
-def get_mounts():
+def get_mounts(user):
     mounts = []
+    admin_user = current_app.config['ADMIN_USER']
     with open("/proc/mounts") as mount:
         for line in mount:
             fields = line.strip().split()
@@ -58,6 +59,8 @@ def get_mounts():
                     mounts.remove(fields[1])
                 except:
                     pass
+    if user != admin_user:
+        mounts = [m for m in mounts if user in m]
     return mounts
 
 def generate_page_list(user):
