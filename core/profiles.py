@@ -228,9 +228,11 @@ class sonarr_meta:
     systemd = "sonarr@"
 
 class sonarrv3_meta:
-    name = "sonarr"
+    name = "sonarrv3"
     pretty_name = "Sonarr"
     baseurl = "/sonarr"
+    process = "sonarr"
+    img = "sonarr"
     systemd = "sonarr"
 
 class subsonic_meta:
