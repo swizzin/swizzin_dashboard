@@ -60,7 +60,7 @@ def current_speed(app):
                 total_speed = total - total_prev
                 #print("TOTAL: ', total_speed, 'bps')
                 total_speed = str(GetHumanReadableB(total_speed)) + "/s"
-                emit('speed', {'interface': interface, 'tx': tx_speed, 'rx': rx_speed, 'total'; total_speed}, namespace='/websocket', broadcast=True)
+                emit('speed', {'interface': interface, 'tx': tx_speed, 'rx': rx_speed, 'total': total_speed}, namespace='/websocket', broadcast=True)
             time.sleep(1)
             tx_prev = tx
             rx_prev = rx
