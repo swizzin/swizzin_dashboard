@@ -33,10 +33,12 @@ var http = getHTTPObject();
 http.open("get", url, false, username, password);
 http.send("");
     if (http.status == 200) {
-            document.location = url;
+        document.location = url;
+    } else if (http.status == 429) {
+        alert("You have been rate limited! Please try again in 1 minute.");
     } else {
-    alert("Incorrect username and/or password!");
-}
+        alert("Incorrect username and/or password!");
+    }
 return false;
 }
 
