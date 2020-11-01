@@ -5,7 +5,7 @@
             <th scope="col">Period</th>
             <th scope="col" class="text-info text-center">Down</th>
             <th scope="col" class="text-success text-center">Up</th>
-			<th scope="col" class="text-total text-center">Total</th>
+			<th scope="col" class="text-warning text-center">Total</th>
         </tr>
     </thead>
     <tbody>
@@ -13,31 +13,31 @@
             <td>This Hour</td>
             <td class="text-info text-right text-center">{{ hour['rx'] }}</td>
             <td class="text-success text-center">{{ hour['tx'] }}</td>
-			<td class="text-total text-center">{{ hour['total'] }}</td>
+			<td class="text-warning text-center">{{ hour['total'] }}</td>
         </tr>
         <tr>
             <td>Last Hour</td>
             <td class="text-info text-center">{{ lasthour['rx'] }}</td>
             <td class="text-success text-center">{{ lasthour['tx'] }}</td>
-			<td class="text-total text-center">{{ lasthour['total'] }}</td>
+			<td class="text-warning text-center">{{ lasthour['total'] }}</td>
         </tr>
         <tr>
             <td>This Day</td>
             <td class="text-info text-center">{{ day['rx'] }}</td>
             <td class="text-success text-center">{{ day['tx'] }}</td>
-			<td class="text-total text-center">{{ day['total'] }}</td>
+			<td class="text-warning text-center">{{ day['total'] }}</td>
         </tr>
         <tr>
             <td>This Month</td>
             <td class="text-info text-center">{{ month['rx'] }}</td>
             <td class="text-success text-center">{{ month['tx'] }}</td>
-			<td class="text-total text-center">{{ month['total'] }}</td>
+			<td class="text-warning text-center">{{ month['total'] }}</td>
         </tr>
         <tr>
             <td>All Time</td>
             <td class="text-info text-center">{{ alltime['rx'] }}</td>
             <td class="text-success text-center">{{ alltime['tx'] }}</td>
-			<td class="text-total text-center">{{ alltime['total'] }}</td>
+			<td class="text-warning text-center">{{ alltime['total'] }}</td>
         </tr>
     </tbody>
 </table>
@@ -48,7 +48,7 @@
             <th scope="col">Date</th>
             <th scope="col" class="text-info text-center">Down</th>
             <th scope="col" class="text-success text-center">Up</th>
-			<th scope="col" class="text-total text-center">Total</th>
+			<th scope="col" class="text-warning text-center">Total</th>
         </tr>
     </thead>
     <tbody>
@@ -57,7 +57,7 @@
             <td>{{ t['date'] }}</td>
             <td class="text-info text-center">{{ t['rx'] }}</td>
             <td class="text-success text-center">{{ t['tx'] }}</td>
-			<td class="text-total text-center">{{ t['total'] }}</td>
+			<td class="text-warning text-center">{{ t['total'] }}</td>
         </tr>
         {% endfor %}
     </tbody>
