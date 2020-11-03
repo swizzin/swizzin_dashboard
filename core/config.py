@@ -14,3 +14,4 @@ class Config:
     URL_BASE = "/"
     SHAREDSERVER = False
     FORMS_LOGIN = True
+    NETWORK_TOTALS = False
