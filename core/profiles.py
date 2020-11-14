@@ -77,6 +77,7 @@ class jellyfin_meta:
     pretty_name = "Jellyfin"
     baseurl = "/jellyfin"
     systemd = "jellyfin"
+    runas = "jellyfin"
 
 class librespeed_meta:
     name = "librespeed"
