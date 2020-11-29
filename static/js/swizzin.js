@@ -80,6 +80,7 @@ $(document).ready(function(){
   socket.on('speed', function(result) {
     $('#current_rx').html(result.rx);
     $('#current_tx').html(result.tx)
+	$('#current_total').html(result.total)
     $('#current_interface').html(result.interface)
     return false;
   });

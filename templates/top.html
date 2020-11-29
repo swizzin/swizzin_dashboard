@@ -2,36 +2,54 @@
 <table class="table table-condensed table-hover table-dark table-borderless">
     <thead class="table-active">
         <tr>
-            <th scope="col">Span</th>
-            <th scope="col" class="text-info text-right">Download</th>
-            <th scope="col" class="text-success">Upload</th>
+            <th scope="col">Period</th>
+            <th scope="col" class="text-info text-center">Down</th>
+            <th scope="col" class="text-success text-center">Up</th>
+			{% if config.NETWORK_TOTALS == True %}
+			<th scope="col" class="text-warning text-center">Total</th>
+			{% endif %}
         </tr>
     </thead>
     <tbody>
         <tr>
             <td>This Hour</td>
-            <td class="text-info text-right">{{ hour['rx'] }}</td>
-            <td class="text-success">{{ hour['tx'] }}</td>
+            <td class="text-info text-right text-center">{{ hour['rx'] }}</td>
+            <td class="text-success text-center">{{ hour['tx'] }}</td>
+			{% if config.NETWORK_TOTALS == True %}
+			<td class="text-warning text-center">{{ hour['total'] }}</td>
+			{% endif %}
         </tr>
         <tr>
             <td>Last Hour</td>
-            <td class="text-info text-right">{{ lasthour['rx'] }}</td>
-            <td class="text-success">{{ lasthour['tx'] }}</td>
+            <td class="text-info text-center">{{ lasthour['rx'] }}</td>
+            <td class="text-success text-center">{{ lasthour['tx'] }}</td>
+			{% if config.NETWORK_TOTALS == True %}
+			<td class="text-warning text-center">{{ lasthour['total'] }}</td>
+			{% endif %}
         </tr>
         <tr>
             <td>This Day</td>
-            <td class="text-info text-right">{{ day['rx'] }}</td>
-            <td class="text-success">{{ day['tx'] }}</td>
+            <td class="text-info text-center">{{ day['rx'] }}</td>
+            <td class="text-success text-center">{{ day['tx'] }}</td>
+			{% if config.NETWORK_TOTALS == True %}
+			<td class="text-warning text-center">{{ day['total'] }}</td>
+			{% endif %}
         </tr>
         <tr>
             <td>This Month</td>
-            <td class="text-info text-right">{{ month['rx'] }}</td>
-            <td class="text-success">{{ month['tx'] }}</td>
+            <td class="text-info text-center">{{ month['rx'] }}</td>
+            <td class="text-success text-center">{{ month['tx'] }}</td>
+			{% if config.NETWORK_TOTALS == True %}
+			<td class="text-warning text-center">{{ month['total'] }}</td>
+			{% endif %}
         </tr>
         <tr>
             <td>All Time</td>
-            <td class="text-info text-right">{{ alltime['rx'] }}</td>
-            <td class="text-success">{{ alltime['tx'] }}</td>
+            <td class="text-info text-center">{{ alltime['rx'] }}</td>
+            <td class="text-success text-center">{{ alltime['tx'] }}</td>
+			{% if config.NETWORK_TOTALS == True %}
+			<td class="text-warning text-center">{{ alltime['total'] }}</td>
+			{% endif %}
         </tr>
     </tbody>
 </table>
@@ -40,16 +58,22 @@
     <thead class="table-active">
         <tr>
             <th scope="col">Date</th>
-            <th scope="col" class="text-info text-right">Download</th>
-            <th scope="col" class="text-success">Upload</th>
+            <th scope="col" class="text-info text-center">Down</th>
+            <th scope="col" class="text-success text-center">Up</th>
+			{% if config.NETWORK_TOTALS == True %}
+			<th scope="col" class="text-warning text-center">Total</th>
+			{% endif %}
         </tr>
     </thead>
     <tbody>
         {% for t in top %}
         <tr>
             <td>{{ t['date'] }}</td>
-            <td class="text-info text-right">{{ t['rx'] }}</td>
-            <td class="text-success">{{ t['tx'] }}</td>
+            <td class="text-info text-center">{{ t['rx'] }}</td>
+            <td class="text-success text-center">{{ t['tx'] }}</td>
+			{% if config.NETWORK_TOTALS == True %}
+			<td class="text-warning text-center">{{ t['total'] }}</td>
+			{% endif %}
         </tr>
         {% endfor %}
     </tbody>
