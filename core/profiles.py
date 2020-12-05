@@ -120,6 +120,7 @@ class nextcloud_meta:
     name = "nextcloud"
     pretty_name = "Nextcloud"
     baseurl = "/nextcloud"
+    multiuser = True
     systemd = False
 
 class nzbget_meta:
