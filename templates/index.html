@@ -1,80 +1,85 @@
 {% import "macros.html" as macros %}
 <html>
+
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>{{ title }}</title>
-  <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon/favicon.ico') }}">
-  <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/darkly/bootstrap.min.css">
-  <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/swizzin.css')}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{{ title }}</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon/favicon.ico') }}">
+    <link rel="stylesheet" type="text/css"
+        href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/darkly/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
+        rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/swizzin.css')}}">
 </head>
+
 <body>
-<div class="d-flex" id="wrapper">
-  {{macros.build_sidebar(pages=pages)}}
-  {% if config.SHAREDSERVER == True %}
-    {{macros.build_nav_shared(user=user, apps=pages)}}
-  {% else %}
-    {{macros.build_nav(user=user, apps=pages)}}
-  {% endif %}
-  <!-- #page-content-wrapper -->
-  <div class="container-fluid">
-      <div class="card-columns">
-          {% include 'glance.html' %}
-          {{ macros.build_app_table(apps=pages) }}
-          {% include 'systeminfo.html' %}
-          {% if quota == True %}
-            {% include 'quotainfo.html' %}
-          {% endif %}
-          {% if (quota == False or config.ADMIN_USER == user) %}
-            {% include 'diskinfo.html' %}
-          {% endif %}
-          {% include 'raminfo.html' %}
-          {% if (config.SHAREDSERVER == True or config.ADMIN_USER == user) %}
-            {% include 'netinfo.html' %}
-          {% endif %}
-      </div>
+    <div class="d-flex" id="wrapper">
+        {{macros.build_sidebar(pages=pages)}}
+        {% if config.SHAREDSERVER == True %}
+        {{macros.build_nav_shared(user=user, apps=pages)}}
+        {% else %}
+        {{macros.build_nav(user=user, apps=pages)}}
+        {% endif %}
+        <!-- #page-content-wrapper -->
+        <div class="container-fluid">
+            <div class="card-columns">
+                {% include 'glance.html' %}
+                {{ macros.build_app_table(apps=pages) }}
+                {% include 'systeminfo.html' %}
+                {% if quota == True %}
+                {% include 'quotainfo.html' %}
+                {% endif %}
+                {% if (quota == False or config.ADMIN_USER == user) %}
+                {% include 'diskinfo.html' %}
+                {% endif %}
+                {% include 'raminfo.html' %}
+                {% if (config.SHAREDSERVER == True or config.ADMIN_USER == user) %}
+                {% include 'netinfo.html' %}
+                {% endif %}
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
     </div>
-  <!-- /#page-content-wrapper -->
-</div>
-<!-- /#body-content-wrapper -->
+    <!-- /#body-content-wrapper -->
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
-<script src="{{ url_for('static', filename='js/swizzin.js') }}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/swizzin.js') }}"></script>
 
 
-<script>
-{{ macros.build_widget_js() }}
-{% if config.SHAREDSERVER == True %}
-{{ macros.build_widget_js_shared() }}
-{% endif %}
+    <script>
+        { { macros.build_widget_js() } }
+        {% if config.SHAREDSERVER == True %}
+        { { macros.build_widget_js_shared() } }
+        {% endif %}
 
-{% if quota == True %}
-(function quotausage() {
-    $.get('{{ url_for('quota_free') }}', function(data) {
-        var percent = Math.trunc(data["quota"]['perutil']);
-        $("#quotafree").html(data["quota"]['diskfree']);
-        $("#quotaused").html(data["quota"]['diskused']);
-        $("#quotatotal").html(data["quota"]['disktotal']);
-        $("#quotapercent").html(data["quota"]['perutil']);
-        if (Number(data["quota"]['perutil']) > 90) {
-          $("#quotaindicator.systemindicator").addClass("bg-danger").removeClass("bg-success bg-warning");
-          $("#quotaprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-danger").removeClass("bg-success bg-warning");
-        } else if (Number(data["quota"]['perutil']) > 75) {
-          $("#quotaindicator.systemindicator").addClass("bg-warning").removeClass("bg-success bg-danger");
-          $("#quotaprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-warning").removeClass("bg-success bg-danger");
-        } else {
-          $("#quotaindicator.systemindicator").addClass("bg-success").removeClass("bg-warning bg-danger");
-          $("#quotaprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-success").removeClass("bg-danger bg-warning");
-        }
-        setTimeout(function(){quotausage()}, 60000);
-    });
-})();
-{% endif %}
+        {% if quota == True %}
+        (function quotausage() {
+            $.get('{{ url_for('quota_free') }}', function (data) {
+                var percent = Math.trunc(data["quota"]['perutil']);
+                $("#quotafree").html(data["quota"]['diskfree']);
+                $("#quotaused").html(data["quota"]['diskused']);
+                $("#quotatotal").html(data["quota"]['disktotal']);
+                $("#quotapercent").html(data["quota"]['perutil']);
+                if (Number(data["quota"]['perutil']) > 90) {
+                    $("#quotaindicator.systemindicator").addClass("bg-danger").removeClass("bg-success bg-warning");
+                    $("#quotaprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-danger").removeClass("bg-success bg-warning");
+                } else if (Number(data["quota"]['perutil']) > 75) {
+                    $("#quotaindicator.systemindicator").addClass("bg-warning").removeClass("bg-success bg-danger");
+                    $("#quotaprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-warning").removeClass("bg-success bg-danger");
+                } else {
+                    $("#quotaindicator.systemindicator").addClass("bg-success").removeClass("bg-warning bg-danger");
+                    $("#quotaprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-success").removeClass("bg-danger bg-warning");
+                }
+                setTimeout(function () { quotausage() }, 60000);
+            });
+        })();
+        {% endif %}
 
-</script>
+    </script>
 
 </body>
+
 </html>
