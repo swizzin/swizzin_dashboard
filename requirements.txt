@@ -1,6 +1,6 @@
 flask
 flask-htpasswd
-flask-socketio>=5
+flask-socketio
 flask-limiter
 eventlet
 requests
