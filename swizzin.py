@@ -3,6 +3,7 @@ import flask
 from core.htpasswd import HtPasswdAuth
 from flask_socketio import SocketIO, emit
 from threading import Thread, Lock
+from packaging import version
 import os
 import core.config
 import requests
@@ -26,6 +27,29 @@ app.config.from_pyfile('swizzin.cfg', silent=True)
 admin_user = app.config['ADMIN_USER']
 htpasswd = HtPasswdAuth(app)
 
+#Config rate limiting
+def check_authorization():
+    if flask.request.authorization:
+        try:
+            authreq = flask.request.authorization.username 
+            return True
+        except:
+            return False
+    else:
+        return False
+
+
+if app.config['RATELIMIT_ENABLED'] == True:
+    from flask_limiter import Limiter
+    from flask_limiter.util import get_remote_address
+    limiter = Limiter(
+        app,
+        key_func=get_remote_address,
+        default_limits=[app.config['RATELIMIT_DEFAULT']],
+        default_limits_exempt_when=check_authorization,
+        default_limits_per_method=True
+    )
+
 from core.util import *
 
 #Prepare the background threads
@@ -42,10 +66,11 @@ def current_speed(app):
     with app.app_context():
         #print("Starting current speed for", interface)
         interface = get_default_interface()
-        (tx_prev, rx_prev) = (0, 0)
+        (tx_prev, rx_prev, total_prev) = (0, 0, 0)
         while(True):
             tx = get_nic_bytes('tx', interface)
             rx = get_nic_bytes('rx', interface)
+            total = tx + rx
             if tx_prev > 0:
                 tx_speed = tx - tx_prev
                 #print('TX: ', tx_speed, 'bps')
@@ -54,10 +79,15 @@ def current_speed(app):
                 rx_speed = rx - rx_prev
                 #print('RX: ', rx_speed, 'bps')
                 rx_speed = str(GetHumanReadableB(rx_speed)) + "/s"
-                emit('speed', {'interface': interface, 'tx': tx_speed, 'rx': rx_speed}, namespace='/websocket', broadcast=True)
+            if total_prev > 0:
+                total_speed = total - total_prev
+                #print("TOTAL: ', total_speed, 'bps')
+                total_speed = str(GetHumanReadableB(total_speed)) + "/s"
+                emit('speed', {'interface': interface, 'tx': tx_speed, 'rx': rx_speed, 'total': total_speed}, namespace='/websocket', broadcast=True)
             time.sleep(1)
             tx_prev = tx
             rx_prev = rx
+            total_prev = total
 
 def io_wait(app):
     """ Thread for iowait emission """
@@ -107,12 +137,15 @@ def reload_htpasswd():
 
 @app.errorhandler(401)
 def unauthorized(e):
-    if flask.request.referrer == "{}login".format(flask.request.host_url):
-        return authenticate()
-    elif flask.request.referrer == "{}login/auth".format(flask.request.host_url):
-        return authenticate()
+    if app.config['FORMS_LOGIN']:
+        if flask.request.referrer == "{}login".format(flask.request.host_url):
+            return authenticate()
+        elif flask.request.referrer == "{}login/auth".format(flask.request.host_url):
+            return authenticate()
+        else:
+            return flask.redirect(flask.url_for('login'))
     else:
-        return flask.redirect(flask.url_for('login'))
+        return authenticate()
 
 def authenticate():
     """
@@ -236,30 +269,51 @@ def loadavg(user):
 @app.route('/stats/vnstat')
 @htpasswd.required
 def vnstat(user):
-    stats = []
+    #stats = []
     interface = get_default_interface()
-    hour = int(time.strftime("%H"))
-    lasthour = hour - 1
-    if lasthour == -1:
-        lasthour = 23
-    statsh = vnstat_parse(interface, "h", "hours", hour)
-    statslh = vnstat_parse(interface, "h", "hours", lasthour)
-    statsd = vnstat_parse(interface, "d", "days", 0)
-    statsm = vnstat_parse(interface, "m", "months", 0)
-    statsa = vnstat_parse(interface, "h", "total")
+    vnstat_info = vnstat_data(interface, "h")
+    vnstat_jsonversion = vnstat_info["jsonversion"]
+    if vnstat_jsonversion == "1":
+        qh = "hours"
+        qd = "days"
+        qm = "months"
+        qt = "tops"
+        thisday = 0
+        thismonth = 0
+        hour = int(time.strftime("%H"))
+        lasthour = hour - 1
+        if lasthour == -1:
+            lasthour = 23
+        read_unit = GetHumanReadableKB
+    elif vnstat_jsonversion == "2":
+        qh = "hour"
+        qd = "day"
+        qm = "month"
+        qt = "top"
+        thisday = vnstat_data(interface, "d")['interfaces'][0]['traffic']['day'][-1]["id"]
+        thismonth = vnstat_data(interface, "m")['interfaces'][0]['traffic']['month'][-1]["id"]
+        hour = vnstat_info['interfaces'][0]['traffic']['hour'][-1]["id"]
+        lasthour = vnstat_info['interfaces'][0]['traffic']['hour'][-2]["id"]
+        read_unit = GetHumanReadableB
+    statsh = vnstat_parse(interface, "h", qh, read_unit, hour)
+    statslh = vnstat_parse(interface, "h", qh, read_unit, lasthour)
+    statsd = vnstat_parse(interface, "d", qd, read_unit, thisday)
+    statsm = vnstat_parse(interface, "m", qm, read_unit, thismonth)
+    statsa = vnstat_parse(interface, "h", "total", read_unit)
     #statsa = vnstat_parse(interface, "m", "total", 0)
-    tops = vnstat_data(interface, "t")['interfaces'][0]['traffic']['tops']
+    tops = vnstat_data(interface, "t")['interfaces'][0]['traffic'][qt]
     top = []
-    for t in tops:
+    for t in tops[:10]:
         date = t['date']
         year = date['year']
         month = calendar.month_abbr[date['month']]
         day = date['day']
         date = "{month} {day}, {year}".format(year=year, month=month, day=day)
-        rx = GetHumanReadableKB(t['rx'])
-        tx = GetHumanReadableKB(t['tx'])
-        top.append({"date": date, "rx": rx, "tx": tx})
-    columns = {"date", "rx", "tx"}
+        rx = read_unit(t['rx'])
+        tx =read_unit(t['tx'])
+        total = read_unit(t['tx'] + t['rx'])
+        top.append({"date": date, "rx": rx, "tx": tx, "total": total})
+    columns = {"date", "rx", "tx", "total"}
     #stats = []
     #stats.extend({"statsh": statsh, "statslh": statslh, "statsd": statsd, "statsm": statsm, "statsa": statsa, "top": top})
     #print(stats)

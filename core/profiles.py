@@ -77,6 +77,7 @@ class jellyfin_meta:
     pretty_name = "Jellyfin"
     baseurl = "/jellyfin"
     systemd = "jellyfin"
+    runas = "jellyfin"
 
 class librespeed_meta:
     name = "librespeed"
@@ -94,6 +95,14 @@ class lounge_meta:
     pretty_name = "The Lounge"
     baseurl = "/irc"
     runas = "lounge"
+    
+class mango_meta:
+    name = "mango"
+    pretty_name = "Mango"
+    baseurl = "/mango"
+    systemd = "mango"
+    runas = "mango"
+    multiuser = True
 
 class medusa_meta:
     name = "medusa"
@@ -151,6 +160,13 @@ class pyload_meta:
     pretty_name = "pyLoad"
     baseurl = "/pyload"
     systemd = "pyload"
+
+class qbittorrent_meta:
+    name = "qbittorrent"
+    pretty_name = "qBittorrent"
+    baseurl = "/qbittorrent"
+    systemd = "qbittorrent@"
+    multiuser = True
 
 class quassel_meta:
     name = "quassel"
@@ -212,6 +228,14 @@ class sonarr_meta:
     baseurl = "/sonarr"
     systemd = "sonarr@"
 
+class sonarrv3_meta:
+    name = "sonarrv3"
+    pretty_name = "Sonarr"
+    baseurl = "/sonarr"
+    process = "sonarr"
+    img = "sonarr"
+    systemd = "sonarr"
+
 class subsonic_meta:
     name = "subsonic"
     pretty_name = "Subsonic"
@@ -229,6 +253,13 @@ class tautulli_meta:
     baseurl = "/tautulli"
     runas = "tautulli"
 
+class trackarr_meta:
+    name = "trackarr"
+    pretty_name = "Trackarr"
+    baseurl = "/trackarr"
+    systemd = "trackarr"
+    runas = "trackarr"
+    
 class transmission_meta:
     name = "transmission"
     pretty_name = "Transmission"
