@@ -95,6 +95,7 @@ class lounge_meta:
     pretty_name = "The Lounge"
     baseurl = "/irc"
     runas = "lounge"
+    multiuser = True
     
 class mango_meta:
     name = "mango"
