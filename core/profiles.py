@@ -33,8 +33,9 @@ class calibrecs_meta:
     baseurl= "calibre-cs"
     systemd = "calibre-cs"
     multiuser = True
+    check_theD = True
     
-class calibrecs_meta:
+class calibrweb_meta:
     name = "calibre-web"
     Pretty_name "Calibre-Web"
     baseurl= "calibre-web"
