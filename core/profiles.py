@@ -127,6 +127,7 @@ class nzbget_meta:
     pretty_name = "nzbGet"
     baseurl = "/nzbget"
     systemd = "nzbget@"
+    multiuser = True
 
 class nzbhydra_meta:
     name = "nzbhydra"
