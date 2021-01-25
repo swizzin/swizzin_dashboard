@@ -118,6 +118,7 @@ class nzbget_meta:
     pretty_name = "nzbGet"
     baseurl = "/nzbget"
     systemd = "nzbget@"
+    mutliuser = True
 
 class nzbhydra_meta:
     name = "nzbhydra"
