@@ -29,16 +29,16 @@ class couchpotato_meta:
     
 class calibrecs_meta:
     name = "calibre-cs"
-    Pretty_name "Calibre Content Serever"
-    baseurl= "calibre-cs"
+    pretty_name = "Calibre Content Server"
+    baseurl = "/calibre-cs"
     systemd = "calibre-cs"
     multiuser = True
     check_theD = True
     
 class calibrweb_meta:
     name = "calibre-web"
-    Pretty_name "Calibre-Web"
-    baseurl= "calibre-web"
+    pretty_name = "Calibre-Web"
+    baseurl = "/calibre-web"
     systemd = "calibre-web"
     runas = "calibre-web"
     multiuser = True
