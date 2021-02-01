@@ -84,7 +84,8 @@ class HtPasswdAuth:
             username, password
         )
         if not valid:
-            log.warning('Invalid login from %s', username)
+            user_ip = request.environ['REMOTE_ADDR']
+            log.warning('Invalid login from %s at %s'%(username, user_ip))
             valid = False
         return (
             valid,
