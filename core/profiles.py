@@ -35,7 +35,7 @@ class calibrecs_meta:
     multiuser = True
     check_theD = True
     
-class calibrweb_meta:
+class calibreweb_meta:
     name = "calibre-web"
     pretty_name = "Calibre-Web"
     baseurl = "/calibre-web"
