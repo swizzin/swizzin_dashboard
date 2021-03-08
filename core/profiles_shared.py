@@ -156,7 +156,7 @@ class sonarr_meta:
     pretty_name = "Sonarr"
     baseurl = "/sonarr"
     systemd = "sonarr@"
-    process = "NzbDrone"
+    process = "Sonarr"
     multiuser = True
 
 class wireguard_meta:
