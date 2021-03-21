@@ -184,7 +184,13 @@ class rapidleech_meta:
     pretty_name = "RapidLeech"
     baseurl = "/rapidleech"
     systemd = False
-
+    
+class requestrr_meta:
+    name = "requestrr"
+    pretty_name = "Requestrr"
+    baseurl = "/requestrr"
+    systemd = "requestrr"
+    
 class rtorrent_meta:
     name = "rtorrent"
     pretty_name = "rTorrent"
@@ -197,7 +203,7 @@ class rutorrent_meta:
     baseurl = "/rutorrent"
     systemd = False
     multiuser = True
-
+    
 class sabnzbd_meta:
     name = "sabnzbd"
     pretty_name = "SABnzbd"
