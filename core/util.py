@@ -118,7 +118,7 @@ def apps_status(username):
         locks = os.listdir('/home/'+username+'/.install')
     else:
         locks = os.listdir('/install')
-    ps = sp.Popen(('ps', 'axo', 'user:20,comm,cmd'), stdout=sp.PIPE).communicate()[0]
+    ps = sp.Popen(('ps', 'axo', 'user:32,comm,cmd'), stdout=sp.PIPE).communicate()[0]
     procs = ps.splitlines()
     for lock in locks:
         application = lock.split(".")[1]
@@ -127,7 +127,8 @@ def apps_status(username):
         except:
             try:
                 profile = str_to_class(application+"_meta")
-            except:
+            except Exception as e:
+                print("Encountered an error while loading the profile for", application, ": ", e)
                 continue
         try:
             multiuser = profile.multiuser
