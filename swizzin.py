@@ -174,7 +174,11 @@ def index(user):
         quota = True
     else:
         quota = False
-    return flask.render_template('index.html', title='{user} - swizzin dashboard'.format(user=user), user=user, pages=pages, quota=quota, mounts=mounts, async_mode=socketio.async_mode)
+    if os.path.isfile("/install/.sbio.lock"):
+        vendor = "sbio"
+    else:
+        vendor = "swizzin"
+    return flask.render_template('index.html', title='{user} - swizzin dashboard'.format(user=user), user=user, pages=pages, quota=quota, vendor=vendor, mounts=mounts, async_mode=socketio.async_mode)
 
 @socketio.on('connect', namespace='/websocket')
 def socket_connect():
