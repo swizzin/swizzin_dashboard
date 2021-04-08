@@ -10,7 +10,7 @@
 </head>
 <body>
 <div class="d-flex" id="wrapper">
-  {{macros.build_sidebar(pages=pages)}}
+  {{macros.build_sidebar(pages=pages, vendor=vendor)}}
   {% if config.SHAREDSERVER == True %}
     {{macros.build_nav_shared(user=user, apps=pages, vendor=vendor)}}
   {% else %}
