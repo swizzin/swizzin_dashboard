@@ -28,19 +28,19 @@ class couchpotato_meta:
     systemd = "couchpotato"
     
 class calibrecs_meta:
-    name = "calibre-cs"
+    name = "calibrecs"
     pretty_name = "Calibre Content Server"
-    baseurl = "/calibre-cs"
-    systemd = "calibre-cs"
+    baseurl = "/calibrecs"
+    systemd = "calibrecs"
     multiuser = True
     check_theD = True
     
 class calibreweb_meta:
-    name = "calibre-web"
-    pretty_name = "Calibre-Web"
-    baseurl = "/calibre-web"
-    systemd = "calibre-web"
-    runas = "calibre-web"
+    name = "calibreweb"
+    pretty_name = "Calibre Web"
+    baseurl = "/calibreweb"
+    systemd = "calibreweb"
+    runas = "calibreweb"
     multiuser = True
 
 class deluge_meta:
