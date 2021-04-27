@@ -141,6 +141,12 @@ class ombi_meta:
     baseurl = "/ombi"
     runas = "ombi"
     
+class prowlarr_meta:
+    name = "prowlarr"
+    pretty_name = "Prowlarr"
+    baseurl = "/prowlarr"
+    runas = "prowlarr"
+    
 class organizr_meta:
     name = "organizr"
     pretty_name = "Organizr"
