@@ -13,7 +13,7 @@ class Config:
     PORT = "8333"
     RATELIMIT_ENABLED = True
     RATELIMIT_DEFAULT = "5 per minute"
-    URL_BASE = "/"
+    URL_BASE = None
     SHAREDSERVER = False
     FORMS_LOGIN = True
     NETWORK_TOTALS = False

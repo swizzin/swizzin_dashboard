@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import flask
 from core.htpasswd import HtPasswdAuth
+from core.middleware import PrefixMiddleware
 from flask_socketio import SocketIO, emit
 from threading import Thread, Lock
 from packaging import version
@@ -26,6 +27,8 @@ app.config.from_object('core.config.Config')
 app.config.from_pyfile('swizzin.cfg', silent=True)
 admin_user = app.config['ADMIN_USER']
 htpasswd = HtPasswdAuth(app)
+
+app.wsgi_app = PrefixMiddleware(app.wsgi_app, prefix=app.config['URLBASE'])
 
 #Config rate limiting
 def check_authorization():
