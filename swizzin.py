@@ -20,7 +20,6 @@ async_mode = None
 #Prep flask
 app = flask.Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app)
-socketio = SocketIO(app, async_mode=async_mode)
 
 #Config the app
 app.config.from_object('core.config.Config')
@@ -28,7 +27,9 @@ app.config.from_pyfile('swizzin.cfg', silent=True)
 admin_user = app.config['ADMIN_USER']
 htpasswd = HtPasswdAuth(app)
 
+#Config the base url
 app.wsgi_app = PrefixMiddleware(app.wsgi_app, prefix=app.config['URLBASE'])
+socketio = SocketIO(app, async_mode=async_mode)
 
 #Config rate limiting
 def check_authorization():
