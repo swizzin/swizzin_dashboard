@@ -29,7 +29,7 @@ htpasswd = HtPasswdAuth(app)
 
 #Config the base url
 app.wsgi_app = PrefixMiddleware(app.wsgi_app, prefix=app.config['URLBASE'])
-socketio = SocketIO(app, async_mode=async_mode)
+socketio = SocketIO(app,  path='{}/socket.io'.format(app.config['URLBASE']), async_mode=async_mode)
 
 #Config rate limiting
 def check_authorization():
