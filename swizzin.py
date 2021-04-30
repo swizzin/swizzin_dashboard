@@ -28,6 +28,9 @@ admin_user = app.config['ADMIN_USER']
 htpasswd = HtPasswdAuth(app)
 
 #Config the base url
+if app.config['URLBASE'] == "/":
+    app.config['URLBASE'] = ""
+
 app.wsgi_app = PrefixMiddleware(app.wsgi_app, prefix=app.config['URLBASE'])
 socketio = SocketIO(app,  path='{}/socket.io'.format(app.config['URLBASE']), async_mode=async_mode)
 
@@ -142,11 +145,11 @@ def reload_htpasswd():
 @app.errorhandler(401)
 def unauthorized(e):
     if app.config['FORMS_LOGIN']:
-        if app.config['URLBASE'].startswith("/"):
-            urlbase = app.config['URLBASE'][1:]
-        else:
+        if app.config['URLBASE'] == "":
             urlbase = app.config['URLBASE']
-        if not app.config['URLBASE'].endswith("/"):
+        elif app.config['URLBASE'].startswith("/"):
+            urlbase = app.config['URLBASE'][1:]:
+        if not urlbase == "" and not urlbase.endswith("/"):
             urlbase = urlbase + "/"
         if flask.request.referrer == "{host}{urlbase}login".format(host=flask.request.host_url, urlbase=urlbase):
             return authenticate()
