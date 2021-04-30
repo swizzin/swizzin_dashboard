@@ -390,9 +390,9 @@ def auth(user):
         <div>You have been logged in. Redirecting to home...</div>    
 
 <script>
-    setTimeout(function () {
-        window.location.href = "{{}}";
-    }, 500);
+    setTimeout(function () {{
+        window.location.href = "{}";
+    }}, 500);
 </script>
     """.format(flask.url_for('index'))
 
