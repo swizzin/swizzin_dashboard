@@ -31,7 +31,7 @@ var path = window.location.pathname.split("/");
 var basepath = path.slice(0, path.length-1).join("/");
 var http = getHTTPObject();
     //var url = "http://" + username + ":" + password + "@" + this.action.substr(7);
-    var url = basepath;
+    var url = basepath + "/";
 http.open("get", url, false, username, password);
 http.send("");
     if (http.status == 200) {
