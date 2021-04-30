@@ -146,6 +146,8 @@ def unauthorized(e):
             urlbase = app.config['URLBASE'][1:]
         else:
             urlbase = app.config['URLBASE']
+        if not app.config['URLBASE'].endswith("/"):
+            urlbase = urlbase + "/"
         if flask.request.referrer == "{host}{urlbase}login".format(host=flask.request.host_url, urlbase=urlbase):
             return authenticate()
         elif flask.request.referrer == "{host}{urlbase}login/auth".format(host=flask.request.host_url, urlbase=urlbase):
