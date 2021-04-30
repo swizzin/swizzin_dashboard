@@ -391,7 +391,7 @@ def auth(user):
 
 <script>
     setTimeout(function () {
-        window.location.href = "{}";
+        window.location.href = "{{}}";
     }, 500);
 </script>
     """.format(flask.url_for('index'))
