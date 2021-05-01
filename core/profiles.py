@@ -78,6 +78,13 @@ class jellyfin_meta:
     baseurl = "/jellyfin"
     systemd = "jellyfin"
     runas = "jellyfin"
+    
+class komga_meta:
+    name = "komga"
+    pretty_name = "Komga"
+    baseurl = "/komga"
+    systemd = "komga"
+    img = "komga"
 
 class librespeed_meta:
     name = "librespeed"
