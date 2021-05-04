@@ -222,8 +222,8 @@ class sickgear_meta:
     baseurl = "/sickgear"
     systemd = "sickgear"
 
-class sonarrv2old_meta:
-    name = "sonarrv2-old"
+class sonarrold_meta:
+    name = "sonarrold"
     pretty_name = "Sonarr"
     process = "nzbdrone"
     baseurl = "/sonarr"
