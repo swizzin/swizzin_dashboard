@@ -6,7 +6,8 @@ class autobrr_meta:
     pretty_name = "autobrr"
     baseurl = "/autobrr"
     process = "autobrr"
-    systemd = "autobrr"
+    systemd = "autobrr@"
+    multiuser = True
 
 class autodl_meta:
     name = "autodl"

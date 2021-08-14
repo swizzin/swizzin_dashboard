@@ -1,5 +1,13 @@
 from pwd import getpwnam
 
+class autobrr_meta:
+    name = "autobrr"
+    pretty_name = "autobrr"
+    baseurl = "/autobrr"
+    process = "autobrr"
+    systemd = "autobrr@"
+    multiuser = True
+
 class autodl_meta:
     name = "autodl"
     pretty_name = "AutoDL irssi"
