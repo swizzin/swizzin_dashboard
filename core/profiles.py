@@ -1,6 +1,14 @@
 from pwd import getpwnam
 from configparser import ConfigParser
 
+class autobrr_meta:
+    name = "autobrr"
+    pretty_name = "autobrr"
+    baseurl = "/autobrr"
+    process = "autobrr"
+    systemd = "autobrr@"
+    multiuser = True
+
 class autodl_meta:
     name = "autodl"
     process = "irssi"
