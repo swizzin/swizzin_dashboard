@@ -134,6 +134,12 @@ class medusa_meta:
     baseurl = "/medusa"
     systemd = "medusa"
 
+class mylar_meta:
+    name = "mylar"
+    pretty_name = "Mylar"
+    baseurl = "/mylar
+    systemd = "mylar"
+    
 class netdata_meta:
     name = "netdata"
     pretty_name = "Netdata"
