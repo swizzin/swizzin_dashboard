@@ -140,6 +140,13 @@ class medusa_meta:
     pretty_name = "Medusa"
     baseurl = "/medusa"
     systemd = "medusa"
+    
+class navidrome_meta:
+    name = "navidrome"
+    pretty_name = "Navidrome"
+    baseurl = "/navidrome"
+    systemd = "navidrome"
+    img = "navidrome"
 
 class netdata_meta:
     name = "netdata"
