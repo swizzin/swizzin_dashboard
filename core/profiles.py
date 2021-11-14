@@ -137,8 +137,10 @@ class medusa_meta:
 class mylar_meta:
     name = "mylar"
     pretty_name = "Mylar"
-    baseurl = "/mylar
+    baseurl = "/mylar"
+    process = "mylar"
     systemd = "mylar"
+    img = "mylar"
     
 class netdata_meta:
     name = "netdata"
