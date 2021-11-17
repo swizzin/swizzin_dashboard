@@ -138,8 +138,9 @@ class navidrome_meta:
     name = "navidrome"
     pretty_name = "Navidrome"
     baseurl = "/navidrome"
+    process = "navidrome"
     systemd = "navidrome"
-    img = "navidrome"
+    multiuser = True
 
 class netdata_meta:
     name = "netdata"
