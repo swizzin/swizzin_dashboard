@@ -142,6 +142,14 @@ class navidrome_meta:
     systemd = "navidrome"
     multiuser = True
 
+class mylar_meta:
+    name = "mylar"
+    pretty_name = "Mylar"
+    baseurl = "/mylar"
+    process = "mylar"
+    systemd = "mylar"
+    img = "mylar"
+    
 class netdata_meta:
     name = "netdata"
     pretty_name = "Netdata"
