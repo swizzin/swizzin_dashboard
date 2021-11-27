@@ -269,7 +269,12 @@ function getdisks() {
 //getdisks()
 
 function appstatus(){
-  $.get("{{ url_for('app_status') }}", function(data){
+  $.get("{{ url_for('app_status') }}", function(data, xhr){
+  if(xhr.status==401)
+    {
+      clearTimeout(timer);
+      return
+    }
   for (var apps in data) {
     var name = data[apps]["name"];
     var enabled = data[apps]["enabled"];
@@ -292,7 +297,12 @@ function appstatus(){
 appstatus();
 
 (function loadavg() {
-    $.get('{{ url_for('loadavg') }}', function(data) {
+    $.get('{{ url_for('loadavg') }}', function(data, xhr) {
+      if(xhr.status==401)
+      {
+        clearTimeout(timer);
+        return
+      }
       $("#load1m").html(data['1m']);
       $("#load5m").html(data['5m']);
       $("#load15m").html(data['15m']);
@@ -310,7 +320,12 @@ appstatus();
 })();
 
 (function diskusage() {
-    $.get('{{ url_for('disk_free') }}', function(data) {
+    $.get('{{ url_for('disk_free') }}', function(data, xhr) {
+      if(xhr.status==401)
+      {
+        clearTimeout(timer);
+        return
+      }
       for (var mount in data) {
         var percent = Math.trunc(data[mount]['perutil']);
         $("#"+$.escapeSelector(mount)+"diskfree").html(data[mount]['diskfree']);
@@ -333,7 +348,12 @@ appstatus();
 })();
 
 (function ramusage() {
-    $.get('{{ url_for('ram_stats') }}', function(data) {
+    $.get('{{ url_for('ram_stats') }}', function(data, xhr) {
+      if(xhr.status==401)
+      {
+        clearTimeout(timer);
+        return
+      }
       var percent = Math.trunc(data['perutil']);
       $("#ramfree").html(data['ramfree']);
       $("#ramused").html(data['ramused']);
@@ -355,7 +375,12 @@ appstatus();
 })();
 
 (function vnstat_top10() {
-    $.get('{{ url_for('vnstat') }}', function(data) {
+    $.get('{{ url_for('vnstat') }}', function(data, xhr) {
+      if(xhr.status==401)
+      {
+        clearTimeout(timer);
+        return
+      }
       $("#top10").html(data);
       setTimeout(function(){vnstat_top10()}, 600000);
       }
@@ -364,7 +389,7 @@ appstatus();
 
 
   window.onload = function() {
-    $.get('{{ url_for('boot_time') }}', function(data) {
+    $.get('{{ url_for('boot_time') }}', function(data, xhr) {
       countUpFromTime(data, 'uptime');
     })
   };
@@ -412,7 +437,12 @@ appstatus();
 
 {% macro build_widget_js_shared() %}
 (function netusage() {
-  $.get('{{ url_for('network_quota') }}', function(data) {
+  $.get('{{ url_for('network_quota') }}', function(data, xhr) {
+    if(xhr.status==401)
+    {
+      clearTimeout(timer);
+      return
+    }
     var percent = Math.trunc(data['perutil']);
     $("#netfree").html(data['netfree']);
     $("#netused").html(data['netused']);
