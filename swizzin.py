@@ -127,10 +127,9 @@ def io_wait(app):
 @app.before_request
 def reload_htpasswd():
     """ 
-    This function will run before every load of the index. It will ensure the htpasswd file is current.
+    This function ensures htpasswd is reloaded and up-to-date before every request.
     """ 
-    if flask.request.endpoint == 'index':
-        htpasswd.load_users(app)
+    htpasswd.load_users(app)
 
 #@app.after_request
 #def apply_headers(response):
