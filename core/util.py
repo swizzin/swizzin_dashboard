@@ -45,7 +45,7 @@ def get_mounts():
     with open("/proc/mounts") as mount:
         for line in mount:
             fields = line.strip().split()
-            if fields[0].startswith("/dev"):
+            if fields[0].startswith("/dev") or ("rclone" in fields[2]):
                 if ("boot" in fields[1]) or ("fuse" in fields) or ("/snap/" in fields[1]) or ("/loop" in fields[0]):
                     continue
                 else:
