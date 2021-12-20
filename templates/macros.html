@@ -163,6 +163,7 @@
             <th scope="col" class="text-center">Used</th>
             <th scope="col" class="text-center">Free</th>
             <th scope="col" class="text-center">Total</th>
+            <th scope="col" class="text-center">%</th>
         </tr>
     </thead>
     {% for mount in mounts %}
@@ -173,12 +174,10 @@
             <td id='{{ mount }}diskused' class="text-center"></td>
             <td id='{{ mount }}diskfree'class="text-center"></td>
             <td id='{{ mount }}disktotal' class="text-center"></td>
+            <td class="text-center"><span id='{{ mount }}diskpercent'></span> %</td>
         </tr>
         <tr>
-            <td colspan="4" class="align-middle"><span class="progress"><div id='{{ mount }}diskprogress' class='progress-bar' role='progressbar' style='' aria-valuenow='' aria-valuemin='0' aria-valuemax='100'></div></span></td>
-          </tr>
-        <tr>
-            <td colspan="4" class="text-center"><span id='{{ mount }}diskpercent'></span>%</td>
+            <td colspan="5" class="align-middle"><span class="progress"><div id='{{ mount }}diskprogress' class='progress-bar' role='progressbar' style='' aria-valuenow='' aria-valuemin='0' aria-valuemax='100'></div></span></td>
         </tr>
     </tbody>
     {% if (loop.index == 3 and not loop.last) %}
@@ -227,6 +226,7 @@ function getdisks() {
               <th scope="col" class="text-center">Used</th>
               <th scope="col" class="text-center">Free</th>
               <th scope="col" class="text-center">Total</th>
+              <th scope="col" class="text-center">%</th>
           </tr>
       </thead>
   `
@@ -242,12 +242,10 @@ function getdisks() {
           <td id='`+mount+`diskused' class="text-center"></td>
           <td id='`+mount+`diskfree'class="text-center"></td>
           <td id='`+mount+`disktotal' class="text-center"></td>
+          <td class="text-center"><span id='`+mount+`diskpercent'></span> %</td>
       </tr>
       <tr>
-          <td colspan="4" class="align-middle"><span class="progress"><div id='`+mount+`diskprogress' class='progress-bar bg-warning' role='progressbar' style='' aria-valuenow='' aria-valuemin='0' aria-valuemax='100'></div></span></td>
-        </tr>
-      <tr>
-          <td colspan="4" class="text-center"><span id='`+mount+`diskpercent'></span>%</td>
+        <td colspan="5" class="align-middle"><span class="progress"><div id='`+mount+`diskprogress' class='progress-bar bg-warning' role='progressbar' style='' aria-valuenow='' aria-valuemin='0' aria-valuemax='100'></div></span></td>
       </tr>
       </tbody>
       
