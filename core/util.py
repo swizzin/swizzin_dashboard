@@ -22,8 +22,14 @@ else:
         pass
 
 
+def get_btime_utc():
+    file = open('/proc/stat', 'r')
+    for line in file:
+        if line.startswith("btime"):
+            btime = int(line.split(" ")[1])
+            return btime
 
-boottimestamp = os.stat("/proc").st_ctime
+boottimestamp = get_btime_utc()
 boottimeutc = datetime.datetime.utcfromtimestamp(boottimestamp).strftime('%b %d, %Y %H:%M:%S')
 
 def str_to_class(str):
