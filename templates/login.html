@@ -63,8 +63,8 @@ body {
       <div class="form-signin">
         <img class="mb-4" src="{{ url_for('static', filename='img/logo-sm.png') }}" alt="" width="72" height="72">
         <!--<h1 class="h3 mb-3 font-weight-normal">swizzin login</h1>-->
-        <label for="basic-username" class="sr-only">Username</label><input name="username" type="text" id="basic-username" class="form-control" placeholder="Username" required autofocus>
-        <label for="basic-password" class="sr-only">Password</label><input name="password" type="password" id="basic-password" class="form-control" placeholder="Password" required>
+        <label for="basic-username" class="sr-only">Username</label><input name="username" type="text" id="basic-username" class="form-control" placeholder="Username" autocorrect="off" autocapitalize="none" required autofocus>
+        <label for="basic-password" class="sr-only">Password</label><input name="password" type="password" id="basic-password" class="form-control" placeholder="Password" autocorrect="off" autocapitalize="none" required>
         <input type="submit" value="Login" id="btnsubmit" class="btn btn-lg btn-primary btn-block" onclick="login()">
       </div>
   </body>
