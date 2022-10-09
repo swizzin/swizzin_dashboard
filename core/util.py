@@ -76,7 +76,12 @@ def generate_page_list(user):
     else:
         locks = os.listdir('/install')
     try:
-        host = request.host.split(":")[0]
+        if "[" in host:
+            # Special case to handle IPv6 addresses
+            host = request.host.split("]:")[0]
+        else:
+            # Handle IPv4 addresses
+            host = request.host.split(":")[0]
     except:
         host = request.host
 
