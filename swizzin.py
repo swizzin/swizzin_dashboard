@@ -12,6 +12,9 @@ import time
 from werkzeug.middleware.proxy_fix import ProxyFix
 import calendar
 import eventlet
+import logging
+
+logging.basicConfig(level=logging.WARN)
 
 #Prep the websockets with eventlet workers
 eventlet.monkey_patch()

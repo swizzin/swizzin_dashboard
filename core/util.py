@@ -136,7 +136,7 @@ def apps_status(username):
             try:
                 profile = str_to_class(application+"_meta")
             except Exception as e:
-                print("Encountered an error while loading the profile for", application, ": ", e)
+                current_app.logger.debug("Encountered an error while loading the profile for %s: %s", application, e)
                 continue
         try:
             multiuser = profile.multiuser
