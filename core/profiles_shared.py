@@ -73,7 +73,7 @@ class jellyfin_meta:
 
 class jfago_meta:
     name = "jfago"
-    pretty_name = "jf-ago"
+    pretty_name = "jfa-go"
     systemd = "jfago"
     baseurl = "/jfa-go"
     runas = "root"
