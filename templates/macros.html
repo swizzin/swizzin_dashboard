@@ -275,7 +275,7 @@ function appstatus(){
   $.get("{{ url_for('app_status') }}", function(data, xhr){
   if(xhr.status==401)
     {
-      window.location.href = "{{ url_for('logout') }}";
+      window.location.replace = "{{ url_for('logout') }}";
     }
   for (var apps in data) {
     var name = data[apps]["name"];
@@ -302,7 +302,7 @@ appstatus();
     $.get('{{ url_for('loadavg') }}', function(data, xhr) {
       if(xhr.status==401)
       {
-        window.location.href = "{{ url_for('logout') }}";
+        window.location.replace = "{{ url_for('logout') }}";
       }
       $("#load1m").html(data['1m']);
       $("#load5m").html(data['5m']);
@@ -324,7 +324,7 @@ appstatus();
     $.get('{{ url_for('disk_free') }}', function(data, xhr) {
       if(xhr.status==401)
       {
-        window.location.href = "{{ url_for('logout') }}";
+        window.location.replace = "{{ url_for('logout') }}";
       }
       for (var mount in data) {
         var percent = Math.trunc(data[mount]['perutil']);
@@ -351,7 +351,7 @@ appstatus();
     $.get('{{ url_for('ram_stats') }}', function(data, xhr) {
       if(xhr.status==401)
       {
-        window.location.href = "{{ url_for('logout') }}";
+        window.location.replace = "{{ url_for('logout') }}";
       }
       var percent = Math.trunc(data['perutil']);
       $("#ramfree").html(data['ramfree']);
@@ -377,7 +377,7 @@ appstatus();
     $.get('{{ url_for('vnstat') }}', function(data, xhr) {
       if(xhr.status==401)
       {
-        window.location.href = "{{ url_for('logout') }}";
+        window.location.replace = "{{ url_for('logout') }}";
       }
       $("#top10").html(data);
       setTimeout(function(){vnstat_top10()}, 600000);
@@ -438,7 +438,7 @@ appstatus();
   $.get('{{ url_for('network_quota') }}', function(data, xhr) {
     if(xhr.status==401)
     {
-      window.location.href = "{{ url_for('logout') }}";
+      window.location.replace = "{{ url_for('logout') }}";
     }
     var percent = Math.trunc(data['perutil']);
     $("#netfree").html(data['netfree']);
