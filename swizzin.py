@@ -157,6 +157,8 @@ def unauthorized(e):
             return authenticate()
         elif flask.request.referrer == "{host}{urlbase}login/auth".format(host=flask.request.host_url, urlbase=urlbase):
             return authenticate()
+        elif flask.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return "UNAUTHORIZED", 401
         else:
             return flask.redirect(flask.url_for('login'))
     else:

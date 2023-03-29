@@ -271,39 +271,49 @@ function getdisks() {
 }
 //getdisks()
 
-function appstatus(){
-  $.get("{{ url_for('app_status') }}", function(data, xhr){
-  if(xhr.status==401)
-    {
-      window.location.replace = "{{ url_for('logout') }}";
+function appstatus() {
+  $.ajax({
+    url: "{{ url_for('app_status') }}",
+    statusCode: {
+      401: function() {
+        window.location.replace("{{ url_for('logout') }}");
+      }
+    },
+    success: function(data) {
+      for (var apps in data) {
+        var name = data[apps]["name"];
+        var enabled = data[apps]["enabled"];
+        var active = data[apps]["active"];
+        if (active == true) {
+          $("#status_"+name+".indicator").addClass("bg-success").removeClass("bg-danger");
+        } else {
+          $("#status_"+name+".indicator").addClass("bg-danger").removeClass("bg-success");
+        }
+        if (enabled == true) {
+          $('#enabled_'+name).data('bs.toggle').on(true);
+        } else {
+          $('#enabled_'+name).data('bs.toggle').off(true);
+        }
+      }
+      setTimeout(function() {
+        appstatus();
+      }, 60000);
     }
-  for (var apps in data) {
-    var name = data[apps]["name"];
-    var enabled = data[apps]["enabled"];
-    var active = data[apps]["active"];
-    if (active == true) {
-      $("#status_"+name+".indicator").addClass("bg-success").removeClass("bg-danger");
-    } else {
-      $("#status_"+name+".indicator").addClass("bg-danger").removeClass("bg-success");
-    }
-    if (enabled == true) {
-      $('#enabled_'+name).data('bs.toggle').on(true);
-    } else {
-      $('#enabled_'+name).data('bs.toggle').off(true);
-    }
-  }
-  timer = setTimeout(function(){appstatus()}, 60000);
-  }
-)
-};
+  });
+}
+
 appstatus();
 
+
 (function loadavg() {
-    $.get('{{ url_for('loadavg') }}', function(data, xhr) {
-      if(xhr.status==401)
-      {
-        window.location.replace = "{{ url_for('logout') }}";
+  $.ajax({
+    url: "{{ url_for('loadavg')}}",
+    statusCode: {
+      401: function() {
+        window.location.replace("{{ url_for('logout')}}");
       }
+    },
+    success: function(data) {
       $("#load1m").html(data['1m']);
       $("#load5m").html(data['5m']);
       $("#load15m").html(data['15m']);
@@ -315,17 +325,22 @@ appstatus();
       } else {
         $("#loadindicator.systemindicator").addClass("bg-success").removeClass("bg-warning bg-danger");
       }
-      setTimeout(function(){loadavg()}, 60000);
-      }
-    );
+      setTimeout(function() {
+        loadavg();
+      }, 60000);
+    }
+  });
 })();
 
 (function diskusage() {
-    $.get('{{ url_for('disk_free') }}', function(data, xhr) {
-      if(xhr.status==401)
-      {
-        window.location.replace = "{{ url_for('logout') }}";
+  $.ajax({
+    url: "{{ url_for('disk_free') }}",
+    statusCode: {
+      401: function() {
+        window.location.replace("{{ url_for('logout') }}");
       }
+    },
+    success: function(data) {
       for (var mount in data) {
         var percent = Math.trunc(data[mount]['perutil']);
         $("#"+$.escapeSelector(mount)+"diskfree").html(data[mount]['diskfree']);
@@ -342,17 +357,23 @@ appstatus();
           $("#"+$.escapeSelector(mount)+"indicator.systemindicator").addClass("bg-success").removeClass("bg-warning bg-danger");
           $("#"+$.escapeSelector(mount)+"diskprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-success").removeClass("bg-danger bg-warning");
         }
-        }
-        setTimeout(function(){diskusage()}, 60000);
-    });
+      }
+      setTimeout(function() {
+        diskusage();
+      }, 60000);
+    }
+  });
 })();
 
 (function ramusage() {
-    $.get('{{ url_for('ram_stats') }}', function(data, xhr) {
-      if(xhr.status==401)
-      {
-        window.location.replace = "{{ url_for('logout') }}";
+  $.ajax({
+    url: "{{ url_for('ram_stats') }}",
+    statusCode: {
+      401: function() {
+        window.location.replace("{{ url_for('logout') }}");
       }
+    },
+    success: function(data) {
       var percent = Math.trunc(data['perutil']);
       $("#ramfree").html(data['ramfree']);
       $("#ramused").html(data['ramused']);
@@ -367,24 +388,30 @@ appstatus();
       } else {
         $("#ramindicator.systemindicator").addClass("bg-success").removeClass("bg-warning bg-danger");
         $("#ramprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-success").removeClass("bg-danger bg-warning");
-      }
-      setTimeout(function(){ramusage()}, 60000);
-      }
-    );
+        }
+      setTimeout(function(){
+        ramusage()
+      }, 60000);
+    }
+  });
 })();
 
 (function vnstat_top10() {
-    $.get('{{ url_for('vnstat') }}', function(data, xhr) {
-      if(xhr.status==401)
-      {
-        window.location.replace = "{{ url_for('logout') }}";
+  $.ajax({
+    url: "{{ url_for('vnstat') }}",
+    statusCode: {
+      401: function() {
+        window.location.replace("{{ url_for('logout') }}");
       }
+    },
+    success: function(data) {
       $("#top10").html(data);
-      setTimeout(function(){vnstat_top10()}, 600000);
-      }
-    );
-  })();
-
+    setTimeout(function(){
+      vnstat_top10()
+    }, 600000);
+  }
+});
+})();
 
   window.onload = function() {
     $.get('{{ url_for('boot_time') }}', function(data, xhr) {
@@ -435,11 +462,14 @@ appstatus();
 
 {% macro build_widget_js_shared() %}
 (function netusage() {
-  $.get('{{ url_for('network_quota') }}', function(data, xhr) {
-    if(xhr.status==401)
-    {
-      window.location.replace = "{{ url_for('logout') }}";
-    }
+  $.ajax({
+    url: "{{ url_for('network_quota') }}",
+    statusCode: {
+      401: function() {
+        window.location.replace("{{ url_for('logout') }}");
+      }
+    },
+    success: function(data) {
     var percent = Math.trunc(data['perutil']);
     $("#netfree").html(data['netfree']);
     $("#netused").html(data['netused']);
@@ -455,8 +485,10 @@ appstatus();
       $("#netindicator.systemindicator").addClass("bg-success").removeClass("bg-warning bg-danger");
       $("#netprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-success").removeClass("bg-danger bg-warning");
     }
-    setTimeout(function(){netusage()}, 60000);
-    }
-  );
+    setTimeout(function(){
+      netusage()
+    }, 60000);
+  }
+});
 })();
 {% endmacro %}
