@@ -12,6 +12,9 @@ import time
 from werkzeug.middleware.proxy_fix import ProxyFix
 import calendar
 import eventlet
+import logging
+
+logging.basicConfig(level=logging.WARN)
 
 #Prep the websockets with eventlet workers
 eventlet.monkey_patch()
@@ -50,8 +53,8 @@ if app.config['RATELIMIT_ENABLED'] == True:
     from flask_limiter import Limiter
     from flask_limiter.util import get_remote_address
     limiter = Limiter(
-        app,
-        key_func=get_remote_address,
+        get_remote_address,
+        app=app,
         default_limits=[app.config['RATELIMIT_DEFAULT']],
         default_limits_exempt_when=check_authorization,
         default_limits_per_method=True
@@ -154,6 +157,8 @@ def unauthorized(e):
             return authenticate()
         elif flask.request.referrer == "{host}{urlbase}login/auth".format(host=flask.request.host_url, urlbase=urlbase):
             return authenticate()
+        elif flask.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return "UNAUTHORIZED", 401
         else:
             return flask.redirect(flask.url_for('login'))
     else:

@@ -230,6 +230,11 @@ class rapidleech_meta:
     baseurl = "/rapidleech"
     systemd = False
 
+class readarr_meta:
+    name = "readarr"
+    pretty_name = "Readarr"
+    baseurl = "/readarr"
+
 class rtorrent_meta:
     name = "rtorrent"
     pretty_name = "rTorrent"

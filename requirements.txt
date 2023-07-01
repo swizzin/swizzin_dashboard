@@ -1,8 +1,9 @@
 flask
 flask-htpasswd
 flask-socketio>=5
-flask-limiter
+flask-limiter>=3.0.0
 eventlet
 requests
 dnspython==1.16.0; python_version == "3.5"
+dnspython<2.3
 authlib
