@@ -1,9 +1,9 @@
-flask
-flask-htpasswd
-flask-socketio>=5
-flask-limiter>=3.0.0
-eventlet
-requests
+authlib
 dnspython==1.16.0; python_version == "3.5"
 dnspython<2.3
-authlib
+eventlet
+flask
+flask-htpasswd
+flask-limiter>=3.0.0
+flask-socketio>=5
+requests
