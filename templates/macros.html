@@ -26,12 +26,15 @@
           <li class="nav-item {{ 'active' if request.endpoint == 'index' else '' }}">
               <a class="nav-link" href="{{ url_for('index') }}">Home <span class="sr-only">(current)</span></a>
           </li>
-          {% if ('deluge' in apps|map(attribute="name") or 'rtorrent' in apps|map(attribute="name") or 'qbittorrent' in apps|map(attribute="name")) %}
+          {% if ('deluge' in apps|map(attribute="name") or 'rtorrent' in apps|map(attribute="name") or 'qbittorrent' in apps|map(attribute="name") or 'transmission' in apps|map(attribute="name")) %}
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Downloads
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+              {% if 'transmission' in apps|map(attribute="name") %}
+              <a class="dropdown-item" href="/transmission.downloads">Transmission</a>
+              {% endif %}
               {% if 'rtorrent' in apps|map(attribute="name") %}
               <a class="dropdown-item" href="/rtorrent.downloads">rTorrent</a>
               {% endif %}
@@ -250,7 +253,7 @@ function getdisks() {
           <td colspan="4" class="text-center"><span id='`+mount+`diskpercent'></span>%</td>
       </tr>
       </tbody>
-      
+
       `
       if (i < $(data).length) {
         html += ``
@@ -268,31 +271,49 @@ function getdisks() {
 }
 //getdisks()
 
-function appstatus(){
-  $.get("{{ url_for('app_status') }}", function(data){
-  for (var apps in data) {
-    var name = data[apps]["name"];
-    var enabled = data[apps]["enabled"];
-    var active = data[apps]["active"];
-    if (active == true) {
-      $("#status_"+name+".indicator").addClass("bg-success").removeClass("bg-danger");
-    } else {
-      $("#status_"+name+".indicator").addClass("bg-danger").removeClass("bg-success");
+function appstatus() {
+  $.ajax({
+    url: "{{ url_for('app_status') }}",
+    statusCode: {
+      401: function() {
+        window.location.replace("{{ url_for('logout') }}");
+      }
+    },
+    success: function(data) {
+      for (var apps in data) {
+        var name = data[apps]["name"];
+        var enabled = data[apps]["enabled"];
+        var active = data[apps]["active"];
+        if (active == true) {
+          $("#status_"+name+".indicator").addClass("bg-success").removeClass("bg-danger");
+        } else {
+          $("#status_"+name+".indicator").addClass("bg-danger").removeClass("bg-success");
+        }
+        if (enabled == true) {
+          $('#enabled_'+name).data('bs.toggle').on(true);
+        } else {
+          $('#enabled_'+name).data('bs.toggle').off(true);
+        }
+      }
+      setTimeout(function() {
+        appstatus();
+      }, 60000);
     }
-    if (enabled == true) {
-      $('#enabled_'+name).data('bs.toggle').on(true);
-    } else {
-      $('#enabled_'+name).data('bs.toggle').off(true);  
-    }
-  }
-  timer = setTimeout(function(){appstatus()}, 60000);
-  }
-)
-};
+  });
+}
+
 appstatus();
 
+
 (function loadavg() {
-    $.get('{{ url_for('loadavg') }}', function(data) {
+  $.ajax({
+    url: "{{ url_for('loadavg')}}",
+    statusCode: {
+      401: function() {
+        window.location.replace("{{ url_for('logout')}}");
+      }
+    },
+    success: function(data) {
       $("#load1m").html(data['1m']);
       $("#load5m").html(data['5m']);
       $("#load15m").html(data['15m']);
@@ -304,13 +325,22 @@ appstatus();
       } else {
         $("#loadindicator.systemindicator").addClass("bg-success").removeClass("bg-warning bg-danger");
       }
-      setTimeout(function(){loadavg()}, 60000);
-      }
-    );
+      setTimeout(function() {
+        loadavg();
+      }, 60000);
+    }
+  });
 })();
 
 (function diskusage() {
-    $.get('{{ url_for('disk_free') }}', function(data) {
+  $.ajax({
+    url: "{{ url_for('disk_free') }}",
+    statusCode: {
+      401: function() {
+        window.location.replace("{{ url_for('logout') }}");
+      }
+    },
+    success: function(data) {
       for (var mount in data) {
         var percent = Math.trunc(data[mount]['perutil']);
         $("#"+$.escapeSelector(mount)+"diskfree").html(data[mount]['diskfree']);
@@ -327,13 +357,23 @@ appstatus();
           $("#"+$.escapeSelector(mount)+"indicator.systemindicator").addClass("bg-success").removeClass("bg-warning bg-danger");
           $("#"+$.escapeSelector(mount)+"diskprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-success").removeClass("bg-danger bg-warning");
         }
-        }
-        setTimeout(function(){diskusage()}, 60000);
-    });
+      }
+      setTimeout(function() {
+        diskusage();
+      }, 60000);
+    }
+  });
 })();
 
 (function ramusage() {
-    $.get('{{ url_for('ram_stats') }}', function(data) {
+  $.ajax({
+    url: "{{ url_for('ram_stats') }}",
+    statusCode: {
+      401: function() {
+        window.location.replace("{{ url_for('logout') }}");
+      }
+    },
+    success: function(data) {
       var percent = Math.trunc(data['perutil']);
       $("#ramfree").html(data['ramfree']);
       $("#ramused").html(data['ramused']);
@@ -348,24 +388,88 @@ appstatus();
       } else {
         $("#ramindicator.systemindicator").addClass("bg-success").removeClass("bg-warning bg-danger");
         $("#ramprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-success").removeClass("bg-danger bg-warning");
-      }
-      setTimeout(function(){ramusage()}, 60000);
-      }
-    );
+        }
+      setTimeout(function(){
+        ramusage()
+      }, 60000);
+    }
+  });
 })();
 
 (function vnstat_top10() {
-    $.get('{{ url_for('vnstat') }}', function(data) {
-      $("#top10").html(data);
-      setTimeout(function(){vnstat_top10()}, 600000);
+  $.ajax({
+    url: "{{ url_for('vnstat') }}",
+    statusCode: {
+      401: function() {
+        window.location.replace("{{ url_for('logout') }}");
       }
-    );
-  })();
+    },
+    success: function(data) {
+      $("#top10").html(data);
+    setTimeout(function(){
+      vnstat_top10()
+    }, 600000);
+  }
+});
+})();
+
+  window.onload = function() {
+    $.get('{{ url_for('boot_time') }}', function(data, xhr) {
+      countUpFromTime(data, 'uptime');
+    })
+  };
+  function countUpFromTime(countFrom, id) {
+  countFrom = new Date(countFrom).getTime();
+  var now = new Date(new Date().toUTCString().substr(0, 25)),
+  countFrom = new Date(countFrom),
+  timeDifference = (now - countFrom);
+
+  var secondsInADay = 60 * 60 * 1000 * 24,
+  secondsInAHour = 60 * 60 * 1000;
+
+  days = Math.floor(timeDifference / (secondsInADay) * 1);
+  hours = Math.floor((timeDifference % (secondsInADay)) / (secondsInAHour) * 1);
+  mins = Math.floor(((timeDifference % (secondsInADay)) % (secondsInAHour)) / (60 * 1000) * 1);
+  secs = Math.floor((((timeDifference % (secondsInADay)) % (secondsInAHour)) % (60 * 1000)) / 1000 * 1);
+
+  var idEl = document.getElementById(id);
+  idEl.getElementsByClassName('days')[0].innerHTML = days;
+  idEl.getElementsByClassName('hours')[0].innerHTML = hours;
+  idEl.getElementsByClassName('minutes')[0].innerHTML = mins;
+  idEl.getElementsByClassName('seconds')[0].innerHTML = secs;
+
+  clearTimeout(countUpFromTime.interval);
+  countUpFromTime.interval = setTimeout(function(){ countUpFromTime(countFrom, id); }, 1000);
+  }
+
+  $(document).ready(function(){
+    var protocol = window.location.protocol;
+    var socket = io.connect(protocol + '//' + document.domain + ':' + location.port + '/websocket', {'path': '{{ config.URLBASE }}/socket.io'});
+    socket.on('speed', function(result) {
+      $('#current_rx').html(result.rx);
+      $('#current_tx').html(result.tx)
+    $('#current_total').html(result.total)
+      $('#current_interface').html(result.interface)
+      return false;
+    });
+    socket.on('iowait', function(result) {
+      $('#iowait-glance').html(result.iowait);
+      return false;
+    });
+  });
+
 {% endmacro %}
 
 {% macro build_widget_js_shared() %}
 (function netusage() {
-  $.get('{{ url_for('network_quota') }}', function(data) {
+  $.ajax({
+    url: "{{ url_for('network_quota') }}",
+    statusCode: {
+      401: function() {
+        window.location.replace("{{ url_for('logout') }}");
+      }
+    },
+    success: function(data) {
     var percent = Math.trunc(data['perutil']);
     $("#netfree").html(data['netfree']);
     $("#netused").html(data['netused']);
@@ -381,8 +485,10 @@ appstatus();
       $("#netindicator.systemindicator").addClass("bg-success").removeClass("bg-warning bg-danger");
       $("#netprogress").css("width", percent + "%").attr("aria-valuenow", percent).addClass("bg-success").removeClass("bg-danger bg-warning");
     }
-    setTimeout(function(){netusage()}, 60000);
-    }
-  );
+    setTimeout(function(){
+      netusage()
+    }, 60000);
+  }
+});
 })();
 {% endmacro %}

@@ -22,8 +22,14 @@ else:
         pass
 
 
+def get_btime_utc():
+    file = open('/proc/stat', 'r')
+    for line in file:
+        if line.startswith("btime"):
+            btime = int(line.split(" ")[1])
+            return btime
 
-boottimestamp = os.stat("/proc").st_ctime
+boottimestamp = get_btime_utc()
 boottimeutc = datetime.datetime.utcfromtimestamp(boottimestamp).strftime('%b %d, %Y %H:%M:%S')
 
 def str_to_class(str):
@@ -46,10 +52,12 @@ def get_mounts():
         for line in mount:
             fields = line.strip().split()
             if fields[0].startswith("/dev"):
-                if ("boot" in fields[1]) or ("fuse" in fields) or ("/snap/" in fields[1]) or ("/loop" in fields[0]):
+                if ("boot" in fields[1]) or ("fuse" in fields) or ("/snap/" in fields[1]) or ("/loop" in fields[0]) or ("/docker" in fields[1]):
                     continue
                 else:
                     mounts.append(fields[1])
+            if fields[2] == "zfs":
+                mounts.append(fields[1])
     with open("/etc/fstab") as fstab:
         for line in fstab:
             fields = line.strip().split()
@@ -128,7 +136,7 @@ def apps_status(username):
             try:
                 profile = str_to_class(application+"_meta")
             except Exception as e:
-                print("Encountered an error while loading the profile for", application, ": ", e)
+                current_app.logger.debug("Encountered an error while loading the profile for %s: %s", application, e)
                 continue
         try:
             multiuser = profile.multiuser

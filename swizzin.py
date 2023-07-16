@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import flask
 from core.htpasswd import HtPasswdAuth
+from core.middleware import PrefixMiddleware
 from flask_socketio import SocketIO, emit
 from threading import Thread, Lock
 from packaging import version
@@ -11,6 +12,9 @@ import time
 from werkzeug.middleware.proxy_fix import ProxyFix
 import calendar
 import eventlet
+import logging
+
+logging.basicConfig(level=logging.WARN)
 
 #Prep the websockets with eventlet workers
 eventlet.monkey_patch()
@@ -19,13 +23,19 @@ async_mode = None
 #Prep flask
 app = flask.Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app)
-socketio = SocketIO(app, async_mode=async_mode)
 
 #Config the app
 app.config.from_object('core.config.Config')
 app.config.from_pyfile('swizzin.cfg', silent=True)
 admin_user = app.config['ADMIN_USER']
 htpasswd = HtPasswdAuth(app)
+
+#Config the base url
+if app.config['URLBASE'] == "/":
+    app.config['URLBASE'] = ""
+
+app.wsgi_app = PrefixMiddleware(app.wsgi_app, prefix=app.config['URLBASE'])
+socketio = SocketIO(app,  path='{}/socket.io'.format(app.config['URLBASE']), async_mode=async_mode)
 
 #Config rate limiting
 def check_authorization():
@@ -43,8 +53,8 @@ if app.config['RATELIMIT_ENABLED'] == True:
     from flask_limiter import Limiter
     from flask_limiter.util import get_remote_address
     limiter = Limiter(
-        app,
-        key_func=get_remote_address,
+        get_remote_address,
+        app=app,
         default_limits=[app.config['RATELIMIT_DEFAULT']],
         default_limits_exempt_when=check_authorization,
         default_limits_per_method=True
@@ -120,10 +130,9 @@ def io_wait(app):
 @app.before_request
 def reload_htpasswd():
     """ 
-    This function will run before every load of the index. It will ensure the htpasswd file is current.
+    This function ensures htpasswd is reloaded and up-to-date before every request.
     """ 
-    if flask.request.endpoint == 'index':
-        htpasswd.load_users(app)
+    htpasswd.load_users(app)
 
 #@app.after_request
 #def apply_headers(response):
@@ -138,10 +147,18 @@ def reload_htpasswd():
 @app.errorhandler(401)
 def unauthorized(e):
     if app.config['FORMS_LOGIN']:
-        if flask.request.referrer == "{}login".format(flask.request.host_url):
+        if app.config['URLBASE'] == "":
+            urlbase = app.config['URLBASE']
+        elif app.config['URLBASE'].startswith("/"):
+            urlbase = app.config['URLBASE'][1:]
+        if not urlbase == "" and not urlbase.endswith("/"):
+            urlbase = urlbase + "/"
+        if flask.request.referrer == "{host}{urlbase}login".format(host=flask.request.host_url, urlbase=urlbase):
             return authenticate()
-        elif flask.request.referrer == "{}login/auth".format(flask.request.host_url):
+        elif flask.request.referrer == "{host}{urlbase}login/auth".format(host=flask.request.host_url, urlbase=urlbase):
             return authenticate()
+        elif flask.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return "UNAUTHORIZED", 401
         else:
             return flask.redirect(flask.url_for('login'))
     else:
@@ -377,11 +394,11 @@ def auth(user):
         <div>You have been logged in. Redirecting to home...</div>    
 
 <script>
-    setTimeout(function () {
-        window.location.href = "/";
-    }, 500);
+    setTimeout(function () {{
+        window.location.href = "{}";
+    }}, 500);
 </script>
-    """
+    """.format(flask.url_for('index'))
 
 
 @app.route('/logout')

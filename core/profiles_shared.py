@@ -1,5 +1,13 @@
 from pwd import getpwnam
 
+class autobrr_meta:
+    name = "autobrr"
+    pretty_name = "autobrr"
+    baseurl = "/autobrr"
+    process = "autobrr"
+    systemd = "autobrr@"
+    multiuser = True
+
 class autodl_meta:
     name = "autodl"
     pretty_name = "AutoDL irssi"
@@ -76,6 +84,13 @@ class medusa_meta:
     baseurl = "/medusa"
     systemd = "medusa@"
     multiuser = True
+    
+class navidrome_meta:
+    name = "navidrome"
+    pretty_name = "Navidrome"
+    baseurl = "/navidrome"
+    systemd = "navidrome"
+    img = "navidrome"
 
 class nzbget_meta:
     name = "nzbget"

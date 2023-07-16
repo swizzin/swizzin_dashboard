@@ -1,6 +1,14 @@
 from pwd import getpwnam
 from configparser import ConfigParser
 
+class autobrr_meta:
+    name = "autobrr"
+    pretty_name = "autobrr"
+    baseurl = "/autobrr"
+    process = "autobrr"
+    systemd = "autobrr@"
+    multiuser = True
+
 class autodl_meta:
     name = "autodl"
     process = "irssi"
@@ -26,6 +34,22 @@ class couchpotato_meta:
     pretty_name = "CouchPotato"
     baseurl = "/couchpotato"
     systemd = "couchpotato"
+    
+class calibrecs_meta:
+    name = "calibrecs"
+    pretty_name = "Calibre Content Server"
+    baseurl = "/calibrecs"
+    systemd = "calibrecs"
+    multiuser = True
+    check_theD = True
+    
+class calibreweb_meta:
+    name = "calibreweb"
+    pretty_name = "Calibre Web"
+    baseurl = "/calibreweb"
+    systemd = "calibreweb"
+    runas = "calibreweb"
+    multiuser = True
 
 class deluge_meta:
     name = "deluge"
@@ -109,7 +133,23 @@ class medusa_meta:
     pretty_name = "Medusa"
     baseurl = "/medusa"
     systemd = "medusa"
+    
+class navidrome_meta:
+    name = "navidrome"
+    pretty_name = "Navidrome"
+    baseurl = "/navidrome"
+    process = "navidrome"
+    systemd = "navidrome"
+    multiuser = True
 
+class mylar_meta:
+    name = "mylar"
+    pretty_name = "Mylar"
+    baseurl = "/mylar"
+    process = "mylar"
+    systemd = "mylar"
+    img = "mylar"
+    
 class netdata_meta:
     name = "netdata"
     pretty_name = "Netdata"
@@ -140,6 +180,11 @@ class ombi_meta:
     pretty_name = "Ombi"
     baseurl = "/ombi"
     runas = "ombi"
+    
+class prowlarr_meta:
+    name = "prowlarr"
+    pretty_name = "Prowlarr"
+    baseurl = "/prowlarr"
     
 class organizr_meta:
     name = "organizr"
@@ -185,6 +230,11 @@ class rapidleech_meta:
     baseurl = "/rapidleech"
     systemd = False
 
+class readarr_meta:
+    name = "readarr"
+    pretty_name = "Readarr"
+    baseurl = "/readarr"
+
 class rtorrent_meta:
     name = "rtorrent"
     pretty_name = "rTorrent"
@@ -222,15 +272,15 @@ class sickgear_meta:
     baseurl = "/sickgear"
     systemd = "sickgear"
 
-class sonarr_meta:
-    name = "sonarr"
+class sonarrold_meta:
+    name = "sonarrold"
     pretty_name = "Sonarr"
     process = "nzbdrone"
     baseurl = "/sonarr"
     systemd = "sonarr@"
 
-class sonarrv3_meta:
-    name = "sonarrv3"
+class sonarr_meta:
+    name = "sonarr"
     pretty_name = "Sonarr"
     baseurl = "/sonarr"
     process = "sonarr"
