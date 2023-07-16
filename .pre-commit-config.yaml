@@ -7,8 +7,8 @@ repos:
   #   rev: v1.3.1
   #   hooks:
   #     - id: python-safety-dependencies-check
-  - repo: github.com/pre-commit/pre-commit-hooks
-    rev: master
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0  # Use the ref you want to point at
     hooks:
       - id: check-ast
       - id: requirements-txt-fixer
