@@ -7,6 +7,7 @@ import pkg_resources
 
 _REQUIREMENTS_PATH = Path(__file__).parent.with_name("requirements.txt")
 
+
 class TestRequirements(unittest.TestCase):
     """Test availability of required packages."""
 
@@ -18,6 +19,7 @@ class TestRequirements(unittest.TestCase):
             requirement = str(requirement)
             with self.subTest(requirement=requirement):
                 pkg_resources.require(requirement)
+
 
 test = TestRequirements()
 test.test_requirements()

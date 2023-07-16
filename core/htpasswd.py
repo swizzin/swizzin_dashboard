@@ -32,19 +32,19 @@ class HtPasswdAuth:
         Find and configure the user database from specified file
         """
         # pylint: disable=inconsistent-return-statements
-        app.config.setdefault('FLASK_AUTH_ALL', False)
-        app.config.setdefault('FLASK_AUTH_REALM', 'Login Required')
+        app.config.setdefault("FLASK_AUTH_ALL", False)
+        app.config.setdefault("FLASK_AUTH_REALM", "Login Required")
         # Default set to bad file to trigger IOError
-        app.config.setdefault('FLASK_HTPASSWD_PATH', '/^^^/^^^')
+        app.config.setdefault("FLASK_HTPASSWD_PATH", "/^^^/^^^")
 
         # Load up user database
         try:
             self.load_users(app)
         except IOError:
             log.critical(
-                'No htpasswd file loaded, please set `FLASK_HTPASSWD`'
-                'or `FLASK_HTPASSWD_PATH` environment variable to a '
-                'valid apache htpasswd file.'
+                "No htpasswd file loaded, please set `FLASK_HTPASSWD`"
+                "or `FLASK_HTPASSWD_PATH` environment variable to a "
+                "valid apache htpasswd file."
             )
 
         # Allow requiring auth for entire app, with pre request method
@@ -52,7 +52,7 @@ class HtPasswdAuth:
         def require_auth():
             # pylint: disable=unused-variable
             """Pre request processing for enabling full app authentication."""
-            if not current_app.config['FLASK_AUTH_ALL']:
+            if not current_app.config["FLASK_AUTH_ALL"]:
                 return None
             is_valid, user = self.authenticate()
             if not is_valid:
@@ -71,41 +71,32 @@ class HtPasswdAuth:
         Returns:
             None
         """
-        self.users = HtpasswdFile(
-            app.config['FLASK_HTPASSWD_PATH']
-        )
+        self.users = HtpasswdFile(app.config["FLASK_HTPASSWD_PATH"])
 
     def check_basic_auth(self, username, password):
         """
         This function is called to check if a username /
         password combination is valid via the htpasswd file.
         """
-        valid = self.users.check_password(
-            username, password
-        )
+        valid = self.users.check_password(username, password)
         if not valid:
-            user_ip = request.environ['REMOTE_ADDR']
-            log.warning('Invalid login from %s at %s'%(username, user_ip))
+            user_ip = request.environ["REMOTE_ADDR"]
+            log.warning("Invalid login from %s at %s" % (username, user_ip))
             valid = False
-        return (
-            valid,
-            username
-        )
+        return (valid, username)
 
     @staticmethod
     def get_signature():
         """
         Setup crypto sig.
         """
-        return Serializer.serialize(current_app.config['FLASK_SECRET'])
+        return Serializer.serialize(current_app.config["FLASK_SECRET"])
 
     def get_hashhash(self, username):
         """
         Generate a digest of the htpasswd hash
         """
-        return hashlib.sha256(
-            self.users.get_hash(username)
-        ).hexdigest()
+        return hashlib.sha256(self.users.get_hash(username)).hexdigest()
 
     def generate_token(self, username):
         """
@@ -116,11 +107,8 @@ class HtPasswdAuth:
         """
         serializer = self.get_signature()
         return serializer.dumps(
-            {
-                'username': username,
-                'hashhash': self.get_hashhash(username)
-            }
-        ).decode('UTF-8')
+            {"username": username, "hashhash": self.get_hashhash(username)}
+        ).decode("UTF-8")
 
     def check_token_auth(self, token):
         """
@@ -132,22 +120,20 @@ class HtPasswdAuth:
         try:
             data = serializer.loads(token)
         except BadSignature:
-            log.warning('Received bad token signature')
+            log.warning("Received bad token signature")
             return False, None
-        if data['username'] not in self.users.users():
+        if data["username"] not in self.users.users():
             log.warning(
-                'Token auth signed message, but invalid user %s',
-                data['username']
+                "Token auth signed message, but invalid user %s", data["username"]
             )
             return False, None
-        if data['hashhash'] != self.get_hashhash(data['username']):
+        if data["hashhash"] != self.get_hashhash(data["username"]):
             log.warning(
-                'Token and password do not match, %s '
-                'needs to regenerate token',
-                data['username']
+                "Token and password do not match, %s " "needs to regenerate token",
+                data["username"],
             )
             return False, None
-        return True, data['username']
+        return True, data["username"]
 
     @staticmethod
     def auth_failed():
@@ -157,7 +143,10 @@ class HtPasswdAuth:
         if request.endpoint == "auth":
             r = make_response()
             r.status_code = 401
-            r.headers.set('WWW-Authenticate', 'basic realm="{0}"'.format(current_app.config['FLASK_AUTH_REALM']))
+            r.headers.set(
+                "WWW-Authenticate",
+                'basic realm="{0}"'.format(current_app.config["FLASK_AUTH_REALM"]),
+            )
             return r
         else:
             return abort(401)
@@ -178,8 +167,8 @@ class HtPasswdAuth:
                 basic_auth.username, basic_auth.password
             )
         else:  # Try token auth
-            token = request.headers.get('Authorization', None)
-            param_token = request.args.get('access_token')
+            token = request.headers.get("Authorization", None)
+            param_token = request.args.get("access_token")
             if token or param_token:
                 if token:
                     # slice the 'token ' piece of the header (following
@@ -188,7 +177,7 @@ class HtPasswdAuth:
                 else:
                     # Grab it from query dict instead
                     token = param_token
-                log.debug('Received token: %s', token)
+                log.debug("Received token: %s", token)
 
                 is_valid, user = self.check_token_auth(token)
         return (is_valid, user)
@@ -197,6 +186,7 @@ class HtPasswdAuth:
         """
         Decorator function with basic and token authentication handler
         """
+
         @wraps(func)
         def decorated(*args, **kwargs):
             """
@@ -205,6 +195,7 @@ class HtPasswdAuth:
             is_valid, user = self.authenticate()
             if not is_valid:
                 return self.auth_failed()
-            kwargs['user'] = user
+            kwargs["user"] = user
             return func(*args, **kwargs)
+
         return decorated
