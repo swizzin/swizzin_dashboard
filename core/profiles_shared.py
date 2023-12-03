@@ -145,6 +145,13 @@ class radarr_meta:
     systemd = "radarr@"
     multiuser = True
 
+class readarr_meta:
+    name = "readarr"
+    pretty_name = "Readarr"
+    baseurl = "/readarr"
+    systemd = "readarr@"
+    multiuser = True
+
 class rtorrent_meta:
     name = "rtorrent"
     pretty_name = "rTorrent"
