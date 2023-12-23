@@ -51,7 +51,7 @@ def get_mounts():
     with open("/proc/mounts") as mount:
         for line in mount:
             fields = line.strip().split()
-            if fields[0].startswith("/dev"):
+            if fields[0].startswith("/dev") or re.match("[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}", fields[0]) or re.match("^(([0-9A-Fa-f]{1,4}:){7})([0-9A-Fa-f]{1,4})$|(([0-9A-Fa-f]{1,4}:){1,6}:)(([0-9A-Fa-f]{1,4}:){0,4})([0-9A-Fa-f]{1,4})$", fields[0]):
                 if ("boot" in fields[1]) or ("fuse" in fields) or ("/snap/" in fields[1]) or ("/loop" in fields[0]) or ("/docker" in fields[1]):
                     continue
                 else:
