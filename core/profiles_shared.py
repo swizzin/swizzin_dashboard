@@ -91,7 +91,15 @@ class navidrome_meta:
     baseurl = "/navidrome"
     systemd = "navidrome"
     img = "navidrome"
-
+    
+class nextcloud_meta:
+    name = "nextcloud"
+    pretty_name = "Nextcloud"
+    systemd = "nextcloud@"
+    multiuser = True
+    def __init__(self, user):
+        self.baseurl = "/"+user+"/nextcloud/"
+    
 class nzbget_meta:
     name = "nzbget"
     pretty_name = "nzbGet"
