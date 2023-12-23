@@ -131,6 +131,13 @@ class plexpy_meta:
     process = "plexpy"
     multiuser = True
 
+class prowlarr_meta:
+    name = "prowlarr"
+    pretty_name = "Prowlarr"
+    baseurl = "/prowlarr"
+    systemd = "prowlarr@"
+    multiuser = True
+
 class qbittorrent_meta:
     name = "qbittorrent"
     pretty_name = "qBittorrent"
