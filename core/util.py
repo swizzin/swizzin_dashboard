@@ -263,16 +263,16 @@ def network_quota_usage(username):
     quota = json.loads(quota)
     try:
         total = int(quota['total'])
-        totalh = GetHumanReadableB(total)
+        totalh = GetHumanReadableBi(total)
     except:
         totalh = quota['total']
     try:
         free = int(quota['remaining'])
-        freeh = GetHumanReadableB(free)
+        freeh = GetHumanReadableBi(free)
     except:
         freeh = quota['remaining']
     used = int(quota['used'])
-    usedh = GetHumanReadableB(used)
+    usedh = GetHumanReadableBi(used)
     try:
         usage = '{0:.2f}'.format((used / total * 100))
     except:
@@ -288,13 +288,14 @@ def GetHumanReadableKiB(size,precision=2):
         size = size/1024.0 #apply the division
     return "%.*f %s"%(precision,size,suffixes[suffixIndex])
 
+#KB function is unused -- check math before using
 def GetHumanReadableKB(size,precision=2):
     #https://stackoverflow.com/a/32009595
     suffixes=['KB','MB','GB','TB','PB']
     suffixIndex = 0
-    while size > 1024 and suffixIndex < 4:
+    while size > 1000 and suffixIndex < 4:
         suffixIndex += 1 #increment the index of the suffix
-        size = size/1024.0 #apply the division
+        size = size/1000.0 #apply the division
     return "%.*f %s"%(precision,size,suffixes[suffixIndex])
 
 def GetHumanReadableBi(size,precision=2):
@@ -310,9 +311,9 @@ def GetHumanReadableB(size,precision=2):
     #https://stackoverflow.com/a/32009595
     suffixes=['B','KB','MB','GB','TB','PB']
     suffixIndex = 0
-    while size > 1024 and suffixIndex < 4:
+    while size > 1000 and suffixIndex < 4:
         suffixIndex += 1 #increment the index of the suffix
-        size = size/1024.0 #apply the division
+        size = size/1000.0 #apply the division
     return "%.*f %s"%(precision,size,suffixes[suffixIndex])
 
 def get_nic_bytes(t, interface):

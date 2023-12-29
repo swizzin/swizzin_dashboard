@@ -84,15 +84,15 @@ def current_speed(app):
             if tx_prev > 0:
                 tx_speed = tx - tx_prev
                 #print('TX: ', tx_speed, 'bps')
-                tx_speed = str(GetHumanReadableB(tx_speed)) + "/s"
+                tx_speed = str(GetHumanReadableBi(tx_speed)) + "/s"
             if rx_prev > 0:
                 rx_speed = rx - rx_prev
                 #print('RX: ', rx_speed, 'bps')
-                rx_speed = str(GetHumanReadableB(rx_speed)) + "/s"
+                rx_speed = str(GetHumanReadableBi(rx_speed)) + "/s"
             if total_prev > 0:
                 total_speed = total - total_prev
                 #print("TOTAL: ', total_speed, 'bps')
-                total_speed = str(GetHumanReadableB(total_speed)) + "/s"
+                total_speed = str(GetHumanReadableBi(total_speed)) + "/s"
                 emit('speed', {'interface': interface, 'tx': tx_speed, 'rx': rx_speed, 'total': total_speed}, namespace='/websocket', broadcast=True)
             time.sleep(1)
             tx_prev = tx
@@ -369,9 +369,9 @@ def boot_time(user):
 @htpasswd.required
 def ram_stats(user):
     ramstats = dict((i.split()[0].rstrip(':'),int(i.split()[1])) for i in open('/proc/meminfo').readlines())
-    ramtotal = GetHumanReadableKB(ramstats['MemTotal'])
-    ramfree = GetHumanReadableKB(ramstats['MemAvailable'])
-    ramused = GetHumanReadableKB(ramstats['MemTotal'] - ramstats['MemAvailable'])
+    ramtotal = GetHumanReadableKiB(ramstats['MemTotal'])
+    ramfree = GetHumanReadableKiB(ramstats['MemAvailable'])
+    ramused = GetHumanReadableKiB(ramstats['MemTotal'] - ramstats['MemAvailable'])
     perutil = '{0:.2f}'.format((ramstats['MemTotal'] - ramstats['MemAvailable']) / ramstats['MemTotal'] * 100)
     return flask.jsonify({"ramtotal": ramtotal, "ramfree": ramfree, "ramused": ramused, "perutil": perutil})
 
