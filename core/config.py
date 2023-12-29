@@ -17,3 +17,4 @@ class Config:
     SHAREDSERVER = False
     FORMS_LOGIN = True
     NETWORK_TOTALS = False
+    DISK_UNITS = "iec"

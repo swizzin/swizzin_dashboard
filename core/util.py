@@ -239,9 +239,14 @@ def vnstat_parse(interface, mode, query, read_unit, position=False):
 
 def disk_usage(location):
     total, used, free = shutil.disk_usage(location)
-    totalh = GetHumanReadableBi(total)
-    usedh = GetHumanReadableBi(used)
-    freeh = GetHumanReadableBi(free)
+    if swizzin.app.config['DISK_UNITS'] == "si":
+        totalh = GetHumanReadableB(total)
+        usedh = GetHumanReadableB(used)
+        freeh = GetHumanReadableB(free)
+    else:
+        totalh = GetHumanReadableBi(total)
+        usedh = GetHumanReadableBi(used)
+        freeh = GetHumanReadableBi(free)
     usage = '{0:.2f}'.format((used / total * 100))
     return totalh, usedh, freeh, usage
 
