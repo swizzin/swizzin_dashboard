@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+#Prep the websockets with eventlet workers
+import eventlet
+eventlet.monkey_patch()
+
 import flask
 from core.htpasswd import HtPasswdAuth
 from core.middleware import PrefixMiddleware
@@ -11,13 +15,10 @@ import requests
 import time
 from werkzeug.middleware.proxy_fix import ProxyFix
 import calendar
-import eventlet
 import logging
 
 logging.basicConfig(level=logging.WARN)
 
-#Prep the websockets with eventlet workers
-eventlet.monkey_patch()
 async_mode = None
 
 #Prep flask
