@@ -193,6 +193,14 @@ class organizr_meta:
     systemd = False
     multiuser = True
 
+class overseerr_meta:
+    name = "overseerr"
+    pretty_name = "Overseerr"
+    baseurl = "/overseerr"
+    systemd = "overseerr"
+    runas = "overseerr"
+    multiuser = True    
+    
 class plex_meta:
     name = "plex"
     pretty_name = "Plex"
