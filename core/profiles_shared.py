@@ -1,5 +1,15 @@
 from pwd import getpwnam
 
+class audiobookshelf_meta:
+    name = "audiobookshelf"
+    pretty_name = "Audiobookshelf"
+    baseurl = "/audiobookshelf"
+    systemd = "audiobookshelf@"
+    process = "audiobookshelf"
+    multiuser = True
+    def __init__(self, user):
+        self.baseurl = "/"+user+"/audiobookshelf/"
+
 class autobrr_meta:
     name = "autobrr"
     pretty_name = "autobrr"
