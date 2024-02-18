@@ -23,7 +23,7 @@ class bazarr_meta:
 
 class btsync_meta:
     name = "btsync"
-    pretty_name = "Resilio Sync"    
+    pretty_name = "Resilio Sync"
     baseurl = ":8888/gui"
     scheme = "http"
     systemd = "resilio-sync"
@@ -34,7 +34,7 @@ class couchpotato_meta:
     pretty_name = "CouchPotato"
     baseurl = "/couchpotato"
     systemd = "couchpotato"
-    
+
 class calibrecs_meta:
     name = "calibrecs"
     pretty_name = "Calibre Content Server"
@@ -42,7 +42,7 @@ class calibrecs_meta:
     systemd = "calibrecs"
     multiuser = True
     check_theD = True
-    
+
 class calibreweb_meta:
     name = "calibreweb"
     pretty_name = "Calibre Web"
@@ -95,13 +95,22 @@ class jackett_meta:
     pretty_name = "Jackett"
     baseurl = "/jackett"
     systemd = "jackett@"
-    
+
 class jellyfin_meta:
     name = "jellyfin"
     pretty_name = "Jellyfin"
     baseurl = "/jellyfin"
     systemd = "jellyfin"
     runas = "jellyfin"
+
+class jfago_meta:
+    name = "jfago"
+    pretty_name = "jfa-go"
+    systemd = "jfago"
+    baseurl = "/jfa-go"
+    runas = "root"
+    check_theD = True
+    multiuser = False
 
 class librespeed_meta:
     name = "librespeed"
@@ -119,7 +128,7 @@ class lounge_meta:
     pretty_name = "The Lounge"
     baseurl = "/irc"
     runas = "lounge"
-    
+
 class mango_meta:
     name = "mango"
     pretty_name = "Mango"
@@ -133,7 +142,7 @@ class medusa_meta:
     pretty_name = "Medusa"
     baseurl = "/medusa"
     systemd = "medusa"
-    
+
 class navidrome_meta:
     name = "navidrome"
     pretty_name = "Navidrome"
@@ -149,7 +158,7 @@ class mylar_meta:
     process = "mylar"
     systemd = "mylar"
     img = "mylar"
-    
+
 class netdata_meta:
     name = "netdata"
     pretty_name = "Netdata"
@@ -180,12 +189,12 @@ class ombi_meta:
     pretty_name = "Ombi"
     baseurl = "/ombi"
     runas = "ombi"
-    
+
 class prowlarr_meta:
     name = "prowlarr"
     pretty_name = "Prowlarr"
     baseurl = "/prowlarr"
-    
+
 class organizr_meta:
     name = "organizr"
     pretty_name = "Organizr"
@@ -331,7 +340,7 @@ class wireguard_meta:
 class xmrig_meta:
     name = "xmrig"
     pretty_name = "XMRig"
-    
+
 class znc_meta:
     name = "znc"
     pretty_name = "ZNC"
