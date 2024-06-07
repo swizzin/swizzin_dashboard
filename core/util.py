@@ -56,7 +56,7 @@ def get_mounts():
                     continue
                 else:
                     mounts.append(fields[1])
-            if fields[2] == "zfs":
+            if fields[2] == "zfs" or fields[2] == "cifs":
                 mounts.append(fields[1])
     with open("/etc/fstab") as fstab:
         for line in fstab:
