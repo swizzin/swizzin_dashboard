@@ -27,16 +27,20 @@ function login()
 {
 var username = document.getElementById("basic-username").value;
 var password = document.getElementById("basic-password").value;
+var path = window.location.pathname.split("/");
+var basepath = path.slice(0, path.length-1).join("/");
 var http = getHTTPObject();
     //var url = "http://" + username + ":" + password + "@" + this.action.substr(7);
-    var url = "/";
+    var url = basepath + "/";
 http.open("get", url, false, username, password);
 http.send("");
     if (http.status == 200) {
-            document.location = url;
+        document.location = url;
+    } else if (http.status == 429) {
+        alert("You have been rate limited! Please try again in 1 minute.");
     } else {
-    alert("Incorrect username and/or password!");
-}
+        alert("Incorrect username and/or password!");
+    }
 return false;
 }
 

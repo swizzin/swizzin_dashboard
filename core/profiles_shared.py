@@ -1,5 +1,13 @@
 from pwd import getpwnam
 
+class autobrr_meta:
+    name = "autobrr"
+    pretty_name = "autobrr"
+    baseurl = "/autobrr"
+    process = "autobrr"
+    systemd = "autobrr@"
+    multiuser = True
+
 class autodl_meta:
     name = "autodl"
     pretty_name = "AutoDL irssi"
@@ -76,7 +84,22 @@ class medusa_meta:
     baseurl = "/medusa"
     systemd = "medusa@"
     multiuser = True
-
+    
+class navidrome_meta:
+    name = "navidrome"
+    pretty_name = "Navidrome"
+    baseurl = "/navidrome"
+    systemd = "navidrome"
+    img = "navidrome"
+    
+class nextcloud_meta:
+    name = "nextcloud"
+    pretty_name = "Nextcloud"
+    systemd = "nextcloud@"
+    multiuser = True
+    def __init__(self, user):
+        self.baseurl = "/"+user+"/nextcloud/"
+    
 class nzbget_meta:
     name = "nzbget"
     pretty_name = "nzbGet"
@@ -116,6 +139,13 @@ class plexpy_meta:
     process = "plexpy"
     multiuser = True
 
+class prowlarr_meta:
+    name = "prowlarr"
+    pretty_name = "Prowlarr"
+    baseurl = "/prowlarr"
+    systemd = "prowlarr@"
+    multiuser = True
+
 class qbittorrent_meta:
     name = "qbittorrent"
     pretty_name = "qBittorrent"
@@ -128,6 +158,13 @@ class radarr_meta:
     pretty_name = "Radarr"
     baseurl = "/radarr"
     systemd = "radarr@"
+    multiuser = True
+
+class readarr_meta:
+    name = "readarr"
+    pretty_name = "Readarr"
+    baseurl = "/readarr"
+    systemd = "readarr@"
     multiuser = True
 
 class rtorrent_meta:
@@ -156,7 +193,7 @@ class sonarr_meta:
     pretty_name = "Sonarr"
     baseurl = "/sonarr"
     systemd = "sonarr@"
-    process = "NzbDrone"
+    process = "Sonarr"
     multiuser = True
 
 class wireguard_meta:

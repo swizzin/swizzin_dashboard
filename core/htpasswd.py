@@ -9,8 +9,8 @@ import hashlib
 import logging
 
 from flask import request, Response, current_app, g, abort, make_response
-from itsdangerous import JSONWebSignatureSerializer as Serializer
 from itsdangerous import BadSignature
+from authlib.jose import JsonWebSignature as Serializer
 from passlib.apache import HtpasswdFile
 
 
@@ -84,7 +84,8 @@ class HtPasswdAuth:
             username, password
         )
         if not valid:
-            log.warning('Invalid login from %s', username)
+            user_ip = request.environ['REMOTE_ADDR']
+            log.warning('Invalid login from %s at %s'%(username, user_ip))
             valid = False
         return (
             valid,
@@ -96,7 +97,7 @@ class HtPasswdAuth:
         """
         Setup crypto sig.
         """
-        return Serializer(current_app.config['FLASK_SECRET'])
+        return Serializer.serialize(current_app.config['FLASK_SECRET'])
 
     def get_hashhash(self, username):
         """

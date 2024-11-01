@@ -1,6 +1,11 @@
 #!/usr/bin/env python
+#Prep the websockets with eventlet workers
+import eventlet
+eventlet.monkey_patch()
+
 import flask
 from core.htpasswd import HtPasswdAuth
+from core.middleware import PrefixMiddleware
 from flask_socketio import SocketIO, emit
 from threading import Thread, Lock
 from packaging import version
@@ -10,22 +15,51 @@ import requests
 import time
 from werkzeug.middleware.proxy_fix import ProxyFix
 import calendar
-import eventlet
+import logging
 
-#Prep the websockets with eventlet workers
-eventlet.monkey_patch()
+logging.basicConfig(level=logging.WARN)
+
 async_mode = None
 
 #Prep flask
 app = flask.Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app)
-socketio = SocketIO(app, async_mode=async_mode)
 
 #Config the app
 app.config.from_object('core.config.Config')
 app.config.from_pyfile('swizzin.cfg', silent=True)
 admin_user = app.config['ADMIN_USER']
 htpasswd = HtPasswdAuth(app)
+
+#Config the base url
+if app.config['URLBASE'] == "/":
+    app.config['URLBASE'] = ""
+
+app.wsgi_app = PrefixMiddleware(app.wsgi_app, prefix=app.config['URLBASE'])
+socketio = SocketIO(app,  path='{}/socket.io'.format(app.config['URLBASE']), async_mode=async_mode)
+
+#Config rate limiting
+def check_authorization():
+    if flask.request.authorization:
+        try:
+            authreq = flask.request.authorization.username 
+            return True
+        except:
+            return False
+    else:
+        return False
+
+
+if app.config['RATELIMIT_ENABLED'] == True:
+    from flask_limiter import Limiter
+    from flask_limiter.util import get_remote_address
+    limiter = Limiter(
+        get_remote_address,
+        app=app,
+        default_limits=[app.config['RATELIMIT_DEFAULT']],
+        default_limits_exempt_when=check_authorization,
+        default_limits_per_method=True
+    )
 
 from core.util import *
 
@@ -43,22 +77,28 @@ def current_speed(app):
     with app.app_context():
         #print("Starting current speed for", interface)
         interface = get_default_interface()
-        (tx_prev, rx_prev) = (0, 0)
+        (tx_prev, rx_prev, total_prev) = (0, 0, 0)
         while(True):
             tx = get_nic_bytes('tx', interface)
             rx = get_nic_bytes('rx', interface)
+            total = tx + rx
             if tx_prev > 0:
                 tx_speed = tx - tx_prev
                 #print('TX: ', tx_speed, 'bps')
-                tx_speed = str(GetHumanReadableB(tx_speed)) + "/s"
+                tx_speed = str(GetHumanReadableBi(tx_speed)) + "/s"
             if rx_prev > 0:
                 rx_speed = rx - rx_prev
                 #print('RX: ', rx_speed, 'bps')
-                rx_speed = str(GetHumanReadableB(rx_speed)) + "/s"
-                emit('speed', {'interface': interface, 'tx': tx_speed, 'rx': rx_speed}, namespace='/websocket', broadcast=True)
+                rx_speed = str(GetHumanReadableBi(rx_speed)) + "/s"
+            if total_prev > 0:
+                total_speed = total - total_prev
+                #print("TOTAL: ', total_speed, 'bps')
+                total_speed = str(GetHumanReadableBi(total_speed)) + "/s"
+                emit('speed', {'interface': interface, 'tx': tx_speed, 'rx': rx_speed, 'total': total_speed}, namespace='/websocket', broadcast=True)
             time.sleep(1)
             tx_prev = tx
             rx_prev = rx
+            total_prev = total
 
 def io_wait(app):
     """ Thread for iowait emission """
@@ -91,10 +131,9 @@ def io_wait(app):
 @app.before_request
 def reload_htpasswd():
     """ 
-    This function will run before every load of the index. It will ensure the htpasswd file is current.
+    This function ensures htpasswd is reloaded and up-to-date before every request.
     """ 
-    if flask.request.endpoint == 'index':
-        htpasswd.load_users(app)
+    htpasswd.load_users(app)
 
 #@app.after_request
 #def apply_headers(response):
@@ -109,10 +148,18 @@ def reload_htpasswd():
 @app.errorhandler(401)
 def unauthorized(e):
     if app.config['FORMS_LOGIN']:
-        if flask.request.referrer == "{}login".format(flask.request.host_url):
+        if app.config['URLBASE'] == "":
+            urlbase = app.config['URLBASE']
+        elif app.config['URLBASE'].startswith("/"):
+            urlbase = app.config['URLBASE'][1:]
+        if not urlbase == "" and not urlbase.endswith("/"):
+            urlbase = urlbase + "/"
+        if flask.request.referrer == "{host}{urlbase}login".format(host=flask.request.host_url, urlbase=urlbase):
             return authenticate()
-        elif flask.request.referrer == "{}login/auth".format(flask.request.host_url):
+        elif flask.request.referrer == "{host}{urlbase}login/auth".format(host=flask.request.host_url, urlbase=urlbase):
             return authenticate()
+        elif flask.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return "UNAUTHORIZED", 401
         else:
             return flask.redirect(flask.url_for('login'))
     else:
@@ -145,7 +192,11 @@ def index(user):
         quota = True
     else:
         quota = False
-    return flask.render_template('index.html', title='{user} - swizzin dashboard'.format(user=user), user=user, pages=pages, quota=quota, mounts=mounts, async_mode=socketio.async_mode)
+    if os.path.isfile("/install/.sbio.lock"):
+        vendor = "sbio"
+    else:
+        vendor = "swizzin"
+    return flask.render_template('index.html', title='{user} - swizzin dashboard'.format(user=user), user=user, pages=pages, quota=quota, vendor=vendor, mounts=mounts, async_mode=socketio.async_mode)
 
 @socketio.on('connect', namespace='/websocket')
 def socket_connect():
@@ -282,8 +333,9 @@ def vnstat(user):
         date = "{month} {day}, {year}".format(year=year, month=month, day=day)
         rx = read_unit(t['rx'])
         tx =read_unit(t['tx'])
-        top.append({"date": date, "rx": rx, "tx": tx})
-    columns = {"date", "rx", "tx"}
+        total = read_unit(t['tx'] + t['rx'])
+        top.append({"date": date, "rx": rx, "tx": tx, "total": total})
+    columns = {"date", "rx", "tx", "total"}
     #stats = []
     #stats.extend({"statsh": statsh, "statslh": statslh, "statsd": statsd, "statsm": statsm, "statsa": statsa, "top": top})
     #print(stats)
@@ -318,9 +370,9 @@ def boot_time(user):
 @htpasswd.required
 def ram_stats(user):
     ramstats = dict((i.split()[0].rstrip(':'),int(i.split()[1])) for i in open('/proc/meminfo').readlines())
-    ramtotal = GetHumanReadableKB(ramstats['MemTotal'])
-    ramfree = GetHumanReadableKB(ramstats['MemAvailable'])
-    ramused = GetHumanReadableKB(ramstats['MemTotal'] - ramstats['MemAvailable'])
+    ramtotal = GetHumanReadableKiB(ramstats['MemTotal'])
+    ramfree = GetHumanReadableKiB(ramstats['MemAvailable'])
+    ramused = GetHumanReadableKiB(ramstats['MemTotal'] - ramstats['MemAvailable'])
     perutil = '{0:.2f}'.format((ramstats['MemTotal'] - ramstats['MemAvailable']) / ramstats['MemTotal'] * 100)
     return flask.jsonify({"ramtotal": ramtotal, "ramfree": ramfree, "ramused": ramused, "perutil": perutil})
 
@@ -343,11 +395,11 @@ def auth(user):
         <div>You have been logged in. Redirecting to home...</div>    
 
 <script>
-    setTimeout(function () {
-        window.location.href = "/";
-    }, 500);
+    setTimeout(function () {{
+        window.location.href = "{}";
+    }}, 500);
 </script>
-    """
+    """.format(flask.url_for('index'))
 
 
 @app.route('/logout')

@@ -21,7 +21,7 @@ If you are adapting this package to work outside of a swizzin environment, the s
 
 #### Dependencies
 
-- Python 3.5+
+- Python 3.6+
 - Flask
 - Flask-htpasswd
 - Flask-SocketIO

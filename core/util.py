@@ -22,8 +22,14 @@ else:
         pass
 
 
+def get_btime_utc():
+    file = open('/proc/stat', 'r')
+    for line in file:
+        if line.startswith("btime"):
+            btime = int(line.split(" ")[1])
+            return btime
 
-boottimestamp = os.stat("/proc").st_ctime
+boottimestamp = get_btime_utc()
 boottimeutc = datetime.datetime.utcfromtimestamp(boottimestamp).strftime('%b %d, %Y %H:%M:%S')
 
 def str_to_class(str):
@@ -46,11 +52,13 @@ def get_mounts(user):
     with open("/proc/mounts") as mount:
         for line in mount:
             fields = line.strip().split()
-            if fields[0].startswith("/dev"):
-                if ("boot" in fields[1]) or ("fuse" in fields) or ("/snap/" in fields[1]) or ("/loop" in fields[0]):
+            if fields[0].startswith("/dev") or re.match("[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}", fields[0]) or re.match("^(([0-9A-Fa-f]{1,4}:){7})([0-9A-Fa-f]{1,4})$|(([0-9A-Fa-f]{1,4}:){1,6}:)(([0-9A-Fa-f]{1,4}:){0,4})([0-9A-Fa-f]{1,4})$", fields[0]):
+                if ("boot" in fields[1]) or ("fuse" in fields) or ("/snap/" in fields[1]) or ("/loop" in fields[0]) or ("/docker" in fields[1]):
                     continue
                 else:
                     mounts.append(fields[1])
+            if fields[2] == "zfs":
+                mounts.append(fields[1])
     with open("/etc/fstab") as fstab:
         for line in fstab:
             fields = line.strip().split()
@@ -71,7 +79,12 @@ def generate_page_list(user):
     else:
         locks = os.listdir('/install')
     try:
-        host = request.host.split(":")[0]
+        if "[" in request.host:
+            # Special case to handle IPv6 addresses
+            host = request.host.split("]:")[0]
+        else:
+            # Handle IPv4 addresses
+            host = request.host.split(":")[0]
     except:
         host = request.host
 
@@ -121,7 +134,7 @@ def apps_status(username):
         locks = os.listdir('/home/'+username+'/.install')
     else:
         locks = os.listdir('/install')
-    ps = sp.Popen(('ps', 'axo', 'user:20,comm,cmd'), stdout=sp.PIPE).communicate()[0]
+    ps = sp.Popen(('ps', 'axo', 'user:32,comm,cmd'), stdout=sp.PIPE).communicate()[0]
     procs = ps.splitlines()
     for lock in locks:
         application = lock.split(".")[1]
@@ -130,7 +143,8 @@ def apps_status(username):
         except:
             try:
                 profile = str_to_class(application+"_meta")
-            except:
+            except Exception as e:
+                current_app.logger.debug("Encountered an error while loading the profile for %s: %s", application, e)
                 continue
         try:
             multiuser = profile.multiuser
@@ -216,19 +230,26 @@ def vnstat_parse(interface, mode, query, read_unit, position=False):
                 data = {}
                 data['rx'] = read_unit(p['rx'])
                 data['tx'] = read_unit(p['tx'])
+                data['total'] = read_unit(p['tx'] + p['rx'])
                 result = data
                 break
     else:
         result = vnstat_data(interface, mode)['interfaces'][0]['traffic'][query]
+        result['total'] = read_unit(result['rx'] + result['tx'])
         result['rx'] = read_unit(result['rx'])
         result['tx'] = read_unit(result['tx'])
     return result
 
 def disk_usage(location):
     total, used, free = shutil.disk_usage(location)
-    totalh = GetHumanReadableBi(total)
-    usedh = GetHumanReadableBi(used)
-    freeh = GetHumanReadableBi(free)
+    if swizzin.app.config['DISK_UNITS'] == "si":
+        totalh = GetHumanReadableB(total)
+        usedh = GetHumanReadableB(used)
+        freeh = GetHumanReadableB(free)
+    else:
+        totalh = GetHumanReadableBi(total)
+        usedh = GetHumanReadableBi(used)
+        freeh = GetHumanReadableBi(free)
     usage = '{0:.2f}'.format((used / total * 100))
     return totalh, usedh, freeh, usage
 
@@ -250,16 +271,16 @@ def network_quota_usage(username):
     quota = json.loads(quota)
     try:
         total = int(quota['total'])
-        totalh = GetHumanReadableB(total)
+        totalh = GetHumanReadableBi(total)
     except:
         totalh = quota['total']
     try:
         free = int(quota['remaining'])
-        freeh = GetHumanReadableB(free)
+        freeh = GetHumanReadableBi(free)
     except:
         freeh = quota['remaining']
     used = int(quota['used'])
-    usedh = GetHumanReadableB(used)
+    usedh = GetHumanReadableBi(used)
     try:
         usage = '{0:.2f}'.format((used / total * 100))
     except:
@@ -275,13 +296,14 @@ def GetHumanReadableKiB(size,precision=2):
         size = size/1024.0 #apply the division
     return "%.*f %s"%(precision,size,suffixes[suffixIndex])
 
+#KB function is unused -- check math before using
 def GetHumanReadableKB(size,precision=2):
     #https://stackoverflow.com/a/32009595
     suffixes=['KB','MB','GB','TB','PB']
     suffixIndex = 0
-    while size > 1024 and suffixIndex < 4:
+    while size > 1000 and suffixIndex < 4:
         suffixIndex += 1 #increment the index of the suffix
-        size = size/1024.0 #apply the division
+        size = size/1000.0 #apply the division
     return "%.*f %s"%(precision,size,suffixes[suffixIndex])
 
 def GetHumanReadableBi(size,precision=2):
@@ -297,9 +319,9 @@ def GetHumanReadableB(size,precision=2):
     #https://stackoverflow.com/a/32009595
     suffixes=['B','KB','MB','GB','TB','PB']
     suffixIndex = 0
-    while size > 1024 and suffixIndex < 4:
+    while size > 1000 and suffixIndex < 4:
         suffixIndex += 1 #increment the index of the suffix
-        size = size/1024.0 #apply the division
+        size = size/1000.0 #apply the division
     return "%.*f %s"%(precision,size,suffixes[suffixIndex])
 
 def get_nic_bytes(t, interface):

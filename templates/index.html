@@ -10,9 +10,9 @@
 </head>
 <body>
 <div class="d-flex" id="wrapper">
-  {{macros.build_sidebar(pages=pages)}}
+  {{macros.build_sidebar(pages=pages, vendor=vendor)}}
   {% if config.SHAREDSERVER == True %}
-    {{macros.build_nav_shared(user=user, apps=pages)}}
+    {{macros.build_nav_shared(user=user, apps=pages, vendor=vendor)}}
   {% else %}
     {{macros.build_nav(user=user, apps=pages)}}
   {% endif %}
@@ -38,9 +38,9 @@
 </div>
 <!-- /#body-content-wrapper -->
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 <script src="{{ url_for('static', filename='js/swizzin.js') }}"></script>
 
