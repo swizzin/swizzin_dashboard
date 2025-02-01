@@ -29,7 +29,7 @@
             <th scope="col">Interface</th>
             <th scope="col" class="text-info text-center">Down</th>
             <th scope="col" class="text-success text-center">Up</th>
-			{% if config.NETWORK_TOTALS == True %}
+			{% if config.NETWORK_INFO_TOTALS == True %}
 			<th scope="col" class="text-warning text-center">Total</th>
 			{% endif %}
         </tr>
@@ -39,7 +39,7 @@
             <td><div id="current_interface">--</div></td>
             <td class="text-info"><div id="current_rx" class="text-center">--</div></td>
             <td class="text-success"><div id="current_tx" class="text-center">--</div></td>
-			{% if config.NETWORK_TOTALS == True %}
+			{% if config.NETWORK_INFO_TOTALS == True %}
 			<td class="text-warning"><div id="current_total" class="text-center">--</div></td>
 			{% endif %}
         </tr>

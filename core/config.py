@@ -18,3 +18,8 @@ class Config:
     FORMS_LOGIN = True
     NETWORK_TOTALS = False
     DISK_UNITS = "iec"
+
+    NETWORK_INFO_CUTOFF = "YYYY-MM-DD"
+    NETWORK_INFO_TOP = True
+    NETWORK_INFO_TOPSTATS = 5
+    NETWORK_INFO_TOTALS = True

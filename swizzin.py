@@ -335,12 +335,30 @@ def vnstat(user):
         tx =read_unit(t['tx'])
         total = read_unit(t['tx'] + t['rx'])
         timeline.append({"date": date, "rx": rx, "tx": tx, "total": total})
+
+    if app.config['NETWORK_INFO_TOP']:
+        if not app.config['NETWORK_INFO_CUTOFF'] or app.config['NETWORK_INFO_CUTOFF'] == "YYYY-MM-DD":
+            tops = vnstat_data(interface, "t")['interfaces'][0]['traffic'][qt]
+        else:
+            tops = vnstat_data(interface, "t", app.config['NETWORK_INFO_CUTOFF'])['interfaces'][0]['traffic'][qt]
+        top = []
+        for t in tops[:app.config['NETWORK_INFO_TOPSTATS']]:
+            date = t['date']
+            year = date['year']
+            month = calendar.month_abbr[date['month']]
+            day = date['day']
+            date = "{month} {day}, {year}".format(year=year, month=month, day=day)
+            rx = read_unit(t['rx'])
+            tx =read_unit(t['tx'])
+            total = read_unit(t['tx'] + t['rx'])
+            top.append({"date": date, "rx": rx, "tx": tx, "total": total})
+
     columns = {"date", "rx", "tx", "total"}
     #stats = []
     #stats.extend({"statsh": statsh, "statslh": statslh, "statsd": statsd, "statsm": statsm, "statsa": statsa, "top": top})
     #print(stats)
     #return flask.jsonify({"statsh": statsh, "statslh": statslh, "statsd": statsd, "statsm": statsm, "statsa": statsa, "top": top})
-    return flask.render_template('top.html', user=user, timeline=timeline, day=statsd, month=statsm, hour=statsh, lasthour=statslh, alltime=statsa, colnames=columns)
+    return flask.render_template('top.html', user=user, timeline=timeline, day=statsd, month=statsm, hour=statsh, lasthour=statslh, alltime=statsa, colnames=columns, top=top if app.config['NETWORK_INFO_TOP'] else None)
 
 @app.route('/stats/disk')
 @htpasswd.required
