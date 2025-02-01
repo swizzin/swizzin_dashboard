@@ -212,8 +212,11 @@ def systemctl(function, application):
         result = sp.run(('sudo', 'systemctl', function, application), stdout=sp.DEVNULL).returncode
     return result
 
-def vnstat_data(interface, mode):
-    vnstat = sp.run(('vnstat', '-i', interface, '--json', mode), stdout=sp.PIPE)
+def vnstat_data(interface, mode, begin=False):
+    if begin is not False:
+        vnstat = sp.run(('vnstat', '-i', interface, '-b', begin, "--json", mode), stdout=sp.PIPE)
+    else:
+        vnstat = sp.run(('vnstat', '-i', interface, '--json', mode), stdout=sp.PIPE)
     data = json.loads(vnstat.stdout.decode('utf-8'))
     #data = vnstat.stdout.decode('utf-8')
     return data
