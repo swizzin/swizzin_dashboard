@@ -66,13 +66,13 @@
         </tr>
     </thead>
     <tbody>
-        {% for t in top %}
+        {% for day in timeline %}
         <tr>
-            <td>{{ t['date'] }}</td>
-            <td class="text-info text-center">{{ t['rx'] }}</td>
-            <td class="text-success text-center">{{ t['tx'] }}</td>
-			{% if config.NETWORK_TOTALS == True %}
-			<td class="text-warning text-center">{{ t['total'] }}</td>
+            <td>{{ day['date'] }}</td>
+            <td class="text-info text-center">{{ day['rx'] }}</td>
+            <td class="text-success text-center">{{ day['tx'] }}</td>
+			{% if config.NETWORK_INFO_TOTALS == True %}
+			<td class="text-warning text-center">{{ day['total'] }}</td>
 			{% endif %}
         </tr>
         {% endfor %}
