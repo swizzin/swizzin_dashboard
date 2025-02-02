@@ -291,7 +291,7 @@ def GetHumanReadableKiB(size,precision=2):
     #https://stackoverflow.com/a/32009595
     suffixes=['KiB','MiB','GiB','TiB','PiB']
     suffixIndex = 0
-    while size > 1024 and suffixIndex < 4:
+    while size > 1024 and suffixIndex < 5:
         suffixIndex += 1 #increment the index of the suffix
         size = size/1024.0 #apply the division
     return "%.*f %s"%(precision,size,suffixes[suffixIndex])
@@ -310,7 +310,7 @@ def GetHumanReadableBi(size,precision=2):
     #https://stackoverflow.com/a/32009595
     suffixes=['B','KiB','MiB','GiB','TiB','PiB']
     suffixIndex = 0
-    while size > 1024 and suffixIndex < 4:
+    while size > 1024 and suffixIndex < 5:
         suffixIndex += 1 #increment the index of the suffix
         size = size/1024.0 #apply the division
     return "%.*f %s"%(precision,size,suffixes[suffixIndex])
@@ -319,7 +319,7 @@ def GetHumanReadableB(size,precision=2):
     #https://stackoverflow.com/a/32009595
     suffixes=['B','KB','MB','GB','TB','PB']
     suffixIndex = 0
-    while size > 1000 and suffixIndex < 4:
+    while size > 1000 and suffixIndex < 5:
         suffixIndex += 1 #increment the index of the suffix
         size = size/1000.0 #apply the division
     return "%.*f %s"%(precision,size,suffixes[suffixIndex])
