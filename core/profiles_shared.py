@@ -206,3 +206,26 @@ class wireguard_meta:
         uid = getpwnam(user).pw_uid
         self.systemd = "wg-quick@wg"+str(uid)
         self.process = "wg"+str(uid)
+
+class filebrowser_meta:
+    name = "filebrowser"
+    pretty_name = "Filebrowser"
+    baseurl = "/filebrowser"
+    systemd = "filebrowser@"
+    process = "filebrowser"
+    multiuser = True
+
+class audiobookshelf_meta:
+    name = "audiobookshelf"
+    pretty_name = "Audiobookshelf"
+    systemd = "audiobookshelf@"
+    multiuser = True
+    def __init__(self, user):
+        self.baseurl = "/"+user+"/audiobookshelf/"
+
+class lounge_meta:
+    name = "lounge"
+    pretty_name = "The Lounge"
+    baseurl = "/thelounge"
+    systemd = "thelounge@"
+    multiuser = True
