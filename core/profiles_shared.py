@@ -210,10 +210,12 @@ class wireguard_meta:
 class filebrowser_meta:
     name = "filebrowser"
     pretty_name = "Filebrowser"
-    baseurl = "/filebrowser"
     systemd = "filebrowser@"
     process = "filebrowser"
-    multiuser = True
+    multiuser = True'    
+    def __init__(self, user):
+        self.baseurl = "/"+user+"/filebrowser"
+
 
 class audiobookshelf_meta:
     name = "audiobookshelf"
