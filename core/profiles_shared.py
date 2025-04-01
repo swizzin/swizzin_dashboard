@@ -212,7 +212,7 @@ class filebrowser_meta:
     pretty_name = "Filebrowser"
     systemd = "filebrowser@"
     process = "filebrowser"
-    multiuser = True'    
+    multiuser = True
     def __init__(self, user):
         self.baseurl = "/"+user+"/filebrowser"
 
