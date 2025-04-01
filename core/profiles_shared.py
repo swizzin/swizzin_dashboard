@@ -225,9 +225,11 @@ class audiobookshelf_meta:
     def __init__(self, user):
         self.baseurl = "/"+user+"/audiobookshelf/"
 
-class lounge_meta:
-    name = "lounge"
+class thelounge_meta:
+    name = "thelounge"
     pretty_name = "The Lounge"
     baseurl = "/thelounge"
     systemd = "thelounge@"
     multiuser = True
+    def __init__(self, user):
+        self.baseurl = "/"+user+"/thelounge/"
