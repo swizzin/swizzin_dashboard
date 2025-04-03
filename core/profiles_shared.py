@@ -214,7 +214,7 @@ class filebrowser_meta:
     process = "filebrowser"
     multiuser = True
     def __init__(self, user):
-        self.baseurl = "/"+user+"/filebrowser"
+        self.baseurl = "/"+user+"/filebrowser/"
 
 
 class audiobookshelf_meta:
