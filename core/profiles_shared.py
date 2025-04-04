@@ -24,7 +24,7 @@ class bazarr_meta:
 
 class btsync_meta:
     name = "btsync"
-    pretty_name = "Resilio Sync"    
+    pretty_name = "Resilio Sync"
     baseurl = "/btsync"
     #scheme = "http"
     systemd = "btsync@"
@@ -71,6 +71,15 @@ class jellyfin_meta:
     def __init__(self, user):
         self.baseurl = "/"+user+"/jellyfin/"
 
+class jfago_meta:
+    name = "jfago"
+    pretty_name = "jfa-go"
+    systemd = "jfago"
+    baseurl = "/jfa-go"
+    runas = "root"
+    check_theD = True
+    multiuser = False
+
 class lidarr_meta:
     name = "lidarr"
     pretty_name = "Lidarr"
@@ -84,7 +93,7 @@ class medusa_meta:
     baseurl = "/medusa"
     systemd = "medusa@"
     multiuser = True
-    
+
 class navidrome_meta:
     name = "navidrome"
     pretty_name = "Navidrome"
