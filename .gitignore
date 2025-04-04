@@ -1,2 +1,5 @@
-
+.env/
+**__pycache__**
+swizzin.cfg
 .DS_Store
+
