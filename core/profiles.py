@@ -1,6 +1,12 @@
 from pwd import getpwnam
 from configparser import ConfigParser
 
+class airsonic_meta:
+    name = "airsonic"
+    pretty_name = "Airsonic"
+    baseurl = "/airsonic"
+    runas = "airsonic"
+
 class autobrr_meta:
     name = "autobrr"
     pretty_name = "autobrr"
