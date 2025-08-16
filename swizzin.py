@@ -52,7 +52,7 @@ def check_authorization():
         return False
 
 
-if app.config['RATELIMIT_ENABLED'] == True:
+if app.config['RATELIMIT_ENABLED']:
     from flask_limiter import Limiter
     from flask_limiter.util import get_remote_address
 
@@ -119,7 +119,7 @@ def io_wait(app):
         while True:
             readstats = open('/proc/stat')
             procstats = readstats.readlines()[0].split()
-            user, nice, sys, idle, iowait, irq, sirq = (
+            _user, _nice, _sys, _idle, iowait, _irq, _sirq = (
                 float(procstats[1]),
                 float(procstats[2]),
                 float(procstats[3]),
@@ -132,7 +132,7 @@ def io_wait(app):
             time.sleep(interval)
             readstats = open('/proc/stat')
             procstats = readstats.readlines()[0].split()
-            userd, niced, sysd, idled, iowaitd, irqd, sirqd = (
+            _userd, _niced, _sysd, _idled, iowaitd, _irqd, _sirqd = (
                 float(procstats[1]),
                 float(procstats[2]),
                 float(procstats[3]),
@@ -300,7 +300,7 @@ def service(user):
             multiuser = profile.multiuser
         except:
             multiuser = False
-        if multiuser == False and user != admin_user:
+        if not multiuser and user != admin_user:
             return """Access denied"""
         try:
             application = profile.systemd
@@ -461,7 +461,7 @@ def login():
 @htpasswd.required
 def auth(user):
     return """
-        <div>You have been logged in. Redirecting to home...</div>    
+        <div>You have been logged in. Redirecting to home...</div>
 
 <script>
     setTimeout(function () {{

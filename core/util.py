@@ -119,7 +119,7 @@ def generate_page_list(user):
             multiuser = profile.multiuser
         except:
             multiuser = False
-        if multiuser == False and user != admin_user:
+        if not multiuser and user != admin_user:
             continue
         try:
             scheme = profile.scheme
@@ -174,7 +174,7 @@ def apps_status(username):
             multiuser = profile.multiuser
         except:
             multiuser = False
-        if multiuser == False and username != admin_user:
+        if not multiuser and username != admin_user:
             continue
         try:
             # If application is not run as user
@@ -190,7 +190,7 @@ def apps_status(username):
             systemd = profile.systemd
         except:
             systemd = profile.name
-        if systemd == False:
+        if not systemd:
             continue
         try:
             enabled = is_application_enabled(systemd, user)
