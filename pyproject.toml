@@ -29,3 +29,15 @@ line-length = 120
 [tool.ruff.format]
 quote-style = "preserve"
 preview=true
+
+[tool.ruff.lint]
+select = [
+    "I",
+    "E",
+    "W",
+    "F"
+]
+
+ignore = [
+    "E402", #These imports are everywhere
+]
