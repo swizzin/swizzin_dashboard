@@ -4,4 +4,10 @@ repos:
     hooks:
       - id: uv-lock
       - id: uv-export
-        args : ["--no-hashes"]
+        args: ["--no-hashes"]
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.12.9
+    hooks:
+      # - id: ruff-check
+      - id: ruff-format
