@@ -3,6 +3,7 @@
 Decorator, configuration, and error handler for basic and token
 authentication using htpasswd files
 """
+
 from __future__ import absolute_import, unicode_literals
 from functools import wraps
 import hashlib
@@ -71,26 +72,19 @@ class HtPasswdAuth:
         Returns:
             None
         """
-        self.users = HtpasswdFile(
-            app.config['FLASK_HTPASSWD_PATH']
-        )
+        self.users = HtpasswdFile(app.config['FLASK_HTPASSWD_PATH'])
 
     def check_basic_auth(self, username, password):
         """
         This function is called to check if a username /
         password combination is valid via the htpasswd file.
         """
-        valid = self.users.check_password(
-            username, password
-        )
+        valid = self.users.check_password(username, password)
         if not valid:
             user_ip = request.environ['REMOTE_ADDR']
-            log.warning('Invalid login from %s at %s'%(username, user_ip))
+            log.warning('Invalid login from %s at %s' % (username, user_ip))
             valid = False
-        return (
-            valid,
-            username
-        )
+        return (valid, username)
 
     @staticmethod
     def get_signature():
@@ -103,9 +97,7 @@ class HtPasswdAuth:
         """
         Generate a digest of the htpasswd hash
         """
-        return hashlib.sha256(
-            self.users.get_hash(username)
-        ).hexdigest()
+        return hashlib.sha256(self.users.get_hash(username)).hexdigest()
 
     def generate_token(self, username):
         """
@@ -115,12 +107,7 @@ class HtPasswdAuth:
         the username and a hash of the htpasswd string.
         """
         serializer = self.get_signature()
-        return serializer.dumps(
-            {
-                'username': username,
-                'hashhash': self.get_hashhash(username)
-            }
-        ).decode('UTF-8')
+        return serializer.dumps({'username': username, 'hashhash': self.get_hashhash(username)}).decode('UTF-8')
 
     def check_token_auth(self, token):
         """
@@ -137,14 +124,13 @@ class HtPasswdAuth:
         if data['username'] not in self.users.users():
             log.warning(
                 'Token auth signed message, but invalid user %s',
-                data['username']
+                data['username'],
             )
             return False, None
         if data['hashhash'] != self.get_hashhash(data['username']):
             log.warning(
-                'Token and password do not match, %s '
-                'needs to regenerate token',
-                data['username']
+                'Token and password do not match, %s needs to regenerate token',
+                data['username'],
             )
             return False, None
         return True, data['username']
@@ -174,9 +160,7 @@ class HtPasswdAuth:
         is_valid = False
         user = None
         if basic_auth:
-            is_valid, user = self.check_basic_auth(
-                basic_auth.username, basic_auth.password
-            )
+            is_valid, user = self.check_basic_auth(basic_auth.username, basic_auth.password)
         else:  # Try token auth
             token = request.headers.get('Authorization', None)
             param_token = request.args.get('access_token')
@@ -197,6 +181,7 @@ class HtPasswdAuth:
         """
         Decorator function with basic and token authentication handler
         """
+
         @wraps(func)
         def decorated(*args, **kwargs):
             """
@@ -207,4 +192,5 @@ class HtPasswdAuth:
                 return self.auth_failed()
             kwargs['user'] = user
             return func(*args, **kwargs)
+
         return decorated
