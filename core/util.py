@@ -1,14 +1,15 @@
-import sys
-import os
-import swizzin
-from flask import request, current_app
-from flask_socketio import SocketIO, emit
-import subprocess as sp
-import json
-import shutil
 import datetime
+import json
+import os
 import re
+import shutil
+import subprocess as sp
+import sys
 from pwd import getpwnam
+
+from flask import current_app, request
+
+import swizzin
 
 is_shared = swizzin.app.config['SHAREDSERVER']
 
@@ -58,7 +59,7 @@ def get_mounts():
             fields = line.strip().split()
             if (
                 fields[0].startswith("/dev")
-                or re.match("[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}", fields[0])
+                or re.match(r"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}", fields[0])
                 or re.match(
                     "^(([0-9A-Fa-f]{1,4}:){7})([0-9A-Fa-f]{1,4})$|(([0-9A-Fa-f]{1,4}:){1,6}:)(([0-9A-Fa-f]{1,4}:){0,4})([0-9A-Fa-f]{1,4})$",
                     fields[0],

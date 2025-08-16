@@ -5,15 +5,15 @@ authentication using htpasswd files
 """
 
 from __future__ import absolute_import, unicode_literals
-from functools import wraps
+
 import hashlib
 import logging
+from functools import wraps
 
-from flask import request, Response, current_app, g, abort, make_response
-from itsdangerous import BadSignature
 from authlib.jose import JsonWebSignature as Serializer
+from flask import abort, current_app, g, make_response, request
+from itsdangerous import BadSignature
 from passlib.apache import HtpasswdFile
-
 
 log = logging.getLogger(__name__)  # pylint: disable=invalid-name
 

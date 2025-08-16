@@ -1,5 +1,5 @@
-from pwd import getpwnam
 from configparser import ConfigParser
+from pwd import getpwnam
 
 
 class autobrr_meta:

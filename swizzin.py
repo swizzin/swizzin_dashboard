@@ -4,19 +4,19 @@ import eventlet
 
 eventlet.monkey_patch()
 
-import flask
-from core.htpasswd import HtPasswdAuth
-from core.middleware import PrefixMiddleware
-from flask_socketio import SocketIO, emit
-from threading import Thread, Lock
-from packaging import version
-import os
-import core.config
-import requests
-import time
-from werkzeug.middleware.proxy_fix import ProxyFix
 import calendar
 import logging
+import os
+import time
+from threading import Lock
+
+import flask
+import requests
+from flask_socketio import SocketIO, emit
+from werkzeug.middleware.proxy_fix import ProxyFix
+
+from core.htpasswd import HtPasswdAuth
+from core.middleware import PrefixMiddleware
 
 logging.basicConfig(level=logging.WARN)
 
