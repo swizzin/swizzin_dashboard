@@ -21,3 +21,11 @@ dev = [
     "ruff>=0.12.9",
     "uv>=0.8.11",
 ]
+
+[tool.ruff]
+# Allow lines to be as long as 120.
+line-length = 120
+
+[tool.ruff.format]
+# Prefer single quotes over double quotes.
+quote-style = "single"
