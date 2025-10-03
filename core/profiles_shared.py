@@ -153,6 +153,14 @@ class qbittorrent_meta:
     systemd = "qbittorrent@"
     multiuser = True
 
+class qui_meta:
+    name = "qui"
+    pretty_name = "qui"
+    baseurl = "/qui"
+    process = "qui"
+    systemd = "qui@"
+    multiuser = True
+
 class radarr_meta:
     name = "radarr"
     pretty_name = "Radarr"

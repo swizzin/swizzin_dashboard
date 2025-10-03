@@ -219,6 +219,14 @@ class quassel_meta:
     pretty_name = "Quassel-Core"
     systemd = "quasselcore"
 
+class qui_meta:
+    name = "qui"
+    pretty_name = "qui"
+    baseurl = "/qui"
+    process = "qui"
+    systemd = "qui@"
+    multiuser = True
+
 class radarr_meta:
     name = "radarr"
     pretty_name = "Radarr"
