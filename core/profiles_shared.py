@@ -8,6 +8,14 @@ class autobrr_meta:
     systemd = "autobrr@"
     multiuser = True
 
+class shinkro_meta:
+    name = "shinkro"
+    pretty_name = "shinkro"
+    baseurl = "/shinkro"
+    process = "shinkro"
+    systemd = "shinkro@"
+    multiuser = True
+
 class autodl_meta:
     name = "autodl"
     pretty_name = "AutoDL irssi"
