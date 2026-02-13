@@ -179,6 +179,13 @@ class netdata_meta:
     baseurl = "/netdata"
     runas = "netdata"
 
+class netronome_meta:
+    name = "netronome"
+    pretty_name = "netronome"
+    baseurl = "/netronome"
+    process = "netronome"
+    systemd = "netronome@"
+    multiuser = True
 
 class nextcloud_meta:
     name = "nextcloud"
@@ -252,6 +259,13 @@ class quassel_meta:
     pretty_name = "Quassel-Core"
     systemd = "quasselcore"
 
+class qui_meta:
+    name = "qui"
+    pretty_name = "qui"
+    baseurl = "/qui"
+    process = "qui"
+    systemd = "qui@"
+    multiuser = True
 
 class radarr_meta:
     name = "radarr"

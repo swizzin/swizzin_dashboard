@@ -1,4 +1,4 @@
-{% macro build_sidebar(pages, vendor) %}
+f{% macro build_sidebar(pages, vendor) %}
 <div class="bg-dark" id="sidebar-wrapper">
     {% if vendor == "sbio" %}
       <div class="sidebar-heading"><img class="logo" src="{{ url_for('static', filename='img/vendors/sbio.png') }}" /></div>
@@ -113,7 +113,7 @@
               <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a>
                 <a class="dropdown-item" href="https://my.hostingby.design/submitticket.php?step=2&deptid=2">Support</a>
-                <a class="dropdown-item" href="https://discord/gg/StaAybe3rm">Discord</a>
+                <a class="dropdown-item" href="https://discord.gg/StaAybe3rm">Discord</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="https://docs.hostingby.design/">Documentation</a>
               </div>
