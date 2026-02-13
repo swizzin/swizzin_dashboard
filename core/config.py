@@ -1,5 +1,6 @@
 import pwd
 
+
 class Config:
     try:
         ADMIN_USER = pwd.getpwuid(1000).pw_name
