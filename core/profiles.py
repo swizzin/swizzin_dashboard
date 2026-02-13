@@ -156,6 +156,14 @@ class netdata_meta:
     baseurl = "/netdata"
     runas = "netdata"
 
+class netronome_meta:
+    name = "netronome"
+    pretty_name = "netronome"
+    baseurl = "/netronome"
+    process = "netronome"
+    systemd = "netronome@"
+    multiuser = True
+
 class nextcloud_meta:
     name = "nextcloud"
     pretty_name = "Nextcloud"
