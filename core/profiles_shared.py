@@ -105,7 +105,8 @@ class navidrome_meta:
     baseurl = "/navidrome"
     systemd = "navidrome"
     img = "navidrome"
-    
+
+
 class netronome_meta:
     name = "netronome"
     pretty_name = "netronome"
@@ -113,6 +114,7 @@ class netronome_meta:
     process = "netronome"
     systemd = "netronome@"
     multiuser = True
+
 
 class nextcloud_meta:
     name = "nextcloud"
@@ -184,6 +186,7 @@ class qbittorrent_meta:
     systemd = "qbittorrent@"
     multiuser = True
 
+
 class qui_meta:
     name = "qui"
     pretty_name = "qui"
@@ -191,6 +194,7 @@ class qui_meta:
     process = "qui"
     systemd = "qui@"
     multiuser = True
+
 
 class radarr_meta:
     name = "radarr"
