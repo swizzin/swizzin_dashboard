@@ -249,3 +249,20 @@ class thelounge_meta:
     multiuser = True
     def __init__(self, user):
         self.baseurl = "/"+user+"/thelounge/"
+
+class qui_meta:
+    name = "qui"
+    pretty_name = "qui"
+    baseurl = "/qui"
+    process = "qui"
+    systemd = "qui@"
+    multiuser = True
+
+class tautulli_meta:
+    name = "tautulli"
+    pretty_name = "Tautulli"
+    baseurl = "/tautulli"
+    systemd = "tautulli@"
+    process = "tautulli"
+    multiuser = True
+
