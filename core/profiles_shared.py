@@ -31,6 +31,14 @@ class btsync_meta:
     process = "rslsync"
     multiuser = True
 
+class copyparty_meta:
+    name = "copyparty"
+    pretty_name = "copyparty"
+    baseurl = "/copyparty"
+    systemd = "copyparty"
+    process = "copyparty"
+    img = "copyparty"
+
 class deluge_meta:
     name = "deluge"
     pretty_name = "Deluge"

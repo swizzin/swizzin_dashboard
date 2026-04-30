@@ -29,6 +29,14 @@ class btsync_meta:
     systemd = "resilio-sync"
     process = "rslsync"
 
+class copyparty_meta:
+    name = "copyparty"
+    pretty_name = "copyparty"
+    baseurl = "/copyparty"
+    systemd = "copyparty"
+    process = "copyparty"
+    img = "copyparty"
+
 class couchpotato_meta:
     name= "couchpotato"
     pretty_name = "CouchPotato"
