@@ -226,6 +226,7 @@ class quassel_meta:
     name = "quassel"
     pretty_name = "Quassel-Core"
     systemd = "quasselcore"
+    check_theD = True
 
 class qui_meta:
     name = "qui"
