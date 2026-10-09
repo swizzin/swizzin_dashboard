@@ -8,7 +8,10 @@ import json
 import shutil
 import datetime
 import re
+import logging
 from pwd import getpwnam
+
+log = logging.getLogger(__name__)
 
 is_shared = swizzin.app.config['SHAREDSERVER']
 
@@ -18,8 +21,12 @@ else:
     from core.profiles import *
     try:
         from core.custom.profiles import *
-    except:
-        pass
+    except ModuleNotFoundError as e:
+        # Having no custom profiles file is fine, a module missing inside it is not
+        if e.name not in ("core.custom", "core.custom.profiles"):
+            log.exception("Could not load core/custom/profiles.py, custom profiles are ignored")
+    except Exception:
+        log.exception("Could not load core/custom/profiles.py, custom profiles are ignored")
 
 
 def get_btime_utc():
