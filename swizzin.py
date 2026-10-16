@@ -199,9 +199,19 @@ def index(user):
     return flask.render_template('index.html', title='{user} - swizzin dashboard'.format(user=user), user=user, pages=pages, quota=quota, vendor=vendor, mounts=mounts, async_mode=socketio.async_mode)
 
 @socketio.on('connect', namespace='/websocket')
-def socket_connect():
+def socket_connect(auth=None):
     global thread
     global thread2
+    # The HTTP routes are protected by @htpasswd.required, but this handler was not:
+    # anyone able to reach the panel could open the websocket and receive the live
+    # broadcasts (network speed, iowait). Refuse clients that are not logged in.
+    try:
+        is_valid, user = htpasswd.authenticate()
+    except Exception:  # refuse as well when the check itself fails (an Authorization header it cannot parse, #84)
+        app.logger.exception("Websocket: authentication check failed")
+        is_valid = False
+    if not is_valid:
+        return False
     with thread_lock:
         if thread is None:
             thread = socketio.start_background_task(current_speed, (flask.current_app._get_current_object()))
