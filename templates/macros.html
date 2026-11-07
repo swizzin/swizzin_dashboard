@@ -271,7 +271,15 @@ function getdisks() {
 }
 //getdisks()
 
+// Next Service Info refresh. makePostRequest() in static/js/swizzin.js clears it
+// before refreshing right after a service action.
+var timer;
+
 function appstatus() {
+  // Schedule the next refresh before the request, so that a failed request
+  // does not stop the polling, and keep a single pending timer.
+  clearTimeout(timer);
+  timer = setTimeout(appstatus, 60000);
   $.ajax({
     url: "{{ url_for('app_status') }}",
     statusCode: {
@@ -295,9 +303,6 @@ function appstatus() {
           $('#enabled_'+name).data('bs.toggle').off(true);
         }
       }
-      setTimeout(function() {
-        appstatus();
-      }, 60000);
     }
   });
 }
